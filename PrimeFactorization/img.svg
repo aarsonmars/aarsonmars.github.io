@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="svg" height="100%" width="100%" viewBox="17.034850702025643 99.77889246592895 196.75658560910512 112.07653610645228" canvasWidth="474px" canvasHeight="270px" style="background: none; cursor: default;">
+<defs style="cursor: pointer;">
+<pattern id="minorGridPattern" patternUnits="userSpaceOnUse" width="10" height="10"><polyline id="minorGridLines" points="10 0, 0 0, 0 10" stroke="rgb(200,200,200)" fill="none" stroke-width="0.31132371140681186"/></pattern><pattern id="majorGridPattern" patternUnits="userSpaceOnUse" width="100" height="100"><polyline id="majorGridLines" points="100 0, 0 0, 0 100" stroke="rgb(200,200,200)" fill="none" stroke-width="0.6226474228136237"/></pattern></defs><style style="cursor: pointer;">*{
+transform-box: fill-box;
+transform-origin: center;
+}</style><rect fill="none" stroke="white" stroke-width="2" opacity="1" scene="1" x="37" y="106" width="156" height="101" rx="47.5" ry="44" style="cursor: pointer;" storoke-dasharray="0 10" stroke-dasharray="20 200" stroke-dashoffset="0" id="animObj5021"/><animate href="#animObj5021" attributeName="stroke-dashoffset" begin="0s;anim0.end+0" start="0" dur="3s" values="0; 500" keyTimes="0; 1" keySplines="0 0 1 1" calcMode="spline" fill="remove" class="animation" scene="1" handleColor="rgb(120,67,120)" style="cursor: pointer;" id="anim0"/></svg>

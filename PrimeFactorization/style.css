@@ -8,10 +8,16 @@ body{
     height: 100%;
     width:100%;
     font-family: 'Kaisei HarunoUmi', serif;
+    text-align: center;
 }
+
 h2,h1{
     color:white;
     font-size: 3em;
+}
+h3{
+color:white;
+font-size: 2em;
 }
 button,input{
     background: none;
@@ -21,4 +27,30 @@ button,input{
     border-radius: 1rem;
     padding: 0.3em;
     outline: none;
+}
+
+h1{
+    border-radius: 5rem;
+    padding: 5rem;
+    animation: borderanimation 3s infinite;
+    background-image: url('./img.svg');
+    background-size: contain;
+}
+
+@keyframes borderanimation {
+    0% {
+        border:1.5px solid white;
+    }
+    25% {
+        border:1.5px solid rgb(238, 68, 238);
+    }
+    50% {
+        border:1.5px solid rgb(68, 238, 105);
+    }
+    75% {
+        border:1.5px solid rgb(68, 218, 238);
+    }
+    100% {
+        border:1.5px solid rgb(255, 255, 255);
+    }
 }
