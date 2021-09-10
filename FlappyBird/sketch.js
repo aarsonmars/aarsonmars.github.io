@@ -11,6 +11,11 @@ var speed = 5;
 var tol = 0.001;
 var gravity = 1;
 var gameover = true;
+var winner=false;
+var level=1;
+
+levelElement=document.getElementById('level')
+levelElement.innerText=level
 
 // ctx.beginPath();
 // ctx.rect(x,0,pipeWidth,currentHeight);
@@ -47,14 +52,11 @@ const ball = new Ball(20);
 function checkCollison() {}
 
 function startGame() {
-  console.log("start");
   var e = setInterval(() => {
     if (gameover == false) {
       ball.draw(ball.x + speed / 10, ball.y + gravity);
-        
-      console.log(ctx.getImageData(ball.x + ball.radius+tol+2, ball.y - ball.radius-tol-2, 1, 1)
-        .data)
-      
+
+     
         if (
         ctx.getImageData(ball.x + ball.radius+tol+1, ball.y - ball.radius-tol-1, 1, 1)
           .data[1] == 128 ||
@@ -76,6 +78,18 @@ function startGame() {
       if (ball.y > height - ball.radius) {
         gameover = true;
       }
+      if (ball.x+ball.radius+5>width) {
+        winner=true;
+        gameover=true;
+        level+=1
+        levelElement.innerText=level
+        middleGap-=5
+        pipeDistance-=10
+
+      }
+
+
+
       score=document.getElementById('score')
       score.innerText='Score: '+ parseInt(ball.x/250)        
     }
@@ -83,12 +97,23 @@ function startGame() {
     else {
       clearInterval(e);
       // ball.clear()
-      ball.draw(5, 180);
-
-      ctx.clearRect(0,0,width,height)
-      x=200  
-      createPipes()
-      ball.draw(5, 180);
+      ctx.font = "100px Arial";
+      levelElement.innerText=level      
+      if (winner){
+        ctx.fillText("Winner", width/2-200, height/2);  
+        winner=false;
+      }
+      else{
+        ctx.fillText("Game Over", width/2-200, height/2);
+        level=1
+      }
+      setTimeout(() => {
+        ball.draw(25, 180);
+        ctx.clearRect(0,0,width,height)
+        x=200  
+        createPipes()
+        ball.draw(25, 180); 
+      }, 2000);     
 
     }
   }, 5);
@@ -96,7 +121,7 @@ function startGame() {
 
 function createPipes() {
   while(x<width){ 
-  var currentHeight = Math.random() * 250;
+  var currentHeight = Math.random() * 200 +50;
   ctx.beginPath();
   ctx.rect(x, 0, pipeWidth, currentHeight);
   
@@ -117,10 +142,8 @@ function createPipes() {
 
 
 document.addEventListener("keyup", (e) => {
-  console.log(e.key);
   if (e.key == " ") {
     if (gameover) {
-      console.log(12);
       gameover = false;
       startGame();
     } else {
