@@ -14,8 +14,8 @@ var gameover = true;
 var winner=false;
 var level=1;
 
-levelElement=document.getElementById('level')
-levelElement.innerText=level
+levelElement=document.getElementById('level');
+levelElement.innerText=level;
 
 // ctx.beginPath();
 // ctx.rect(x,0,pipeWidth,currentHeight);
@@ -35,7 +35,7 @@ class Ball {
     this.y = y;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle='red'
+    ctx.fillStyle='red';
     ctx.fill();
   }
   clear() {
@@ -54,13 +54,11 @@ function checkCollison() {}
 function startGame() {
   var e = setInterval(() => {
     if (gameover == false) {
-      ball.draw(ball.x + speed / 10, ball.y + gravity);
-
-     
+      ball.draw(ball.x + speed / 10, ball.y + gravity);     
         if (
-        ctx.getImageData(ball.x + ball.radius+tol+1, ball.y - ball.radius-tol-1, 1, 1)
-          .data[1] == 128 ||
-        ctx.getImageData(ball.x + ball.radius+tol+1, ball.y + ball.radius+tol+1, 1, 1)
+          ctx.getImageData(ball.x + ball.radius+tol+1, ball.y - ball.radius-tol-1, 1, 1)
+            .data[1] == 128 ||
+          ctx.getImageData(ball.x + ball.radius+tol+1, ball.y + ball.radius+tol+1, 1, 1)
           .data[1] == 128 ||
           ctx.getImageData(ball.x , ball.y - ball.radius-tol-1, 1, 1)
           .data[1] == 128||
@@ -69,12 +67,10 @@ function startGame() {
           ctx.getImageData(ball.x-ball.radius-1 , ball.y + ball.radius+tol+1, 1, 1)
           .data[1] == 128 ||
           ctx.getImageData(ball.x -ball.radius-1, ball.y - ball.radius-tol-1, 1, 1)
-          .data[1] == 128
-                   
+          .data[1] == 128                   
       ) {
         gameover = true;
       }
-
       if (ball.y > height - ball.radius) {
         gameover = true;
       }
@@ -87,9 +83,6 @@ function startGame() {
         pipeDistance-=10
 
       }
-
-
-
       score=document.getElementById('score')
       score.innerText='Score: '+ parseInt(ball.x/250)        
     }
@@ -106,6 +99,9 @@ function startGame() {
       else{
         ctx.fillText("Game Over", width/2-200, height/2);
         level=1
+        levelElement.innerText=level
+        middleGap=150
+        pipeDistance=200
       }
       setTimeout(() => {
         ball.draw(25, 180);
@@ -141,17 +137,22 @@ function createPipes() {
   createPipes();
 
 
+document.addEventListener('keyup',(e)=>{
+  if (e.key=='Enter'||e.key=='b'){
+    if (gameover){
+    startGame()
+      gameover=false
+  }
+  }
+})
+
 document.addEventListener("keyup", (e) => {
-  if (e.key == " ") {
-    if (gameover) {
-      gameover = false;
-      startGame();
-    } else {
+      if (!gameover){
       ball.clear();
       ball.y -= 50;
       if (ball.y <= ball.radius) {
         gameover = true;
-      }
-    }
+      }}
+    
   }
-});
+);
