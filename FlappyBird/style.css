@@ -1,3 +1,6 @@
+*{
+    user-select: none;
+}
 body{
     background-color: rgb(206, 241, 154);
     display: flex;
@@ -7,6 +10,7 @@ body{
 canvas{
     background: rgb(226, 224, 224);
     border: 1rem solid greenyellow;
+    width:100%;
 }
 #level,#score,h2{
     color:blueviolet
@@ -14,4 +18,9 @@ canvas{
 #gameTitle{
     text-align: center;
     color:aqua
+}
+@media(max-width:700px){
+    body{
+        color:red;
+    }
 }

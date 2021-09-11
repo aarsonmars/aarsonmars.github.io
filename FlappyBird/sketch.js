@@ -1,7 +1,7 @@
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
-var height = 400;
-var width = 1000;
+var height = c.height;
+var width = c.width;
 var pipeWidth = 50;
 var middleGap = 150;
 var x =  200;
@@ -97,6 +97,8 @@ function startGame() {
         winner=false;
       }
       else{
+        c.removeEventListener("click", clickGamePlay);
+        document.removeEventListener('keyup',keyboardGameplay);
         ctx.fillText("Game Over", width/2-200, height/2);
         level=1
         levelElement.innerText=level
@@ -108,7 +110,8 @@ function startGame() {
         ctx.clearRect(0,0,width,height)
         x=200  
         createPipes()
-        ball.draw(25, 180); 
+        ball.draw(25, 180);
+        registerEventListener();
       }, 2000);     
 
     }
@@ -136,23 +139,42 @@ function createPipes() {
 
   createPipes();
 
+function keyboardGameplay(e){
+    // if (e.key=='Enter'||e.key=='b'){
+    //   if (gameover){
+    //   startGame()
+    //     gameover=false
+    // }
+    // }
+    if (e.key==' '){
+      c.click(); f
+    }
+}
 
-document.addEventListener('keyup',(e)=>{
-  if (e.key=='Enter'||e.key=='b'){
-    if (gameover){
+
+function controlGamePlay(){
+    if (!gameover){
+    ball.clear();
+    ball.y -= 50;
+    if (ball.y <= ball.radius) {
+      gameover = true;
+    }}
+  
+}
+
+function clickGamePlay(){
+  if (gameover){
     startGame()
-      gameover=false
+    gameover=false
   }
+  else{
+    controlGamePlay();
   }
-})
+}
 
-document.addEventListener("keyup", (e) => {
-      if (!gameover){
-      ball.clear();
-      ball.y -= 50;
-      if (ball.y <= ball.radius) {
-        gameover = true;
-      }}
-    
-  }
-);
+function registerEventListener(){
+  
+  c.addEventListener("click", clickGamePlay);
+  document.addEventListener('keyup',keyboardGameplay);
+}
+registerEventListener();
