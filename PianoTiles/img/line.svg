@@ -1,0 +1,4 @@
+<svg xmlns="http://www.w3.org/2000/svg" id="svg" height="100%" width="100%" viewBox="-9.421309139208589 5.230761195418607 39.790390718610624 70.73847238864111" canvasWidth="90px" canvasHeight="160px" style="background: none; cursor: default;"><defs style="cursor: pointer;"><pattern id="minorGridPattern" patternUnits="userSpaceOnUse" width="10" height="10"><polyline id="minorGridLines" points="10 0, 0 0, 0 10" stroke="rgb(200,200,200)" fill="none" stroke-width="0.3315865893217552"/></pattern><pattern id="majorGridPattern" patternUnits="userSpaceOnUse" width="100" height="100"><polyline id="majorGridLines" points="100 0, 0 0, 0 100" stroke="rgb(200,200,200)" fill="none" stroke-width="0.6631731786435104"/></pattern></defs><style style="cursor: pointer;">*{
+transform-box: fill-box;
+transform-origin: center;
+}</style><polyline fill="#ffffff" stroke="#000000" stroke-width="0.5" opacity="1" scene="1" points="10 0&#10;10 80" style="cursor: pointer;"/></svg>

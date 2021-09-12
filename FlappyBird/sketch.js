@@ -147,7 +147,7 @@ function keyboardGameplay(e){
     // }
     // }
     if (e.key==' '){
-      c.click(); f
+      c.click(); 
     }
 }
 

@@ -1,0 +1,29 @@
+* {
+  margin: 0;
+  padding: 0;
+  /* overflow: hidden; */
+}
+
+main {
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+canvas {
+  height: 98%;
+  max-width: 400px;
+  color: rgb(211, 135, 36);
+  border: 1px solid black;
+  /* background: url("./img/line.svg");
+  background-size: 22.5%; */
+}
+
+/* @media(min-width:769px){
+    canvas{
+        width: 50%;
+    }
+} */
