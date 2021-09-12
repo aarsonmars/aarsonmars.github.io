@@ -6,11 +6,12 @@ var canvasWidth = c.width;
 var width = canvasWidth / 4;
 
 var totalTilesCount = 100;
-var tileSpeed = 5;
+var tileSpeed = 1;
 var tiles = new Array();
 var tileHeight = 350;
 var mouse = { x: 0, y: 0, click: false };
 var gameover=false;
+var score=0;
 
 class Tile {
   constructor(x = 0, y = 0, height = 350) {
@@ -21,6 +22,10 @@ class Tile {
   draw() {
     ctx.beginPath();
     ctx.rect(this.x, this.y, width, this.height);
+    ctx.font='50px Arial'
+
+    ctx.fillStyle='rgb(0,0,2)'
+    ctx.fillText(score, 10,50);
     ctx.fill();
   }
   update() {
@@ -31,10 +36,11 @@ class Tile {
         gameover=true
     }
     if (tileTapped) {
+      score+=1;
+    //   ctx.filltext(score,5,5)  
       tiles.shift();
       tileTapped = false;
     }
-    // console.log(this.tileColor )
     
     if (gameover) {
       cancelAnimationFrame(animationRequest);
@@ -49,9 +55,7 @@ function generateTiles() {
   for (var i = 0; i < totalTilesCount; i++) {
     x = parseInt(Math.random() * 4);
     if (x == previousVaule) {
-        console.log(x)
       x = (x==3)?2:x+1;
-      console.log(x)
     }
     previousVaule = x;
     y = -350 * i;
@@ -65,12 +69,14 @@ var tileTapped = false;
 c.addEventListener("click", function (event) {
   mouse.x = (event.offsetX * c.width) / c.offsetWidth;
   mouse.y = (event.offsetY * c.height) / c.offsetHeight;
+  console.log(mouse.x,mouse.y,ctx.getImageData(mouse.x, mouse.y, 1, 1).data)
   if (
     ctx.getImageData(mouse.x, mouse.y, 1, 1).data[2] == 2 &&
     ctx.getImageData(mouse.x + 5, mouse.y + 5, 1, 1).data[2] == 2
   ) {
     tileTapped = true;
   }else{
+      console.log('dfd')
       gameover=true;
   }
 
