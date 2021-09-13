@@ -18,6 +18,8 @@ canvas {
   max-width: 400px;
   color: rgb(211, 135, 36);
   border: 1px solid black;
+  color:rgb(89, 12, 133);
+  box-shadow: 0 1.5px 5px 1px rgb(89, 12, 133);
   /* background: url("./img/line.svg");
   background-size: 22.5%; */
 }
@@ -29,13 +31,13 @@ bottom :3em;
 font-size: 3em;
   width:12rem;
   height: 12rem;
-  box-shadow: .12em .15em 0.0005em -.019em rgb(0, 6, 10);
+  box-shadow: .12rem .15rem 0.0005rem -.019rem rgb(0, 6, 10);
   /* background-color: aqua; */
   border-radius: 50%;
   vertical-align: center;
   border: 5px solid rgb(71, 6, 66);
 }
-#finalScore,#finalScoreText{
+#finalScore,#finalScoreText,#updateScore{
       padding-bottom: 1em;
       text-align: center;
       position: absolute;
@@ -45,6 +47,15 @@ font-size: 3em;
       /* background-color: aqua;
       border-radius: 50%; */
     }
+#updateScore{
+  top:1%;
+  width: 400px;
+  padding: 0;
+  background: white;
+  color:rgb(89, 12, 233);
+  box-shadow: 0 1.5px 2px 1px;
+  
+}    
 
 #finalScoreText{
   top:6em;

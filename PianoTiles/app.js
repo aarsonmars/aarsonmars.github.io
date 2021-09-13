@@ -5,13 +5,14 @@ var canvasHeight = c.height;
 var canvasWidth = c.width;
 var width = canvasWidth / 4;
 
-var totalTilesCount = 1000;
+var totalTilesCount = 50;
 var tileSpeed = 10;
 var tiles = new Array();
 var tileHeight = 400;
 var gameover=false;
 var score=0;
 var currentTileSpeed=tileSpeed;
+var tileRefreshRate=20;
 
 class Tile {
   constructor(x = 0, y = 0, height = 350) {
@@ -22,10 +23,10 @@ class Tile {
   draw() {
     ctx.beginPath();
     ctx.rect(this.x, this.y, width, this.height);
-    ctx.font='50px Arial'
+    // ctx.font='50px Arial'
 
     ctx.fillStyle='rgb(0,0,2)'
-    ctx.fillText(score, 10,50);
+    // ctx.fillText(score, 10,50);
     ctx.fill();
   }
   update() {
@@ -38,6 +39,7 @@ class Tile {
 
     if (tileTapped) {
       score+=1;
+      updateScore.innerText=score
     //   ctx.filltext(score,5,5)  
       tiles=tiles.slice(1,tiles.length);
       tileTapped = false;
@@ -49,9 +51,10 @@ class Tile {
       // ctx.font='400px Arial'
       // ctx.fillStyle='rgb(250,0,2)'
       // ctx.fillText(score, c.width/2-100,c.height/2-100);
-      finalScore();
+      
       cancelAnimationFrame(animationRequest);
-      createButton();
+      document.querySelector('#finalScoreText') || finalScore();
+      document.querySelector('#rePlayButton') || createButton();
       // gameover=false;     
     }
     this.draw();
@@ -78,6 +81,7 @@ var tileTapped = false;
 c.addEventListener("click", function (event) {
   x = (event.offsetX * c.width) / c.offsetWidth;
   y = (event.offsetY * c.height) / c.offsetHeight;
+  console.log(ctx.getImageData(x, y, 1, 1).data)
   if (
     ctx.getImageData(x, y, 1, 1).data[2] == 2 &&
     ctx.getImageData(x + 5, y + 5, 1, 1).data[2] == 2
@@ -88,6 +92,12 @@ c.addEventListener("click", function (event) {
   }
 
 });
+
+ var  updateScore=document.createElement('div')
+  updateScore.id='updateScore'
+  updateScore.innerText=score
+  document.querySelector('#container').append(updateScore)
+
 
 function finalScore(){
   scoreDivText=document.createElement('div')
@@ -118,8 +128,12 @@ function animate() {
     currentTileSpeed+=.015*currentTileSpeed
   }
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-  tiles.forEach(function (c) {
+
+  tiles.slice(0,tileRefreshRate).forEach(function (c) {
     c.update();
+    if (tiles.length==0){
+      generateTiles()
+    }
   });
 }
 animate();
