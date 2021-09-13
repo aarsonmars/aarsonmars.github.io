@@ -5,13 +5,13 @@ var canvasHeight = c.height;
 var canvasWidth = c.width;
 var width = canvasWidth / 4;
 
-var totalTilesCount = 100;
-var tileSpeed = 1;
+var totalTilesCount = 1000;
+var tileSpeed = 10;
 var tiles = new Array();
-var tileHeight = 350;
-var mouse = { x: 0, y: 0, click: false };
+var tileHeight = 400;
 var gameover=false;
 var score=0;
+var currentTileSpeed=tileSpeed;
 
 class Tile {
   constructor(x = 0, y = 0, height = 350) {
@@ -29,24 +29,33 @@ class Tile {
     ctx.fill();
   }
   update() {
-    if (this.y % 3500 == 0) {
-      tileSpeed += .5;
-    }
-    if (this.y-1250>0){
+    // if (this.y % (tileHeight*10) == 0) {
+    //   currentTileSpeed += tileSpeed/totalTilesCount;
+    // }
+    if (this.y-c.height+tileHeight>0){
         gameover=true
     }
+
     if (tileTapped) {
       score+=1;
     //   ctx.filltext(score,5,5)  
-      tiles.shift();
+      tiles=tiles.slice(1,tiles.length);
       tileTapped = false;
     }
     
-    if (gameover) {
+    if (gameover) {      
+      ctx.clearRect(0,0,canvasWidth,canvasHeight)
+      // ctx.beginPath()
+      // ctx.font='400px Arial'
+      // ctx.fillStyle='rgb(250,0,2)'
+      // ctx.fillText(score, c.width/2-100,c.height/2-100);
+      finalScore();
       cancelAnimationFrame(animationRequest);
+      createButton();
+      // gameover=false;     
     }
     this.draw();
-    this.y += tileSpeed;
+    this.y += currentTileSpeed;
   }
 }
 
@@ -58,7 +67,7 @@ function generateTiles() {
       x = (x==3)?2:x+1;
     }
     previousVaule = x;
-    y = -350 * i;
+    y = -tileHeight * i;
     height = tileHeight;
     tiles.push(new Tile(x * width, y, height));
   }
@@ -67,25 +76,47 @@ generateTiles();
 
 var tileTapped = false;
 c.addEventListener("click", function (event) {
-  mouse.x = (event.offsetX * c.width) / c.offsetWidth;
-  mouse.y = (event.offsetY * c.height) / c.offsetHeight;
-  console.log(mouse.x,mouse.y,ctx.getImageData(mouse.x, mouse.y, 1, 1).data)
+  x = (event.offsetX * c.width) / c.offsetWidth;
+  y = (event.offsetY * c.height) / c.offsetHeight;
   if (
-    ctx.getImageData(mouse.x, mouse.y, 1, 1).data[2] == 2 &&
-    ctx.getImageData(mouse.x + 5, mouse.y + 5, 1, 1).data[2] == 2
+    ctx.getImageData(x, y, 1, 1).data[2] == 2 &&
+    ctx.getImageData(x + 5, y + 5, 1, 1).data[2] == 2
   ) {
     tileTapped = true;
   }else{
-      console.log('dfd')
       gameover=true;
   }
 
-  // console.log(event.x,event.y)
 });
+
+function finalScore(){
+  scoreDivText=document.createElement('div')
+  scoreDivText.id='finalScoreText'
+  scoreDivText.innerText='Your Score'
+  document.querySelector('#container').append(scoreDivText)
+  
+  scoreDiv=document.createElement('div')
+  scoreDiv.id='finalScore'
+  scoreDiv.innerText=score
+  document.querySelector('#container').append(scoreDiv)
+
+}
+
+function createButton(){
+  rePlay=document.createElement('button')
+  rePlay.id='rePlayButton'
+  rePlay.innerText='Play\nAgain'
+  document.querySelector('#container').append(rePlay)
+  rePlay.addEventListener('click',()=>{location.reload()})
+}
 
 var animationRequest;
 function animate() {
+  
   animationRequest = requestAnimationFrame(animate);
+  if (animationRequest%100==0){
+    currentTileSpeed+=.015*currentTileSpeed
+  }
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
   tiles.forEach(function (c) {
     c.update();
@@ -101,3 +132,4 @@ animate();
 //     });
 // });
 // fc.start()
+
