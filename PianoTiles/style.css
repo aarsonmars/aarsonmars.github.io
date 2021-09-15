@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  user-select: none;
   /* overflow: hidden; */
 }
 
@@ -15,7 +16,7 @@ main {
 
 canvas {
   height: 99%;
-  max-width: 390px;
+  max-width: 385px;
   color: rgb(211, 135, 36);
   border: 1px solid black;
   color: rgb(89, 12, 133);
@@ -48,8 +49,8 @@ canvas {
 #updateScore {
   font-size: 2em;
 
-  top: 1%;
-  width: 400px;
+  top: 0.5%;
+  width: 383px;
   padding: 0;
   background: white;
   color: rgb(89, 12, 233);
@@ -65,14 +66,14 @@ canvas {
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   color: rgb(122, 5, 60);
   top :1.7em;
-  width: 6rem;
   height: 10rem;
   font-size: 8rem;
   /* background-clip: content-box; */
 }
-
-/* @media(min-width:769px){
+/* 
+@media(min-width:769px){
     canvas{
-        width: 50%;
+        width: 100%;
+        
     }
 } */

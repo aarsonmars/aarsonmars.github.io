@@ -6,7 +6,7 @@ var canvasWidth = c.width;
 var width = canvasWidth / 4;
 
 var totalTilesCount = 50;
-var tileSpeed = 10;
+var tileSpeed = 15;
 var tiles = new Array();
 var tileHeight = 400;
 var gameover=false;
@@ -75,9 +75,32 @@ function generateTiles(noOfTiles,tileGap=0) {
 }
 
 var tileTapped = false;
-c.addEventListener("click", function (event) {
-  x = (event.offsetX * c.width) / c.offsetWidth;
-  y = (event.offsetY * c.height) / c.offsetHeight;
+
+function onClick(event) {
+  // event=event.targetTouches[0]
+x = (event.offsetX * c.width) / c.offsetWidth;
+y = (event.offsetY * c.height) / c.offsetHeight;
+// console.log(ctx.getImageData(x, y, 1, 1).data)
+if (
+  ctx.getImageData(x, y, 1, 1).data[2] == 2 &&
+  ctx.getImageData(x + 5, y + 5, 1, 1).data[2] == 2
+) {
+  tileTapped = true;
+}else{
+    gameover=true;
+}
+}
+
+var audio = new Audio('./sound/beep2.mp3');
+audio.play();
+function onTouch(event) {
+  event.preventDefault()
+  audio.play()
+
+    event=event.targetTouches[0]
+  x = (event.pageX * c.width) / c.offsetWidth;
+  y = (event.pageY * c.height) / c.offsetHeight;
+
   // console.log(ctx.getImageData(x, y, 1, 1).data)
   if (
     ctx.getImageData(x, y, 1, 1).data[2] == 2 &&
@@ -87,8 +110,11 @@ c.addEventListener("click", function (event) {
   }else{
       gameover=true;
   }
+}
 
-});
+
+c.addEventListener("click", onClick);
+c.addEventListener('touchstart',onTouch)
 
  var  updateScore=document.createElement('div')
   updateScore.id='updateScore'
@@ -156,7 +182,9 @@ function startGame() {
   removeElement('#finalScore')
   removeElement('#finalScoreText')
   tiles=[]
+  score=0
   gameover=false
+  currentTileSpeed=tileSpeed;
   generateTiles(tileRefreshRate);  
   animate();
 }
