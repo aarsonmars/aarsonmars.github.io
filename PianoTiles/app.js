@@ -13,6 +13,7 @@ var gameover=false;
 var score=0;
 var currentTileSpeed=tileSpeed;
 var tileRefreshRate=50;
+var icon ='./img/pianoTilesSquare.png'
 
 class Tile {
   constructor(x = 0, y = 0, height = 350) {
@@ -46,6 +47,8 @@ class Tile {
     }
     
     if (gameover) {      
+      console.log('hey')
+
       ctx.clearRect(0,0,canvasWidth,canvasHeight)      
       cancelAnimationFrame(animationRequest);
       document.querySelector('#finalScoreText') || finalScore();
@@ -67,10 +70,9 @@ function generateTiles(noOfTiles,tileGap=0) {
     previousVaule = x;
     y = -tileHeight * i-tileHeight*tileGap;
     tiles.push(new Tile(x * width, y, tileHeight));
-  }    console.log(tiles)
+  }    console.log(tiles.length)
 
 }
-generateTiles(tileRefreshRate);
 
 var tileTapped = false;
 c.addEventListener("click", function (event) {
@@ -107,18 +109,19 @@ function finalScore(){
 
 }
 
-function createButton(){
+function createButton(buttonText='Play\nAgain'){
   rePlay=document.createElement('button')
   rePlay.id='rePlayButton'
-  rePlay.innerText='Play\nAgain'
+  rePlay.innerText=buttonText
   document.querySelector('#container').append(rePlay)
-  rePlay.addEventListener('click',()=>{location.reload()})
+  rePlay.addEventListener('click',startGame)
 }
 
 var animationRequest;
 function animate() {
   
   animationRequest = requestAnimationFrame(animate);
+  console.log(animationRequest)
   if (animationRequest%100==0){
     currentTileSpeed+=.25
   }
@@ -131,7 +134,33 @@ function animate() {
     }
   });
 }
-animate();
+
+createButton('Play');
+scoreDivText=document.createElement('div')
+  scoreDivText.id='finalScoreText'
+  scoreDivText.innerText='Piano Tiles'  
+  document.querySelector('#container').append(scoreDivText)
+
+  scoreDiv=document.createElement('div')
+  scoreDiv.id='finalScore'
+  scoreDiv.style.background=`center / 100% 100% url(${icon})`
+  document.querySelector('#container').append(scoreDiv)
+
+
+
+const removeElement =(id)=>{document.querySelector(id) && document.querySelector(id).remove();}
+
+function startGame() {
+  
+  removeElement('#rePlayButton')
+  removeElement('#finalScore')
+  removeElement('#finalScoreText')
+  tiles=[]
+  gameover=false
+  generateTiles(tileRefreshRate);  
+  animate();
+}
+
 
 // var fc = new FpsCtrl(24, function(e) {
 //     // animationRequest = requestAnimationFrame(animate);
