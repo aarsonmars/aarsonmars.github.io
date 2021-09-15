@@ -12,7 +12,7 @@ var tileHeight = 400;
 var gameover=false;
 var score=0;
 var currentTileSpeed=tileSpeed;
-var tileRefreshRate=20;
+var tileRefreshRate=50;
 
 class Tile {
   constructor(x = 0, y = 0, height = 350) {
@@ -46,12 +46,7 @@ class Tile {
     }
     
     if (gameover) {      
-      ctx.clearRect(0,0,canvasWidth,canvasHeight)
-      // ctx.beginPath()
-      // ctx.font='400px Arial'
-      // ctx.fillStyle='rgb(250,0,2)'
-      // ctx.fillText(score, c.width/2-100,c.height/2-100);
-      
+      ctx.clearRect(0,0,canvasWidth,canvasHeight)      
       cancelAnimationFrame(animationRequest);
       document.querySelector('#finalScoreText') || finalScore();
       document.querySelector('#rePlayButton') || createButton();
@@ -62,26 +57,26 @@ class Tile {
   }
 }
 
-function generateTiles() {
+function generateTiles(noOfTiles,tileGap=0) {
   var previousVaule = 0;
-  for (var i = 0; i < totalTilesCount; i++) {
+  for (var i = 0; i < noOfTiles; i++) {
     x = parseInt(Math.random() * 4);
     if (x == previousVaule) {
       x = (x==3)?2:x+1;
     }
     previousVaule = x;
-    y = -tileHeight * i;
-    height = tileHeight;
-    tiles.push(new Tile(x * width, y, height));
-  }
+    y = -tileHeight * i-tileHeight*tileGap;
+    tiles.push(new Tile(x * width, y, tileHeight));
+  }    console.log(tiles)
+
 }
-generateTiles();
+generateTiles(tileRefreshRate);
 
 var tileTapped = false;
 c.addEventListener("click", function (event) {
   x = (event.offsetX * c.width) / c.offsetWidth;
   y = (event.offsetY * c.height) / c.offsetHeight;
-  console.log(ctx.getImageData(x, y, 1, 1).data)
+  // console.log(ctx.getImageData(x, y, 1, 1).data)
   if (
     ctx.getImageData(x, y, 1, 1).data[2] == 2 &&
     ctx.getImageData(x + 5, y + 5, 1, 1).data[2] == 2
@@ -125,14 +120,14 @@ function animate() {
   
   animationRequest = requestAnimationFrame(animate);
   if (animationRequest%100==0){
-    currentTileSpeed+=.015*currentTileSpeed
+    currentTileSpeed+=.025
   }
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
   tiles.slice(0,tileRefreshRate).forEach(function (c) {
     c.update();
     if (tiles.length==0){
-      generateTiles()
+      generateTiles(tileRefreshRate,tileGap=2)
     }
   });
 }
