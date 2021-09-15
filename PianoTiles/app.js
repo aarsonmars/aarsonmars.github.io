@@ -120,7 +120,7 @@ function animate() {
   
   animationRequest = requestAnimationFrame(animate);
   if (animationRequest%100==0){
-    currentTileSpeed+=.025
+    currentTileSpeed+=.25
   }
   ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 
