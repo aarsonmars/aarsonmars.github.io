@@ -4,45 +4,18 @@
     <meta charset="UTF-8" />
     <title>aarsonmars</title>
     <!-- <link rel='icon' href='./img.png'> -->
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        font-family: monospace;
-        color: white;
-        text-align: center;
-      }
+    <link rel="stylesheet" href="./style.css">
 
-      a {
-        text-decoration: none;
-        text-align: center;
-      }
-
-      hr {
-        margin-left: 1%;
-        width: 98%;
-        border: 1px solid rgba(255, 255, 255, 0.25);
-      }
-    </style>
   </head>
 
   <body style="background: rgb(12, 12, 24)">
-    <p
-      style="margin-top: 2%; color: rgba(255, 255, 255, 0.25); font-size: 98px"
-    >
+    <p id='titleName'>
       aarsonmars
     </p>
-    <div
-      style="
-        position: absolute;
-        top: 50%;
-        transform: translate(0, -50%);
-        margin-left: 10%;
-        width: 80%;
-      "
+
+    <div id='mainContainer'
     >
       <hr />
-
       <a
         target="_blank"
         href="https://github.com/aarsonmars/aarsonmars.github.io/tree/master"
@@ -50,6 +23,40 @@
         >PROJECTS</a
       >
       <hr />
+     <div id='gamesAndApps' 
+     style='display:flex'>
+        <div>Games
+            <hr>
+          <a target="_blank" href="./FlappyBird/index.html">
+            <div class='apps'>
+              <img src="./PianoTiles/img/happy.png" alt="Happy face">
+              <p>Flappy Bird</p>
+            </div>
+          </a>
+          
+          <a target="_blank" href="./PianoTiles/index.html">
+            <div class='apps'>
+              <img src="./PianoTiles/img/pianoTilesSquare.png" alt="Piano Tiles icon">
+              <p>Piano Tiles</p>
+            </div>
+          </a>
+          
+
+
+        </div>
+        <div>Apps
+        <hr>
+          <a target="_blank" href="./PrimeFactorization/index.html">
+            <div class='apps'>
+              <!-- <img height='72px' width='72px' src="./Projects/Sweb/sweb.svg"> -->
+              <img src="./PianoTiles/img/17.png" alt="Piano Tiles icon">
+
+              <p>Prime Check</p>
+            </div>
+          </a>
+
+        </div>
+      </div> 
       <div
         style="
           display: flex;
@@ -60,47 +67,20 @@
         "
       >
       
-        <div>
-          <a target="_blank" href="./PrimeFactorization/index.html">
-            <div>
-              <!-- <img height='72px' width='72px' src="./Projects/Sweb/sweb.svg"> -->
-              <p>Prime Factorization</p>
-            </div>
-          </a>
-          <hr>
-          <a target="_blank" href="./FlappyBird/index.html">
-            <div>
-              <p>Flappy Bird</p>
-            </div>
-          </a>
-          <hr>
-          <a target="_blank" href="./PianoTiles/index.html">
-            <div>
-              <p>Piano Tiles</p>
-            </div>
-          </a>
-          <hr>
-            <br>
+        <div>    
           <a
             target="_blank"
-            href="https://github.com/aarsonmars/aarsonmars.github.io/tree/master/PrimeFactorization"
+            href="https://github.com/aarsonmars/aarsonmars.github.io/tree/master/"
           >
-            <i style="font-size: 28px">Source</i>
+            <i style="font-size: 20px">Source</i>
           </a>
         </div>
       </div>
       <hr />
     </div>
-    <div
-      style="
-        color: rgba(255, 255, 255, 0.25);
-        position: absolute;
-        bottom: 0;
-        font-size: 32px;
-        padding: 5px 0;
-        width: 100%;
-        background: rgba(0, 0, 0, 0.5);
-      "
+
+
+    <div id='bottomBar'      
     >
       <a
         target="_blank"
@@ -116,5 +96,6 @@
         >aarsonmars@gmail.com</a
       >
     </div>
+
   </body>
 </html>

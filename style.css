@@ -1,0 +1,65 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: monospace;
+    color: white;
+    text-align: center;
+  }
+
+  a {
+    text-decoration: none;
+    text-align: center;
+  }
+
+  hr {
+    margin-left: 1%;
+    width: 98%;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+
+  #titleName{
+    margin-top: 2%; 
+    color: rgba(255, 255, 255, 0.25); 
+    font-size: 98px;
+  }
+
+  #mainContainer{
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+    margin-left: 5%;
+    width: 80%;
+  }
+  #gamesAndApps{
+      margin-top: 10px;
+    display: flex;
+    /* align-items: center; */
+    justify-content: space-evenly;
+    font-size: 36px;
+  }
+  .apps{
+      background-color:rgb(20,20,40);
+      margin:10px;
+      padding:5px;
+      border:1px solid rgb(56, 44, 44);
+      border-radius: 20px;
+      box-shadow: .1em .1em .1em .1em #000 ;
+  }
+
+  img{
+      margin-top: 10px;
+      height: 72px;
+      width:72px;
+      border-radius: 50%;
+  }
+
+  #bottomBar{
+      
+    color: rgba(255, 255, 255, 0.25);
+    position: absolute;
+    bottom: 0;
+    font-size: 32px;
+    padding: 5px 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+  }

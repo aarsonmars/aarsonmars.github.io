@@ -121,7 +121,6 @@ function createButton(buttonText = "Play\nAgain") {
 var animationRequest;
 function animate() {
   animationRequest = requestAnimationFrame(animate);
-
   ctx.fillStyle="rgba(218, 219, 242,0.8)"
   ctx.fillRect(0, 0, canvasWidth/4, canvasHeight);
   ctx.fillStyle="rgba(200, 201, 222,0.8)"
