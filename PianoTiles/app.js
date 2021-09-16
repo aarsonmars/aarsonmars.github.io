@@ -1,19 +1,29 @@
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 
+c.height=innerHeight;
+c.width=innerWidth
+
 var canvasHeight = c.height;
 var canvasWidth = c.width;
-var width = canvasWidth / 4;
 
-var totalTilesCount = 50;
-var tileSpeed = 15;
+var tileHeight = 180;
+var width = canvasWidth / 4;
+var tileSpeed = 10;
+var tileRefreshRate=parseInt(Math.random()*50)+50
+
 var tiles = new Array();
-var tileHeight = 400;
-var gameover = false;
 var score = 0;
 var currentTileSpeed = tileSpeed;
-var tileRefreshRate = 50;
 var icon = "./img/pianoTilesSquare.png";
+
+function initializeVariables(){
+  tiles = [];
+  score = 0;
+  currentTileSpeed = tileSpeed;
+  updateScore.innerText=score
+}
+
 
 class Tile {
   constructor(x = 0, y = 0, height = 350) {
@@ -24,97 +34,69 @@ class Tile {
   draw() {
     ctx.beginPath();
     ctx.rect(this.x, this.y, width, this.height);
-    // ctx.font='50px Arial'
-
     ctx.fillStyle = "rgb(0,0,2)";
-    // ctx.fillText(score, 10,50);
     ctx.fill();
   }
   update() {
-    // if (this.y % (tileHeight*10) == 0) {
-    //   currentTileSpeed += tileSpeed/totalTilesCount;
-    // }
-    if (this.y - c.height + tileHeight > 0) {
-      gameover = true;
-    }
-
-    if (tileTapped) {
-      score += 1;
-      updateScore.innerText = score;
-      //   ctx.filltext(score,5,5)
-      tiles = tiles.slice(1, tiles.length);
-      tileTapped = false;
-    }
-
-    if (gameover) {
-
-      ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-      cancelAnimationFrame(animationRequest);
-      document.querySelector("#finalScoreText") || finalScore();
-      document.querySelector("#rePlayButton") || createButton();
-      // gameover=false;
-    }
     this.draw();
     this.y += currentTileSpeed;
   }
 }
 
 function generateTiles(noOfTiles, tileGap = 0) {
-  var previousVaule = 0;
+  let previousVaule = 0;
+  doubleTilePosition=parseInt(Math.random()*noOfTiles)
   for (var i = 0; i < noOfTiles; i++) {
     x = parseInt(Math.random() * 4);
     if (x == previousVaule) {
-      x = x == 3 ? 2 : x + 1;
+      x = x > 2 ? x-1 : x + 1;
     }
-    previousVaule = x;
     y = -tileHeight * i - tileHeight * tileGap;
     tiles.push(new Tile(x * width, y, tileHeight));
+    previousVaule=x
+    // if(i==doubleTilePosition){
+    //   console.log(i)
+    //   if (x<2){
+    //     x=x+2
+    //     previousVaule=x;
+    //   }
+    //   else{
+    //     x=x-2
+    //     previousVaule=x;
+    //   }
+    //   console.log('hello',x,y)
+    //   tiles.push(new Tile(x * width, y, tileHeight));      
+    // }
   }
 }
 
-var tileTapped = false;
-
-function onClick(event) {
-  // event=event.targetTouches[0]
-  x = (event.offsetX * c.width) / c.offsetWidth;
-  y = (event.offsetY * c.height) / c.offsetHeight;
-  // console.log(ctx.getImageData(x, y, 1, 1).data)
+function checkGameover(x,y){
   if (
     ctx.getImageData(x, y, 1, 1).data[2] == 2 &&
     ctx.getImageData(x + 5, y + 5, 1, 1).data[2] == 2
   ) {
-    tileTapped = true;
+    score += 1;
+    updateScore.innerText = score;
+    tiles = tiles.slice(1, tiles.length);
   } else {
-    gameover = true;
+    gameover();
   }
 }
 
-var audio = new Audio("./sound/beep3.mp3");
-function onTouch(event) {
-  // audio.play();
+c.addEventListener("click", (event)=>{
+  x = (event.offsetX * c.width) / c.offsetWidth;
+  y = (event.offsetY * c.height) / c.offsetHeight;
+  checkGameover(x,y)
+});
+c.addEventListener("touchstart", (event)=>{
   event.preventDefault();
   event = event.targetTouches[0];
   x = (event.pageX * c.width) / c.offsetWidth;
   y = (event.pageY * c.height) / c.offsetHeight;
+  checkGameover(x,y)
+});
 
-  // console.log(ctx.getImageData(x, y, 1, 1).data)
-  if (
-    ctx.getImageData(x, y, 1, 1).data[2] == 2 &&
-    ctx.getImageData(x + 5, y + 5, 1, 1).data[2] == 2
-  ) {
-    tileTapped = true;
-  } else {
-    gameover = true;
-  }
-}
 
-c.addEventListener("click", onClick);
-c.addEventListener("touchstart", onTouch);
-
-var updateScore = document.createElement("div");
-updateScore.id = "updateScore";
-updateScore.innerText = score;
-document.querySelector("#container").append(updateScore);
 
 function finalScore() {
   scoreDivText = document.createElement("div");
@@ -139,19 +121,39 @@ function createButton(buttonText = "Play\nAgain") {
 var animationRequest;
 function animate() {
   animationRequest = requestAnimationFrame(animate);
-  if (animationRequest % 200 == 0) {
-    currentTileSpeed += 0.25;
-  }
-  ctx.fillStyle="rgba(255,255,255,0.5)"
-  ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
-  tiles.slice(0, tileRefreshRate).forEach(function (c) {
-    c.update();
-    if (tiles.length == 0) {
-      generateTiles(tileRefreshRate, (tileGap = 2));
+  ctx.fillStyle="rgba(218, 219, 242,0.8)"
+  ctx.fillRect(0, 0, canvasWidth/4, canvasHeight);
+  ctx.fillStyle="rgba(200, 201, 222,0.8)"
+  ctx.fillRect(canvasWidth/4, 0, canvasWidth/4, canvasHeight);
+  ctx.fillStyle="rgba(218, 219, 242,0.8)"
+  ctx.fillRect(canvasWidth/2, 0, canvasWidth/2, canvasHeight);
+  ctx.fillStyle="rgba(200, 201, 222,0.8)"
+  ctx.fillRect(canvasWidth*0.75, 0, canvasWidth, canvasHeight);
+
+  tiles.slice(0, tileRefreshRate).forEach(function (tile) {
+    tile.update();
+    if (tile.y + tile.height - c.height > 0) {
+      setTimeout(() => {
+        gameover();
+      }, 0);
     }
   });
+  if (tiles.length == 0) {
+    tileRefreshRate=parseInt(Math.random()*tileRefreshRate)+tileRefreshRate
+    generateTiles(tileRefreshRate,tileGap=2);
+    currentTileSpeed += .5;;
+  }
 }
+
+
+
+var updateScore;
+function initialStartButtons(){
+  updateScore = document.createElement("div");
+  updateScore.id = "updateScore";
+  updateScore.innerText = score;
+  document.querySelector("#container").append(updateScore);
 
 createButton("Play");
 scoreDivText = document.createElement("div");
@@ -163,19 +165,29 @@ scoreDiv = document.createElement("div");
 scoreDiv.id = "finalScore";
 scoreDiv.style.background = `center / 100% 100% url(${icon})`;
 document.querySelector("#container").append(scoreDiv);
+}
+initialStartButtons()
 
 const removeElement = (id) => {
   document.querySelector(id) && document.querySelector(id).remove();
 };
 
+
+function gameover(){
+    cancelAnimationFrame(animationRequest);
+    ctx.fillStyle="rgba(255,255,255,0.9)"
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight)
+    // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    document.querySelector("#finalScoreText") || finalScore();
+    document.querySelector("#rePlayButton") || createButton();
+  }
+
 function startGame() {
   removeElement("#rePlayButton");
   removeElement("#finalScore");
   removeElement("#finalScoreText");
-  tiles = [];
-  score = 0;
-  gameover = false;
-  currentTileSpeed = tileSpeed;
+
+  initializeVariables()
   generateTiles(tileRefreshRate);
   animate();
 }
