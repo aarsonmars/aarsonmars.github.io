@@ -18,20 +18,22 @@ hr {
 }
 
 #titleName {
-  /* margin-top: 0.5%; */
   color: rgba(255, 255, 255, 0.25);
   font-size: 5em;
 }
 
 #mainContainer {
-  /* position: absolute;
-  top: 50%; */
-  /* transform: translate(0, -50%); */
-  /* justify-content: space-between; */
   margin-left: 5%;
   width: 90%;
   margin-top: 5%;
 }
+#project{
+  top:0;
+  position: sticky;
+  font-size:2.5em;
+  background: rgb(12,12,24);
+}
+
 #gamesAndApps {
   display: flex;
   align-items:stretch;
@@ -53,7 +55,7 @@ hr {
   /* margin: 10px; */
   width: 100%;
   padding: 5px;
-  margin-top: 10px;
+  margin-top: 15px;
   border: 1px solid rgb(56, 44, 44);
   border-radius: 20px;
   box-shadow: 0.1em 0.1em 0.1em 0.1em rgb(77, 73, 73);
@@ -68,7 +70,7 @@ img {
 
 #bottomBar,#source {
   color: rgba(255, 255, 255, 0.25);
-  position:absolute;
+  position:fixed;
 
   bottom: 0;
   font-size: 1.5em;
@@ -77,27 +79,25 @@ img {
   background: rgba(0, 0, 0, 0.5);
 }
 #source{
-  bottom:1.5em;
-  background:none;
+  bottom:1.1em;
+  font-size: 2em;
 }
 
-@media only screen and (max-width:1000px){
+@media only screen and (max-width:512px){
 #titleName{
-  font-size: 7em;
+  font-size: 5em;
 }
 
   #mainContainer{
-    /* top:20%; */
-    /* display: flex;
-    flex-direction: column; */
     width:98%;
     margin:1%;
     justify-content: space-evenly;
-    height:80%
+    height:80%;
+    margin-bottom:6em;
     
   }
   #games,#apps{
-    margin-top:2em;
+    margin-top:1em;
   }
   .apps{
     padding-bottom: 0.5em;
@@ -111,17 +111,17 @@ img {
     display: flex;
     flex-direction: column;
     align-items:stretch;
-    margin-top: 5%;
-    display: flex;
+    margin-top: 1%;
     justify-content: space-evenly;
-    align-items: center;
-    font-size: 5em;
+    font-size: 1.6em;
   }
 
-  #bottomBar,#source {
-    font-size: 3em;
+  #bottomBar {
+    font-size: 1em;
   }
-
+#source{
+  font-size:1.3em
+}
 /* #gamesAndApps{
   width: 100%;
   flex-direction: column;
