@@ -9,7 +9,7 @@ var canvasWidth = c.width;
 
 var tileHeight = 180;
 var width = canvasWidth / 4;
-var tileSpeed = 10;
+var tileSpeed = 8;
 var tileRefreshRate=parseInt(Math.random()*50)+50
 
 var tiles = new Array();
@@ -121,13 +121,18 @@ function createButton(buttonText = "Play\nAgain") {
 var animationRequest;
 function animate() {
   animationRequest = requestAnimationFrame(animate);
-  ctx.fillStyle="rgba(218, 219, 242,0.8)"
+  color1='#FFFFFF'
+  color2='#ECECEF'
+  // ctx.fillStyle="rgba(218, 219, 242,0.8)"
+  // ctx.fillStyle="rgba(200, 201, 222,0.8)"
+
+  ctx.fillStyle=color1
   ctx.fillRect(0, 0, canvasWidth/4, canvasHeight);
-  ctx.fillStyle="rgba(200, 201, 222,0.8)"
+  ctx.fillStyle=color2
   ctx.fillRect(canvasWidth/4, 0, canvasWidth/4, canvasHeight);
-  ctx.fillStyle="rgba(218, 219, 242,0.8)"
+  ctx.fillStyle=color1
   ctx.fillRect(canvasWidth/2, 0, canvasWidth/2, canvasHeight);
-  ctx.fillStyle="rgba(200, 201, 222,0.8)"
+  ctx.fillStyle=color2
   ctx.fillRect(canvasWidth*0.75, 0, canvasWidth, canvasHeight);
 
   tiles.slice(0, tileRefreshRate).forEach(function (tile) {

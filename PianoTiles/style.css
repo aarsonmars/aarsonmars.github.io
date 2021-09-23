@@ -5,6 +5,7 @@
   /* overflow: hidden; */
 }
 
+
 main {
   height: 100%;
   position: absolute;
@@ -69,6 +70,8 @@ canvas {
   height: 10rem;
   font-size: 8rem;
   min-width: 20%;
+  /* max-width: 100px; */
+  
   /* background-clip: content-box; */
 }
 
