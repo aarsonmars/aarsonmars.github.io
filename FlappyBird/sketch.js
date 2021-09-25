@@ -1,9 +1,11 @@
 var c = document.getElementById("myCanvas");
 var ctx = c.getContext("2d");
 var height = c.height;
+// var height = innerHeight;
+
 var width = c.width;
 var pipeWidth = 50;
-var middleGap = 150;
+var middleGap = 180;
 var x =  200;
 var currentHeight = 150;
 var pipeDistance = 200;
@@ -13,17 +15,15 @@ var gravity = 1;
 var gameover = true;
 var winner=false;
 var level=1;
+img= new Image()
+img.src='./img/bird.png'
 
 levelElement=document.getElementById('level');
 levelElement.innerText=level;
+[h,w]=[img.height,img.width];
+let [sx,sy,sWidth,sHeight,dWidth,dHeight]=[0,0,h/3,w/5,60,60];
 
-// ctx.beginPath();
-// ctx.rect(x,0,pipeWidth,currentHeight);
-// ctx.rect(x,currentHeight+middleGap,pipeWidth,height-currentHeight-middleGap);
-// ctx.fillStyle='green';
-// ctx.stroke();
-// ctx.fill()
-
+imageNo=0
 class Ball {
   constructor(radius) {
     this.radius = radius;
@@ -33,41 +33,42 @@ class Ball {
     this.clear();
     this.x = x;
     this.y = y;
-    ctx.beginPath();
-    ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle='red';
-    ctx.fill();
+
+    ctx.drawImage(img, sx, sHeight*imageNo, sWidth, sHeight, this.x, this.y, dWidth, dHeight)
+    imageNo=0
+    // if(imageNo>2){imageNo=2}else{imageNo++}
+
   }
   clear() {
     ctx.clearRect(
-      this.x - this.radius - tol,
-      this.y - this.radius - tol,
-      2 * (tol + this.radius),
-      2 * (tol + this.radius)
+      this.x -tol,
+      this.y -tol,
+      dWidth+tol,
+      dHeight+tol
     );
   }
 }
 const ball = new Ball(20);
-
-function checkCollison() {}
+window.onload=()=>{ball.draw(20,180)}
 
 function startGame() {
   var e = setInterval(() => {
     if (gameover == false) {
       ball.draw(ball.x + speed / 10, ball.y + gravity);     
         if (
-          ctx.getImageData(ball.x + ball.radius+tol+1, ball.y - ball.radius-tol-1, 1, 1)
+          ctx.getImageData(ball.x + dWidth+tol, ball.y -tol, 1, 1)
             .data[1] == 128 ||
-          ctx.getImageData(ball.x + ball.radius+tol+1, ball.y + ball.radius+tol+1, 1, 1)
+          ctx.getImageData(ball.x + dWidth+tol, ball.y + dWidth+tol, 1, 1)
           .data[1] == 128 ||
-          ctx.getImageData(ball.x , ball.y - ball.radius-tol-1, 1, 1)
+          ctx.getImageData(ball.x -tol, ball.y-tol, 1, 1)
           .data[1] == 128||
-          ctx.getImageData(ball.x , ball.y - ball.radius-tol-1, 1, 1)
+          ctx.getImageData(ball.x -tol, ball.y + dWidth+tol, 1, 1)
           .data[1] == 128||
-          ctx.getImageData(ball.x-ball.radius-1 , ball.y + ball.radius+tol+1, 1, 1)
-          .data[1] == 128 ||
-          ctx.getImageData(ball.x -ball.radius-1, ball.y - ball.radius-tol-1, 1, 1)
-          .data[1] == 128                   
+          ctx.getImageData(ball.x +dWidth/2, ball.y-tol, 1, 1)
+          .data[1] == 128||
+          ctx.getImageData(ball.x +dWidth/2, ball.y+ dWidth+tol, 1, 1)
+          .data[1] == 128
+              
       ) {
         gameover = true;
       }
@@ -106,11 +107,12 @@ function startGame() {
         pipeDistance=200
       }
       setTimeout(() => {
-        ball.draw(25, 180);
+        ball.draw()
         ctx.clearRect(0,0,width,height)
         x=200  
         createPipes()
         ball.draw(25, 180);
+
         registerEventListener();
       }, 2000);     
 
@@ -135,17 +137,9 @@ function createPipes() {
   ctx.fill();
   x = x + pipeDistance;
     }}
-
-
-  createPipes();
+createPipes();
 
 function keyboardGameplay(e){
-    // if (e.key=='Enter'||e.key=='b'){
-    //   if (gameover){
-    //   startGame()
-    //     gameover=false
-    // }
-    // }
     if (e.key==' '){
       c.click(); 
     }
@@ -153,13 +147,15 @@ function keyboardGameplay(e){
 
 
 function controlGamePlay(){
-    if (!gameover){
+  imageNo=0
+    
+  if (!gameover){
     ball.clear();
     ball.y -= 50;
+    // gsap.to(ball,{y:ball.y-50})
     if (ball.y <= ball.radius) {
       gameover = true;
-    }}
-  
+    }}  
 }
 
 function clickGamePlay(){
@@ -172,9 +168,23 @@ function clickGamePlay(){
   }
 }
 
-function registerEventListener(){
-  
+function registerEventListener(){  
   c.addEventListener("click", clickGamePlay);
   document.addEventListener('keyup',keyboardGameplay);
 }
 registerEventListener();
+
+
+
+// ctx.getImageData(ball.x + ball.radius+tol+1, ball.y - ball.radius-tol-1, 1, 1)
+// .data[1] == 128 ||
+// ctx.getImageData(ball.x + ball.radius+tol+1, ball.y + ball.radius+tol+1, 1, 1)
+// .data[1] == 128 ||
+// ctx.getImageData(ball.x , ball.y - ball.radius-tol-1, 1, 1)
+// .data[1] == 128||
+// ctx.getImageData(ball.x , ball.y - ball.radius-tol-1, 1, 1)
+// .data[1] == 128||
+// ctx.getImageData(ball.x-ball.radius-1 , ball.y + ball.radius+tol+1, 1, 1)
+// .data[1] == 128 ||
+// ctx.getImageData(ball.x -ball.radius-1, ball.y - ball.radius-tol-1, 1, 1)
+// .data[1] == 128        

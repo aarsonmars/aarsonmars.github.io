@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
     <title>Flappy Bird</title>
-</head>
+  </head>
 
-<body>
-    <h1 id="gameTitle">Flappy Ball </h1>
-    <h2 >Level : <span id='level'>1</span> </h2>
-    <h3 id='score'>Score : 0</h3>
-    <canvas id="myCanvas" width='1000' height="400"></canvas>
-
+  <body>
+    <main>
+      <div id="levelAndScore">
+        <div id="levelText">Level : <span id="level">1</span></div>
+        <div id="score">Score : 0</div>
+      </div>
+      <canvas id="myCanvas" width="800" height="400"></canvas>
     <p>Press 'Space' or click or tap to jump</p>
+</main>
+
+    <!-- <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"
+      integrity="sha512-UxP+UhJaGRWuMG2YC6LPWYpFQnsSgnor0VUF3BHdD83PS/pOpN+FYbZmrYN+ISX8jnvgVUciqP/fILOXDjZSwg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script> -->
     <script src="sketch.js"></script>
     <script src="pipe.js"></script>
     <script src="bird.js"></script>
-</body>
-
+  </body>
 </html>

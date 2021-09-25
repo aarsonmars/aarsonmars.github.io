@@ -91,6 +91,7 @@ c.addEventListener("click", (event)=>{
 c.addEventListener("touchstart", (event)=>{
   event.preventDefault();
   event = event.targetTouches[0];
+  navigator.vibrate(30)
   x = (event.pageX * c.width) / c.offsetWidth;
   y = (event.pageY * c.height) / c.offsetHeight;
   checkGameover(x,y)
