@@ -68,7 +68,7 @@ scene.add(moon);
 window.addEventListener('resize',()=>{location.reload()})
 // Animation Loop
 var moonMax={
-  x:50,y:100,z:30
+  x:50,y:95,z:30
 }
 const borderChange =(x,max,i)=>{
     if ((x-max)>=0){x-=i}
@@ -77,15 +77,15 @@ const borderChange =(x,max,i)=>{
 moon.position.x = -moonMax.x
 moon.position.y=-moonMax.y
 moon.position.z=moonMax.z
-var ix=.05
-var iy=.1
-var iz=.03
+var ix=.025
+var iy=.05
+var iz=.015
 function animate() {
   requestAnimationFrame(animate);
 
-  torus.rotation.x += 0.002;
-  torus.rotation.y += 0.001;
-  torus.rotation.z += 0.002;
+  torus.rotation.x += 0.0002;
+  torus.rotation.y += 0.0001;
+  torus.rotation.z += 0.0002;
 
   moon.rotation.y += 0.005;
   // borderChange(moon.position.x,moonMax.x,0.05)
