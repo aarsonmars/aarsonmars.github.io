@@ -1,0 +1,10 @@
+*{
+    margin:0;
+    padding:0;
+    background-color:rgb(20,20,40);
+    color:white;
+}
+#grid-container{
+    display: grid;
+    
+}

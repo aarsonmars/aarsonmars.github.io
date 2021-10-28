@@ -55,7 +55,7 @@ const moonTexture = new THREE.TextureLoader().load('./img/moon.jpg');
 const normalTexture = new THREE.TextureLoader().load('./img/normal.jpg');
 
 const moon = new THREE.Mesh(
-  new THREE.SphereGeometry(10, 32, 32),
+  new THREE.SphereGeometry(5, 32, 32),
   new THREE.MeshStandardMaterial({
     map: moonTexture,
     normalMap: normalTexture,
@@ -77,9 +77,9 @@ const borderChange =(x,max,i)=>{
 moon.position.x = -moonMax.x
 moon.position.y=-moonMax.y
 moon.position.z=moonMax.z
-var ix=.025
-var iy=.05
-var iz=.015
+var ix=.0125
+var iy=.025
+var iz=.0075
 function animate() {
   requestAnimationFrame(animate);
 
@@ -87,7 +87,7 @@ function animate() {
   torus.rotation.y += 0.0001;
   torus.rotation.z += 0.0002;
 
-  moon.rotation.y += 0.005;
+  moon.rotation.y += 0.003;
   // borderChange(moon.position.x,moonMax.x,0.05)
   if (moon.position.x<-moonMax.x||moon.position.x>moonMax.x)ix=-ix
   moon.position.x-=ix

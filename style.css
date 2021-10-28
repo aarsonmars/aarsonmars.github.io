@@ -43,11 +43,16 @@ hr {
 
 
 
-
+@keyframes title-animation{
+  0%{color:rgba(255, 255, 255, 0.25)}
+  100%{color:rgba(255, 255, 255, 0.75); }
+}
 
 #titleName {
   color: rgba(255, 255, 255, 0.25);
   font-size: 5em;
+  animation: title-animation 3s linear 0s infinite alternate; 
+   
 }
 
 #mainContainer {
@@ -60,6 +65,9 @@ hr {
   position: sticky;
   font-size:2.5em;
   background: rgb(12,12,24);
+}
+.black{
+  color:rgb(90, 14, 233);
 }
 
 #gamesAndApps {
@@ -88,6 +96,9 @@ hr {
   border-radius: 20px;
   box-shadow: 0.1em 0.1em 0.1em 0.1em rgb(77, 73, 73);
 }
+.apps:hover{
+  background-color: rgb(21, 21, 99);
+}
 
 img {
   margin-top: 10px;
@@ -113,7 +124,7 @@ img {
 
 @media only screen and (max-width:512px){
 #titleName{
-  font-size: 5em;
+  font-size: 4.5em;
 }
 
   #mainContainer{
