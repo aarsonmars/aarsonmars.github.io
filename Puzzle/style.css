@@ -16,7 +16,8 @@ input{
   height:40px;
   font-size: 30px;
   text-align: center;
-  text-transform: uppercase;
+  text-transform: uppercase; 
+ 
 
   border-image-slice: 1;
   border-image-source: linear-gradient(to left, #743ad5, #d53a9d);

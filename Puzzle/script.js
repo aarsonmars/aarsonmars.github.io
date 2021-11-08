@@ -1,6 +1,6 @@
 // var canvas = document.getElementById("myCanvas");
 // var ctx = canvas.getContext("2d");
-var shuffleLimit = 10
+var shuffleLimit = 50
 
 
 const wordList=['WATERMELON','APPLE','CHERRY','ORANGE','PEAR','STRAWBERRY','GRAPE','PLUM','MANGO','LUX']
@@ -43,6 +43,7 @@ class Letter
 var words=shuffle(wordList.slice())
 for(shuffleCount=0;shuffleCount<shuffleLimit;shuffleCount++)
 {
+    console.log(shuffleCount)
     var letterlist=[]
     for(i=0;i<words[0].length;i++){
         letterlist.push(new Letter(words[0][i],0,i,'y+',0,words[0]))
@@ -60,15 +61,22 @@ for(shuffleCount=0;shuffleCount<shuffleLimit;shuffleCount++)
                     if(k!=letterlist.length-1&&letterlist[k+1].connection==1&&letterlist[k+1].direction==lk.direction){continue}
                     if(k!=0&&letterlist[k-1].connection==1&&letterlist[k-1].direction==lk.direction){continue}
                     var ll=[]
+                    
+
                     for(m=0;m<words[i].length;m++){
-                        var c=0
+                        var c=0                        
                         if(m==j){var c=lk.connection+1;lk.connection+=1}
                         
                         if (lk.direction=='y+'){
-                            letterlist.forEach(function(l) {if(m-j+lk.x==l.x&&  lk.y==l.y&&c==0){ll=[];bk=true;}})                            
+                            letterlist.forEach(function(l) {if(m-j+lk.x==l.x&&  lk.y==l.y&&c==0){ll=[];bk=true;}})
+                            // letterlist.forEach(function(l) {if(0-j+lk.x-1==l.x){ll=[];bk=true;}})
+                            // letterlist.forEach(function(l) {if(words[i].length-j+lk.x+1==l.x){ll=[];bk=true;}})
+                            // letterlist.forEach(function(l) {if(m-j+lk.y==l.y+1){ll=[];bk=true;}})                            
                             ll.push(new Letter(words[i][m],m-j+lk.x,lk.y,'x+',c,words[i]))
                         }
                         else{
+                            // letterlist.forEach(function(l) {if(0-j+lk.x==l.x+1){ll=[];bk=true;}})
+
                             letterlist.forEach(function(l) {if(m-j+lk.y==l.y&&lk.x==l.x&&c==0){ll=[];bk=true;}})
                             ll.push(new Letter(words[i][m],lk.x,m-j+lk.y,'y+',c,words[i]))
                         }if (bk){bk=false;ll=[];break;}
@@ -81,6 +89,9 @@ for(shuffleCount=0;shuffleCount<shuffleLimit;shuffleCount++)
     if (letterlist.length==totalLetters){break}
     else{words=shuffle(wordList.slice())}  
 }
+
+
+
 
 
 alphabet = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z']
@@ -98,11 +109,12 @@ class InputField
         inputField.style.position='absolute'
         
         inputField.style.left=50-maxLx*50+this.x*50+'px'
-        inputField.style.top =50-maxLy*50+ this.y*50+'px'
+        inputField.style.top =50-maxLy*50+this.y*50+'px'
         inputField.maxLength='1'
         this.parent.appendChild(inputField)
-        inputField.value =this.letter.letter
+        // inputField.value =this.letter.letter
         inputField.addEventListener('input',(e)=>{
+            console.log(11)
             if(this.letter.letter==e.target.value.toUpperCase()){
                 this.inputField.style.color='green'
             }else{
@@ -123,9 +135,52 @@ class InputField
                 inputField.value=alphabet[Math.min(25,index+1)]
             }  
         }
+
+        // inputField.onclick=(event)=>{
+        //     window.addEventListener('touchstart',(e)=>{e.x})
+        //     event.preventDefault()
+        //     var x=event.target.value
+        //     var index=alphabet.indexOf(x)
+        //     if (event.deltaY < 0)
+        //     {
+        //         inputField.value=alphabet[Math.max(index-1,0)]
+        //     }
+        //     else if (event.deltaY > 0)
+        //     {
+        //         inputField.value=alphabet[Math.min(25,index+1)]
+        //     } 
+        // }
+
         this.inputField=inputField
     }
 }
+
+var lastY;
+// document.ontouchstart=()=>{console.log(11)}
+
+// document.ontouchmove=(event)=>{
+//     console.log(1,document.activeElement)
+//     if (document.activeElement.style.position=='absolute'){
+//         console.log(event)
+//         inputField=document.activeElement
+//         event.preventDefault()
+//         var x=event.target.value
+//         var index=alphabet.indexOf(x)
+//         var currentY = event.touches[0].clientY;
+//         console.log(currentY,lastY)
+
+//         if(currentY > lastY)
+//         {
+//             inputField.value=alphabet[Math.max(index-1,0)]
+//         }
+//         else if (currentY < lastY){
+//             inputField.value=alphabet[Math.min(25,index+1)]
+//         }  
+      
+//     lastY = currentY;
+// }}
+
+
 
 var lx=[]
 var ly=[]
