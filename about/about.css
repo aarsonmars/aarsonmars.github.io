@@ -1,0 +1,186 @@
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background: rgb(12, 12, 24);
+    color: white;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0; /* Ensure no padding */
+    animation: fadeIn 1s ease-in;
+}
+
+.profile-section {
+    text-align: center;
+    margin-bottom: 3rem;
+    margin-top: 1rem;
+}
+
+.profile-pic {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 4px solid #4a9eff;
+    animation: float 6s ease-in-out infinite;
+}
+
+.title {
+    color: #4a9eff;
+    font-size: 1.2rem;
+}
+
+.about-section {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 2rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+    backdrop-filter: blur(10px);
+    margin-top: 1rem; /* Adjusted margin to reduce gap */
+    padding-top: 0.5rem;
+}
+
+.skills-section {
+    margin-bottom: 2rem;
+}
+
+.skill-bar {
+    margin-bottom: 1rem;
+}
+
+.skill-category {
+    margin-bottom: 2rem;
+}
+
+.skill-category h3 {
+    color: #4a9eff;
+    margin-bottom: 1rem;
+}
+
+.skills-list {
+    list-style: none;
+    padding: 0;
+}
+
+.skills-list li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.skills-list li i {
+    margin-right: 0.5rem;
+    color: #4a9eff;
+}
+
+.skills-list li:hover i {
+    color: #ffffff;
+}
+
+.skills-list li:hover {
+    color: #4a9eff;
+}
+
+.progress {
+    background: rgba(255, 255, 255, 0.1);
+    height: 10px;
+    border-radius: 5px;
+    margin-top: 0.5rem;
+}
+
+.fill {
+    background: #4a9eff;
+    height: 100%;
+    border-radius: 5px;
+    animation: fillBar 2s ease-out;
+}
+
+.social-links {
+    text-align: center;
+}
+
+.social-links a {
+    color: white;
+    font-size: 2rem;
+    margin: 0 1rem;
+    transition: color 0.3s;
+}
+
+.social-links a:hover {
+    color: #4a9eff;
+}
+
+.timeline {
+    position: relative;
+    padding: 2rem 0;
+}
+
+.timeline-item {
+    border-left: 2px solid #4a9eff;
+    padding-left: 2rem;
+    margin-bottom: 2rem;
+    position: relative;
+    animation: slideIn 0.5s ease-out;
+}
+
+.timeline-item:before {
+    content: "";
+    position: absolute;
+    left: -8px;
+    top: 0;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #4a9eff;
+}
+
+.timeline-item .date {
+    font-size: 1rem;
+    color: #4a9eff;
+    margin-bottom: 0.5rem;
+}
+
+timeline-item h3 {
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+.timeline-item p {
+    margin: 0.5rem 0 0;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes float {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+}
+
+@keyframes fillBar {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+    }
+}
