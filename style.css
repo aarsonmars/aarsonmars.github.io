@@ -3,8 +3,8 @@ canvas {
   top: 0;
   left: 0;
   z-index: -1;
-  /* width: 100%;
-  height: 100%; */
+  width: 100%;
+  height: 100%;
 }
 * {
   margin: 0;
@@ -19,28 +19,38 @@ a {
   text-align: center;
 }
 
+a.hover-animate {
+  position: relative;
+  display: inline-block;
+  overflow: hidden; /* Ensure the underline does not cause overflow */
+}
+
+a.hover-animate::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  bottom: 0; /* Adjusted to ensure the underline is within the element */
+  left: 0;
+  background-color: #007BFF; /* Change to your preferred color */
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+a.hover-animate:hover::after {
+  transform: scaleX(1);
+}
+
 hr {
   margin-left: 1%;
   width: 98%;
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-
-
 #mainConatiner{
   position:absolute;
   z-index: 99;
-
 }
-
-
-
-
-
-
-
-
-
 
 @keyframes title-animation{
   0%{color:rgba(255, 255, 255, 0.25)}
@@ -54,6 +64,8 @@ hr {
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
+  overflow: hidden; /* Ensure the underline does not cause overflow */
+  margin-bottom: 10px; /* Adjust this value to decrease the gap */
 }
 
 #titleName:hover {
@@ -87,6 +99,7 @@ hr {
   position: sticky;
   font-size:2.5em;
   background: rgb(12,12,24);
+  margin-top: 10px; /* Adjust this value to decrease the gap */
 }
 .black{
   color:rgb(90, 14, 233);
@@ -166,7 +179,6 @@ img {
     border-radius: 1em;
   }
 
-
   #gamesAndApps {
     width: 100%;
     display: flex;
@@ -183,13 +195,4 @@ img {
 #source{
   font-size:1.3em
 }
-/* #gamesAndApps{
-  width: 100%;
-  flex-direction: column;
-  justify-content: space-evenly;
-  align-items: center;
-} */
-/* .apps{
-  min-height:50%;
-  min-width: 50%; */
 }

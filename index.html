@@ -8,6 +8,16 @@
     <link rel='icon' href='./img/sagar.png'>
     <link rel="stylesheet" href="./style.css">
 
+    <style>
+      .hover-animate {
+          transition: color 0.3s ease, transform 0.3s ease;
+      }
+
+      .hover-animate:hover {
+          color: #007BFF; /* Change to your preferred color */
+          transform: scale(1.1);
+      }
+    </style>
   </head>
 
 
@@ -67,8 +77,16 @@
         <a
         target="_blank"
         href="https://github.com/aarsonmars/aarsonmars.github.io/tree/master/"
+        class="hover-animate"
       >
         <i >Source</i>
+      </a>
+      <span style="margin: 0 10px;">|</span>
+      <a
+        href="about/index.html"
+        class="hover-animate"
+      >
+        <i>About</i>
       </a>
     </div>
     <div id='bottomBar'      
