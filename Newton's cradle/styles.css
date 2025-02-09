@@ -1,0 +1,118 @@
+canvas {
+    width: 100vw;
+    height: 100vh;
+    /* border: 1px solid #4a9eff; */
+    background: #1a1e33;  /* Updated: lighter than previous deep navy */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background: #1c1c1c;  /* New dark grey background */
+    position: relative; /* Added for absolute positioning of buttons */
+}
+
+/* Removed #buttonContainer rules */
+
+/* Container for cradle buttons */
+.button-container {
+    position: absolute;
+    width: 100%;
+    top: 15%; /* Increased from 9% */
+    z-index: 3;
+}
+
+/* Cradle button styling and uniform positioning */
+.button-container .cradle-button {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 16px;
+    border: none;
+    background: #2b217b;  /* Vibrant accent for buttons */
+    color: #fff;
+    border-radius: 50%;
+    cursor: pointer;
+    text-align: center;
+    transform: translateX(-50%);
+}
+
+/* Update button positions for uniform horizontal spacing */
+.button-container .cradle-button:nth-child(1) { left: 42%; }
+.button-container .cradle-button:nth-child(2) { left: 46%; }
+.button-container .cradle-button:nth-child(3) { left: 50%; }
+.button-container .cradle-button:nth-child(4) { left: 54%; }
+.button-container .cradle-button:nth-child(5) { left: 58%; }
+
+/* Responsive adjustments for mobile devices */
+@media screen and (max-width: 600px) {
+    .button-container .cradle-button {
+        width: 40px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 14px;
+    }
+    /* Adjust button positions (relative to mobile layout) */
+    .button-container .cradle-button:nth-child(1) { left: 35%; }
+    .button-container .cradle-button:nth-child(2) { left: 42%; }
+    .button-container .cradle-button:nth-child(3) { left: 50%; }
+    .button-container .cradle-button:nth-child(4) { left: 58%; }
+    .button-container .cradle-button:nth-child(5) { left: 65%; }
+}
+
+/* Sound toggle button styled as circle */
+.sound-toggle {
+    position: absolute;
+    top: 6%; /* Increased from 1% */
+    left: 54%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background: #3a3; /* green for sound on */
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sound-toggle img {
+    width: 60%; /* Adjust size as needed */
+    height: auto;
+}
+
+.sound-toggle.sound-off {
+    background: red;
+}
+
+.reset-button {
+    position: absolute;
+    top: 6%; /* Increased from 1% */
+    left: 58%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 50px;
+    background: #444;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.reset-button img {
+    width: 60%;
+    height: auto;
+}

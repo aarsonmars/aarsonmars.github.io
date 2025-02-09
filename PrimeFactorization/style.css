@@ -30,27 +30,82 @@ button,input{
 }
 
 h1{
-    border-radius: 5rem;
+    position: relative;
     padding: 5rem;
-    animation: borderanimation 3s infinite;
     background-image: url('./img.svg');
     background-size: contain;
+    border-radius: 5rem;
+    color: #000;  /* Ensure text is black */
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.8);  /* Add white glow */
+    z-index: 1;  /* Place text above pseudo-elements */
+}
+
+h1::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: linear-gradient(
+        45deg,
+        #ff0000,
+        #ff7300,
+        #fffb00,
+        #48ff00,
+        #00ffd5,
+        #002bff,
+        #7a00ff,
+        #ff00c8,
+        #ff0000
+    );
+    border-radius: 5rem;
+    z-index: -2;  /* Below the white background */
+    animation: rotate 4s linear infinite;
+    background-size: 400%;
+}
+
+h1::after {
+    content: '';
+    position: absolute;
+    inset: 2px;
+    background: white;
+    border-radius: 5rem;
+    z-index: -1;  /* Between text and gradient */
 }
 
 @keyframes borderanimation {
     0% {
-        border:1.5px solid white;
-    }
-    25% {
-        border:1.5px solid rgb(238, 68, 238);
+        transform: scale(1);
     }
     50% {
-        border:1.5px solid rgb(68, 238, 105);
-    }
-    75% {
-        border:1.5px solid rgb(68, 218, 238);
+        transform: scale(1.02);
     }
     100% {
-        border:1.5px solid rgb(255, 255, 255);
+        transform: scale(1);
+    }
+}
+
+@keyframes glowing {
+    0% {
+        background-position: 0 0;
+    }
+    50% {
+        background-position: 400% 0;
+    }
+    100% {
+        background-position: 0 0;
+    }
+}
+
+@keyframes rotate {
+    0% {
+        background-position: 0% 0%;
+        filter: blur(1px) brightness(1.2);
+    }
+    50% {
+        background-position: 200% 0%;
+        filter: blur(2px) brightness(1.5);
+    }
+    100% {
+        background-position: 0% 0%;
+        filter: blur(1px) brightness(1.2);
     }
 }
