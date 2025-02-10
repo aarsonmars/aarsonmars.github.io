@@ -83,7 +83,8 @@ function checkGameover(x, y) {
     ctx.getImageData(x, y, 1, 1).data[2] == 2 &&
     ctx.getImageData(x + 5, y + 5, 1, 1).data[2] == 2
   ) {
-    tapSound.play(); // Use preloaded sound
+    // Create a new audio instance to allow overlapping sounds
+    new Audio(tapSound.src).play();
     score += 1;
     updateScore.innerText = score;
     tiles = tiles.slice(1, tiles.length);
