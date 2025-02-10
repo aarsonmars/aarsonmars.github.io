@@ -1,12 +1,12 @@
 body{
-    position:absolute;
+    /* Remove position:absolute */
     background-color: rgb(12, 12, 25);
-    flex-direction:column;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     display: flex;
-    height: 80%;
-    width:100%;
+    min-height: 100vh; /* Ensure body fills screen */
+    width: 100%;
     font-family: 'Kaisei HarunoUmi', serif;
     text-align: center;
 }
@@ -47,18 +47,12 @@ h1::before {
     background: linear-gradient(
         45deg,
         #ff0000,
-        #ff7300,
-        #fffb00,
-        #48ff00,
         #00ffd5,
-        #002bff,
-        #7a00ff,
-        #ff00c8,
         #ff0000
     );
     border-radius: 5rem;
     z-index: -2;  /* Below the white background */
-    animation: rotate 4s linear infinite;
+    animation: rotate 10s linear infinite;
     background-size: 400%;
 }
 
@@ -69,6 +63,31 @@ h1::after {
     background: white;
     border-radius: 5rem;
     z-index: -1;  /* Between text and gradient */
+}
+
+.results {
+    
+    width: 80%;
+    min-height: 15rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem; /* Increase spacing from the form */
+}
+
+.results h1 {
+    height: 6rem; /* fixed height to keep output box constant */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* prevent text expansion from resizing */
+}
+
+.factors {
+    color: rgb(10, 10, 10);
+    font-size: 0.5em; /* smaller than h3 */
 }
 
 @keyframes borderanimation {
