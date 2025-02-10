@@ -70,11 +70,12 @@ function generateTiles(noOfTiles, tileGap = 0) {
   }
 }
 
-function checkGameover(x,y){
+function checkGameover(x, y) {
   if (
     ctx.getImageData(x, y, 1, 1).data[2] == 2 &&
     ctx.getImageData(x + 5, y + 5, 1, 1).data[2] == 2
   ) {
+    new Audio('./sound/beep2.mp3').play(); // Play tap sound on valid tile press
     score += 1;
     updateScore.innerText = score;
     tiles = tiles.slice(1, tiles.length);
