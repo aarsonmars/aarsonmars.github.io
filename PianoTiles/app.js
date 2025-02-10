@@ -24,6 +24,14 @@ function initializeVariables(){
   updateScore.innerText=score
 }
 
+// Preload tap sound
+var tapSound = new Audio('./sound/beep2.mp3'); // Verify path is correct
+
+// Unlock mobile audio on first touch event
+c.addEventListener("touchstart", function initialUnlock() {
+    tapSound.play().then(() => tapSound.pause()).catch(() => {});
+    c.removeEventListener("touchstart", initialUnlock);
+});
 
 class Tile {
   constructor(x = 0, y = 0, height = 350) {
@@ -75,7 +83,7 @@ function checkGameover(x, y) {
     ctx.getImageData(x, y, 1, 1).data[2] == 2 &&
     ctx.getImageData(x + 5, y + 5, 1, 1).data[2] == 2
   ) {
-    new Audio('./sound/beep2.mp3').play(); // Play tap sound on valid tile press
+    tapSound.play(); // Use preloaded sound
     score += 1;
     updateScore.innerText = score;
     tiles = tiles.slice(1, tiles.length);
