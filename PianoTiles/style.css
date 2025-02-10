@@ -5,7 +5,6 @@
   /* overflow: hidden; */
 }
 
-
 main {
   height: 100%;
   position: absolute;
@@ -25,6 +24,70 @@ canvas {
   /* background: url("./img/happy.png"); */
   /* background-size: 22.5%; */
 }
+
+.control-panel {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 10;
+  pointer-events: auto;
+  padding-top: 60px; /* leave room for score and sound button */
+  background: rgba(255, 255, 255, 0.1); /* optional translucent background */
+}
+
+.control-panel .sound-container {
+  margin-bottom: 10px;
+}
+
+.control-panel .difficulty-container {
+  display: flex;
+  gap: 10px;
+}
+
+.control-panel .difficulty-container button.selected {
+  background: orange;
+}
+
+.control-panel button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  background: #2b217b;
+  color: #fff;
+}
+
+#sound-toggle {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  background: green;
+  z-index: 20;
+}
+
+#sound-toggle.sound-off {
+  background: red;
+}
+
+#sound-toggle img {
+  width: 60%;        /* scale down the icon */
+  height: 60%;
+  object-fit: contain;
+  display: block;
+  margin: auto;
+}
+
 #rePlayButton {
   font-weight: bolder;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
@@ -39,17 +102,18 @@ canvas {
   vertical-align: center;
   border: 5px solid rgb(71, 6, 66);
 }
+
 #finalScore,
 #finalScoreText,
 #updateScore {
   /* padding-bottom: 1em; */
   text-align: center;
   position: absolute;
-
 }
+
 #updateScore {
   font-size: 2em;
-  width:97%;
+  width: 97%;
   top: 0.5%;
   /* max-width: 385px; */
   padding: 0;
@@ -66,20 +130,20 @@ canvas {
 #finalScore {
   font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
   color: rgb(122, 5, 60);
-  top :25%;
+  top: 25%;
   height: 10rem;
   font-size: 8rem;
   min-width: 20%;
   /* max-width: 100px; */
-  
+
   /* background-clip: content-box; */
 }
 
-@media(min-width:500px){
-    canvas{
-        width: 400px;        
-    }
-    #updateScore{
-      width:395px;
-    }
+@media (min-width: 500px) {
+  canvas {
+    width: 400px;
+  }
+  #updateScore {
+    width: 395px;
+  }
 }

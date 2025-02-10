@@ -17,6 +17,9 @@ var score = 0;
 var currentTileSpeed = tileSpeed;
 var icon = "./img/pianoTilesSquare.png";
 
+// Global sound flag (enabled by default)
+var soundEnabled = true;
+
 function initializeVariables(){
   tiles = [];
   score = 0;
@@ -83,8 +86,9 @@ function checkGameover(x, y) {
     ctx.getImageData(x, y, 1, 1).data[2] == 2 &&
     ctx.getImageData(x + 5, y + 5, 1, 1).data[2] == 2
   ) {
-    // Create a new audio instance to allow overlapping sounds
-    new Audio(tapSound.src).play();
+    if(soundEnabled) {
+      new Audio(tapSound.src).play();
+    }
     score += 1;
     updateScore.innerText = score;
     tiles = tiles.slice(1, tiles.length);
@@ -190,22 +194,68 @@ const removeElement = (id) => {
 
 function gameover(){
     cancelAnimationFrame(animationRequest);
-    ctx.fillStyle="rgba(255,255,255,0.9)"
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight)
-    // ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.fillStyle = "rgba(255,255,255,0.9)";
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
+    // Revert: Show the entire control panel on game over
+    document.querySelector('.control-panel').style.display = 'flex';
     document.querySelector("#finalScoreText") || finalScore();
     document.querySelector("#rePlayButton") || createButton();
-  }
+}
 
 function startGame() {
+  // Revert: Hide the entire control panel when game starts
+  document.querySelector('.control-panel').style.display = 'none';
   removeElement("#rePlayButton");
   removeElement("#finalScore");
   removeElement("#finalScoreText");
 
-  initializeVariables()
+  initializeVariables();
   generateTiles(tileRefreshRate);
   animate();
 }
+
+// New: Sound Toggle and Difficulty Buttons Event Listeners
+document.addEventListener("DOMContentLoaded", () => {
+    // Sound toggle
+    var soundToggleBtn = document.getElementById('sound-toggle');
+    if(soundToggleBtn) {
+        soundToggleBtn.addEventListener('click', function() {
+            soundEnabled = !soundEnabled;
+            // Optionally toggle a visual indicator, e.g. add/remove a class
+            this.classList.toggle('sound-off', !soundEnabled);
+        });
+    }
+
+    // Difficulty buttons with selected state
+    var btnEasy = document.getElementById('easy');
+    var btnMedium = document.getElementById('medium');
+    var btnHard = document.getElementById('hard');
+    function clearSelected() {
+        btnEasy.classList.remove('selected');
+        btnMedium.classList.remove('selected');
+        btnHard.classList.remove('selected');
+    }
+    if(btnEasy && btnMedium && btnHard) {
+        btnEasy.addEventListener('click', function() {
+            tileSpeed = 5;
+            currentTileSpeed = 5;
+            clearSelected();
+            this.classList.add('selected');
+        });
+        btnMedium.addEventListener('click', function() {
+            tileSpeed = 8;
+            currentTileSpeed = 8;
+            clearSelected();
+            this.classList.add('selected');
+        });
+        btnHard.addEventListener('click', function() {
+            tileSpeed = 11;
+            currentTileSpeed = 11;
+            clearSelected();
+            this.classList.add('selected');
+        });
+    }
+});
 
 // var fc = new FpsCtrl(24, function(e) {
 //     // animationRequest = requestAnimationFrame(animate);
