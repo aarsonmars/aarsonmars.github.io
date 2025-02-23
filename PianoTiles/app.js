@@ -27,8 +27,12 @@ function initializeVariables(){
   updateScore.innerText=score
 }
 
-// Preload tap sound
-var tapSound = new Audio('./sound/beep2.mp3'); // Verify path is correct
+// Preload tap sound (remove or keep for fallback)
+// var tapSound = new Audio('./sound/g6-82013.mp3');
+
+// New: Array of piano note sounds and index tracker
+var soundFiles = ['./sound/a6.mp3', './sound/b6.mp3', './sound/c6.mp3', './sound/f6.mp3', './sound/g6.mp3'];
+var currentSoundIndex = 0;
 
 // Unlock mobile audio on first touch event
 c.addEventListener("touchstart", function initialUnlock() {
@@ -87,7 +91,10 @@ function checkGameover(x, y) {
     ctx.getImageData(x + 5, y + 5, 1, 1).data[2] == 2
   ) {
     if(soundEnabled) {
-      new Audio(tapSound.src).play();
+      // Play next note sound in sequence for soothing effect
+      var note = new Audio(soundFiles[currentSoundIndex]);
+      note.play();
+      currentSoundIndex = (currentSoundIndex + 1) % soundFiles.length;
     }
     score += 1;
     updateScore.innerText = score;
