@@ -31,7 +31,7 @@ function initializeVariables(){
 // var tapSound = new Audio('./sound/g6-82013.mp3');
 
 // New: Array of piano note sounds and index tracker
-var soundFiles = ['./sound/a6.mp3', './sound/b6.mp3', './sound/c6.mp3', './sound/f6.mp3', './sound/g6.mp3'];
+var soundFiles = ['./sound/a6.mp3', './sound/b6.mp3', './sound/c6.mp3', './sound/d6.mp3', './sound/e6.mp3', './sound/f6.mp3', './sound/g6.mp3'];
 var currentSoundIndex = 0;
 
 // Unlock mobile audio on first touch event
