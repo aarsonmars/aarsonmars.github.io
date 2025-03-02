@@ -2,7 +2,8 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="theme-color" content="#0c0c18"> <!-- Sets the color of browser UI in mobile -->
     
     <title>Sagar Bhandari</title>
     <link rel='icon' href='./img/sagar.png'>
@@ -38,43 +39,70 @@
       >
       <hr />
      <div id='gamesAndApps'>
-        <div id='games'>Games
-            <hr>
+        <div id='games'>
+            <div class="section-header">
+                Games
+                <hr>
+            </div>
             <a target="_blank" href="./PianoTiles/index.html">
               <div class='apps'>
-                <img src="./PianoTiles/img/pianoTilesSquare.png" alt="Piano Tiles icon">
-                <p>Piano Tiles</p>
+                <div class="app-content">
+                  <img src="./PianoTiles/img/pianoTilesSquare.png" alt="Piano Tiles icon">
+                  <div class="app-info">
+                    <p>Piano Tiles</p>
+                  </div>
+                </div>
               </div>
             </a>
 
             <a target="_blank" href="./Puzzle/index.html">
             <div class='apps'>
-              <img src="./PianoTiles/img/happy.png" alt="Happy face">
-              <p>Words Puzzle</p>
+              <div class="app-content">
+                <img src="./PianoTiles/img/happy.png" alt="Happy face">
+                <div class="app-info">
+                  <p>Words Puzzle</p>
+                </div>
+              </div>
             </div>
-          </a>
+            </a>
           
-
+            <a target="_blank" href="./FlappyBird/index.html">
+              <div class='apps'>
+                <div class="app-content">
+                  <img src="./FlappyBird/img/final2.svg" alt="Flappy Bird icon">
+                  <div class="app-info">
+                    <p>Flappy Bird</p>
+                  </div>
+                </div>
+              </div>
+            </a>
         </div>
         
-        <div id='apps'>Apps
-        <hr>
-          <a target="_blank" href="./PrimeFactorization/index.html">
-            <div class='apps'>
-              <!-- <img height='72px' width='72px' src="./Projects/Sweb/sweb.svg"> -->
-              <img src="./PianoTiles/img/17.png" alt="Piano Tiles icon">
-
-              <p>Prime Check</p>
+        <div id='apps'>
+            <div class="section-header">
+                Apps
+                <hr>
             </div>
-          </a>
-          <a target="_blank" href="./Newton's cradle/index.html">
+            <a target="_blank" href="./PrimeFactorization/index.html">
             <div class='apps'>
-              <!-- <img height='72px' width='72px' src="./Projects/Sweb/sweb.svg"> -->
-              <img src="./Newton's cradle/icons/icons8-newtons-cradle-64.png" alt="Newton's cradle icon">
-
-              <p>Newton's Cradle</p>
+              <div class="app-content">
+                <img src="./PianoTiles/img/17.png" alt="Piano Tiles icon">
+                <div class="app-info">
+                  <p>Prime Check</p>
+                </div>
+              </div>
             </div>
-          </a>
+            </a>
+            <a target="_blank" href="./Newton's cradle/index.html">
+            <div class='apps'>
+              <div class="app-content">
+                <img src="./Newton's cradle/icons/icons8-newtons-cradle-64.png" alt="Newton's cradle icon">
+                <div class="app-info">
+                  <p>Newton's Cradle</p>
+                </div>
+              </div>
+            </div>
+            </a>
         </div>
       </div> 
    
@@ -108,17 +136,54 @@
       |
       <a
         style="color: rgba(255, 255, 255, 0.25)"
-        target=" _blank "
-        href="mailto:aarsonmars@gmail.com "
+        target="_blank"
+        href="mailto:aarsonmars@gmail.com"
         >aarsonmars@gmail.com</a
       >
     </div>
 
-
-    <!-- <script type="module" src='./main.js'> -->
+    <!-- Add script to ensure scrollbars behave properly -->
+    <script>
+      // Ensure proper overflow behavior on window resize
+      window.addEventListener('resize', function() {
+        const gameSection = document.getElementById('games');
+        const appSection = document.getElementById('apps');
+        
+        // Force recalculation of overflow
+        if (gameSection) {
+          gameSection.style.overflow = 'hidden';
+          setTimeout(() => { 
+            gameSection.style.overflowY = 'auto';
+            gameSection.style.overflowX = 'hidden';
+          }, 10);
+        }
+        
+        if (appSection) {
+          appSection.style.overflow = 'hidden';
+          setTimeout(() => {
+            appSection.style.overflowY = 'auto'; 
+            appSection.style.overflowX = 'hidden';
+          }, 10);
+        }
+      });
+      
+      // Fix for iOS Safari 100vh issue
+      function setViewportHeight() {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+      }
+      
+      window.addEventListener('resize', setViewportHeight);
+      window.addEventListener('orientationchange', setViewportHeight);
+      setViewportHeight();
+      
+      // Improve touch scrolling on mobile
+      document.addEventListener('touchmove', function(e) {
+        const targetElement = e.target;
+        if (targetElement.closest('#games') || targetElement.closest('#apps')) {
+          e.stopPropagation();
+        }
+      }, { passive: true });
     </script>
  
   </body>
 </html>
-
-<!-- P<span class='black'>i</span>a<span class='black'>n</span>o <span class='black'>T</span>i<span class='black'>l</span>e<span class='black'>s</span> -->

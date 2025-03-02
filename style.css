@@ -116,30 +116,127 @@ hr {
 }
 
 #apps,#games{
+  
  display: flex;
  flex-direction: column;
- align-items: center;
+ align-items: left;
+ max-height: 400px;  /* Fixed height for the sections */
+ overflow-y: auto;   /* Enable vertical scrolling */
+ overflow-x: hidden; /* Prevent horizontal scrolling */
+ padding-right: 5px; /* Add padding for scrollbar */
+ /* width: calc(50% - 20px); Adjust width to prevent horizontal overflow */
+ box-sizing: border-box; /* Include padding in width calculation */
+ position: relative; /* Position relative for sticky child elements */
+ /* Hide scrollbar but maintain scrolling functionality */
+  scrollbar-width: none; /* For Firefox */
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  padding-bottom: 15px; /* Add padding at the bottom to show shadows */
+}
+
+/* Hide all scrollbars by default (both horizontal and vertical) */
+#apps::-webkit-scrollbar, 
+#games::-webkit-scrollbar,
+#apps::-webkit-scrollbar-horizontal, 
+#games::-webkit-scrollbar-horizontal {
+  width: 0;
+  height: 0; /* Height for horizontal scrollbar */
+  background: transparent;
+  display: none;
+}
+
+/* Only show vertical scrollbar on hover */
+#apps:hover::-webkit-scrollbar, 
+#games:hover::-webkit-scrollbar {
+  width: 8px;
+  display: block;
+}
+
+/* Keep horizontal scrollbar hidden even on hover */
+#apps:hover::-webkit-scrollbar-horizontal, 
+#games:hover::-webkit-scrollbar-horizontal {
+  height: 0;
+  display: none;
+}
+
+#apps::-webkit-scrollbar-track, #games::-webkit-scrollbar-track {
+  background: rgba(20, 20, 40, 0.3);
+  border-radius: 10px;
+}
+
+#apps::-webkit-scrollbar-thumb, #games::-webkit-scrollbar-thumb {
+  background: rgba(74, 158, 255, 0.5);
+  border-radius: 10px;
+}
+
+#apps::-webkit-scrollbar-thumb:hover, #games::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 158, 255, 0.8);
 }
 
 .apps {
   background-color: rgb(20, 20, 40);
-  /* margin: 10px; */
-  width: 100%;
-  padding: 5px;
+  width: calc(100% - 10px); /* Adjust width to prevent horizontal overflow */
+  padding: 12px 15px;  /* Increased padding for better spacing */
   margin-top: 15px;
+  margin-bottom: 8px; /* Add bottom margin to ensure shadow visibility */
   border: 1px solid rgb(56, 44, 44);
   border-radius: 20px;
   box-shadow: 0.1em 0.1em 0.1em 0.1em rgb(77, 73, 73);
+  box-sizing: border-box; /* Include padding and border in width calculation */
+  /* New layout for side-by-side arrangement */
+  display: flex;
+  align-items: center;  /* Better vertical alignment */
+  justify-content: flex-start;
 }
-.apps:hover{
-  background-color: rgb(21, 21, 99);
+
+/* For the last item in each section, add extra margin to ensure shadow visibility */
+#games a:last-child .apps,
+#apps a:last-child .apps {
+  margin-bottom: 15px;
+}
+
+.app-content {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  justify-content: flex-start;
+  /* Added to prevent extra space */
+  min-width: 0;
+  overflow: hidden; /* Prevent any potential overflow */
+}
+
+.app-info {
+  margin-left: 15px;
+  text-align: center;
+  display: flex;
+  align-items: center; /* Center text vertically */
+  /* Adjusted to prevent extra space */
+  flex: 1;
+  min-width: 0;
+}
+
+.app-info p {
+  text-align: left;
+  font-size: 0.8em;
+  width: auto; /* Let text take natural width */
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  /* Remove text truncation properties */
+  white-space: normal; /* Allow text to wrap */
+  overflow: visible;   /* Show overflow text */
+  text-overflow: clip; /* Don't add ellipsis */
+  word-break: break-word; /* Break long words if needed */
 }
 
 img {
-  margin-top: 10px;
-  height: 72px;
-  width: 72px;
+  margin: 0; /* Remove all margins */
+  height: 50px;
+  width: 50px;
   border-radius: 50%;
+  flex-shrink: 0;
+  object-fit: cover; /* Ensure images maintain aspect ratio */
+  display: block; /* Remove extra space below image */
 }
 
 #bottomBar,#source {
@@ -179,6 +276,37 @@ img {
   cursor: pointer;
 }
 
+.section-header {
+  position: sticky;
+  top: 0;
+  background-color: rgb(12, 12, 24);
+  width: 100%;
+  padding: 5px 0;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+@media only screen and (max-width:768px) {
+  /* Medium-sized mobile devices and tablets */
+  #titleName {
+    font-size: 4.8em;
+  }
+  
+  #project {
+    font-size: 2.2em;
+  }
+  
+  /* Keep the side-by-side layout but slightly adjusted */
+  #gamesAndApps {
+    flex-direction: column;
+  }
+  
+  #games, #apps {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+}
+
 @media only screen and (max-width:512px){
 #titleName{
   font-size: 4.5em;
@@ -190,15 +318,20 @@ img {
     justify-content: space-evenly;
     height:80%;
     margin-bottom:6em;
-    
+    margin-top: 3%;
   }
   #games,#apps{
     margin-top:1em;
+    max-height: 300px;  /* Smaller height on mobile devices */
+    width: 100%; /* Full width on mobile */
+    overflow-x: hidden;
   }
   .apps{
-    padding-bottom: 0.5em;
+    padding: 10px;
+    padding-bottom: 10px; /* Make padding consistent */
     margin-top:1em;
     border-radius: 1em;
+    margin-bottom: 10px; /* Increase bottom margin on mobile for better shadows */
   }
 
   #gamesAndApps {
@@ -213,8 +346,76 @@ img {
 
   #bottomBar {
     font-size: 1em;
+    padding: 8px 0;
+    box-sizing: border-box;
   }
 #source{
-  font-size:1.3em
+  font-size:1.3em;
+  bottom: 2.5em;
 }
+
+  .section-header {
+    font-size: 1.2em;
+    padding: 3px 0;
+  }
+
+  .app-info {
+    margin-left: 12px; /* Adjust margin for mobile */
+    width: calc(100% - 52px); /* Adjust for smaller image on mobile */
+  }
+
+  .app-info p {
+    font-size: 0.9em; /* Slightly increase font size for better visibility */
+    /* Ensure text is visible on mobile */
+    white-space: normal;
+    overflow: visible;
+  }
+  
+  img {
+    height: 40px;
+    width: 40px;
+  }
+
+  #games a:last-child .apps,
+  #apps a:last-child .apps {
+    margin-bottom: 20px; /* More margin on mobile for last items */
+  }
+}
+
+@media only screen and (max-width: 350px) {
+  #titleName {
+    font-size: 3.5em;
+  }
+  
+  #project {
+    font-size: 1.8em;
+  }
+  
+  .app-info p {
+    font-size: 0.85em;
+  }
+  
+  img {
+    height: 36px;
+    width: 36px;
+  }
+  
+  #source {
+    font-size: 1em;
+  }
+  
+  #bottomBar {
+    font-size: 0.8em;
+  }
+}
+
+@media screen and (max-height: 600px) {
+  #mainContainer {
+    margin-top: 2%;
+    margin-bottom: 90px; /* Extra space for bottom bars */
+  }
+  
+  #games, #apps {
+    max-height: 250px;
+  }
 }
