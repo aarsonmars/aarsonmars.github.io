@@ -1,0 +1,865 @@
+:root {
+  --primary-color: #3a0ca3;
+  --secondary-color: #4361ee;
+  --accent-color: #7209b7;
+  --correct-color: #4caf50;
+  --incorrect-color: #f41303;
+  --partial-color: #2196f3;
+  --neutral-color: #2b2d42;
+  --light-bg: #f8f9fa;
+  --dark-bg: #343a40;
+  --border-radius: 8px;
+  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --transition: all 0.3s ease;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background-color: #f0f2f5;
+  color: var(--dark-bg);
+  line-height: 1.6;
+  min-height: 100vh;
+  max-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent scrolling */
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent container scrolling */
+}
+
+header {
+  text-align: center;
+  margin-bottom: 15px;
+  padding: 10px 0;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+}
+
+header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 5px;
+}
+
+.subtitle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.subtitle {
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* New Difficulty Selector in Header */
+.difficulty-selector {
+  display: flex;
+  gap: 5px;
+}
+
+.difficulty-btn {
+  padding: 3px 8px;
+  font-size: 0.85rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: var(--border-radius);
+  color: white;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.difficulty-btn:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+.difficulty-btn.active {
+  background-color: white;
+  color: var(--primary-color);
+  border-color: white;
+}
+
+/* New layout structure */
+.game-container {
+  background-color: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  padding: 15px;
+  margin-bottom: 10px;
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 3fr; /* Adjust ratio of clue panel to game area */
+  gap: 12px;
+  max-height: calc(100vh - 120px); /* Limit height to fit in viewport */
+  overflow: hidden;
+  height: calc(100vh - 120px); /* Add fixed height */
+}
+
+.game-area {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+  overflow: hidden; /* Prevent content overflow */
+  height: 100%; /* Fill available space */
+}
+
+/* Fix the clue section layout to properly contain the button */
+.clue-panel {
+  margin-bottom: 0;
+  max-height: 100%;
+  overflow: hidden;
+  display: flex; /* Make sure it uses flex layout */
+  flex-direction: column;
+  height: 100%; /* Ensure it fills its container */
+}
+
+.clue-section {
+  background-color: var(--light-bg);
+  padding: 12px 12px 60px 12px; /* Add extra padding at the bottom for the button */
+  border-radius: var(--border-radius);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative; /* Ensure relative positioning */
+  overflow: hidden; /* Keep all content contained */
+}
+
+.clue-section h3, .guess-section h3, .hint-section h3 {
+  margin-bottom: 6px;
+  color: var(--neutral-color);
+  font-size: 1rem;
+}
+
+#cluesList {
+  list-style-type: none;
+  margin-bottom: 10px; /* Reduced from 50px */
+  flex: 1;
+  overflow-y: auto;
+  max-height: calc(100vh - 280px);
+  font-size: 0.9rem;
+  padding-bottom: 40px; /* Add space at the bottom for button */
+  padding-left: 5px; /* Add some left padding */
+  padding-right: 5px; /* Add some right padding */
+}
+
+#cluesList li {
+  margin-bottom: 10px; /* Increase from 5px */
+  padding: 8px 10px; /* Increase from 5px 6px */
+  background-color: white;
+  border-left: 3px solid var(--accent-color);
+  border-radius: 5px; /* Slightly more rounded corners */
+  font-size: 0.95rem; /* Slight increase for readability */
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1); /* Add subtle shadow */
+  position: relative; /* For positioning any decorative elements */
+}
+
+/* Add a subtle separator between clues */
+#cluesList li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  bottom: -6px;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background-color: #e9ecef;
+}
+
+/* Guess Section */
+.guess-section {
+  background-color: var(--light-bg);
+  padding: 12px;
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+}
+
+.guess-section h3 {
+  margin-bottom: 6px;
+  color: var(--neutral-color);
+  font-size: 1rem;
+  text-align: center;
+}
+
+#guessForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+#guessInput {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border: 2px solid #ced4da;
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  font-family: 'Source Code Pro', monospace;
+}
+
+#checkGuessBtn {
+  padding: 10px 25px;
+  font-size: 1.1rem;
+  margin-top: 0;
+}
+
+/* New Table-based Guess History */
+.guess-history-container {
+  margin-top: 8px;
+  flex: 0 0 auto; /* Change to prevent growth */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 120px; /* Ensure minimum height */
+  height: 150px; /* Fixed height so it doesn't grow */
+  max-height: 150px;
+}
+
+.guesses-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  flex: 0 0 auto; /* Don't allow growth */
+  table-layout: fixed; /* Fixed table layout */
+}
+
+.guesses-table thead {
+  background-color: var(--neutral-color);
+  color: white;
+  text-align: left;
+}
+
+.guesses-table th,
+.guesses-table td {
+  padding: 8px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+/* Adjust column widths for better space distribution */
+.guesses-table th:first-child,
+.guesses-table td:first-child {
+  width: 35%;  /* Reduce width of number column */
+}
+
+.guesses-table th:last-child,
+.guesses-table td:last-child {
+  width: 65%;  /* Increase width of feedback column */
+}
+
+.guesses-table tbody {
+  display: block;
+  height: 120px; /* Fixed height */
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.guesses-table thead,
+.guesses-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.guess-number {
+  font-family: 'Source Code Pro', monospace;
+  font-weight: 600;
+}
+
+.guess-number span.partial {
+  color: var(--partial-color);
+}
+
+.guess-feedback {
+  font-weight: 500;
+}
+
+.correct {
+  color: var(--correct-color);
+}
+
+.incorrect {
+  color: var(--incorrect-color);
+}
+
+/* Message Area */
+.message-area {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  padding: 12px 20px;
+  text-align: center;
+  font-weight: 600;
+  border-radius: var(--border-radius);
+  min-height: 40px;
+  max-width: 90%;
+  z-index: 150;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  opacity: 0.95;
+}
+
+/* Remove the original static message-area */
+#messageArea {
+  display: none;
+}
+
+.success {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: var(--correct-color);
+}
+
+.error {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: var(--incorrect-color);
+}
+
+.info {
+  background-color: rgba(33, 150, 243, 0.2);
+  color: #2196f3;
+}
+
+/* New position for game controls */
+.main-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 0px;
+}
+
+.game-controls {
+  display: flex;
+  gap: 10px;
+}
+
+/* Fix the Get Clue button position */
+#getClueBtn {
+  background-color: var(--neutral-color);
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  width: calc(100% - 24px);
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+  z-index: 20;
+  margin: 0; /* Remove any margin */
+}
+
+#newGameBtn {
+  background-color: var(--accent-color);
+}
+
+#rulesBtn {
+  background-color: var(--neutral-color);
+}
+
+/* Remove old game controls styles that are no longer needed */
+/* Game Controls (OLD POSITION) 
+.game-controls {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: auto;
+  padding-top: 10px;
+}
+*/
+
+/* Buttons */
+button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: var(--border-radius);
+  background-color: var(--secondary-color);
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  min-height: 44px; /* Apple's recommended minimum touch target size */
+  min-width: 44px;
+}
+
+button:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+#newGameBtn {
+  background-color: var(--accent-color);
+}
+
+#getClueBtn {
+  background-color: var(--neutral-color);
+  width: 80%;
+}
+
+/* Modal */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+}
+
+.modal-content {
+  background-color: white;
+  margin: 10% auto;
+  padding: 25px;
+  border-radius: var(--border-radius);
+  max-width: 600px;
+}
+
+.close {
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: var(--accent-color);
+}
+
+/* Digit Cell */
+.digit-cell {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 50px;
+  border: 2px solid #ced4da;
+  border-radius: 4px;
+  margin: 0 3px;
+  font-family: 'Source Code Pro', monospace;
+  font-size: 1.8rem;
+  background-color: white;
+  position: relative;
+}
+
+.revealed {
+  background-color: #e8f5e9;
+  border-color: var(--correct-color);
+}
+
+.hidden {
+  background-color: #e9ecef;
+  color: transparent;
+}
+
+/* Digit Input System */
+.digit-input-container {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.digit-input {
+  width: 45px;
+  height: 55px;
+  font-size: 1.8rem;
+  font-family: 'Source Code Pro', monospace;
+  text-align: center;
+  border: 2px solid #ced4da;
+  border-radius: var(--border-radius);
+  background-color: white;
+  transition: var(--transition);
+}
+
+.digit-input:focus {
+  border-color: var(--secondary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+}
+
+.digit-input.correct {
+  background-color: rgba(76, 175, 80, 0.2);
+  border-color: var(--correct-color);
+  color: var(--correct-color);
+}
+
+.digit-input.partial {
+  background-color: rgba(33, 150, 243, 0.2);
+  border-color: var(--partial-color);
+  color: var(--partial-color);
+}
+
+.digit-input.incorrect {
+  background-color: rgba(244, 67, 54, 0.2);
+  border-color: var(--incorrect-color);
+  color: var(--incorrect-color);
+}
+
+/* Color examples for rules modal */
+.color-example {
+  display: inline-block;
+  padding: 2px 5px;
+  border-radius: 3px;
+  margin: 0 3px;
+  font-weight: 600;
+}
+
+.color-example.correct {
+  background-color: rgba(76, 175, 80, 0.2);
+  color: var(--correct-color);
+}
+
+.color-example.partial {
+  background-color: rgba(33, 150, 243, 0.2);
+  color: var(--partial-color);
+}
+
+.color-example.incorrect {
+  background-color: rgba(244, 67, 54, 0.2);
+  color: var (--incorrect-color);
+}
+
+/* Number Display */
+.guess-display {
+  background-color: var(--light-bg);
+  padding: 8px 10px 10px 10px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  margin-bottom: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  position: relative;
+}
+
+.digits-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 5px 0;
+  flex-wrap: wrap;
+  min-height: 60px;
+}
+
+.number-display {
+  width: 100%;
+  display: block;
+  position: relative;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+.attempts {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--neutral-color);
+  margin-top: 6px;
+  border-top: 1px solid #e9ecef;
+  padding-top: 6px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+#hangmanCanvas {
+  margin-left: 10px;
+}
+
+@media (min-width: 768px) {
+  .game-area {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .guess-display {
+    grid-column: span 2;
+  }
+  
+  .game-container {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 15px;
+  }
+
+  .clue-panel {
+    margin-bottom: 0;
+  }
+  
+  .clue-section {
+    height: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .game-container {
+    display: flex;
+    flex-direction: column;
+    max-height: none;
+    height: auto; /* Allow flexible height on mobile */
+  }
+
+  .clue-panel {
+    flex: 0 0 auto;
+    max-height: 180px; /* Slightly reduced height */
+  }
+  
+  #cluesList {
+    max-height: 100px;
+  }
+  
+  .game-area {
+    flex: 1;
+  }
+  
+  .guesses-table tbody {
+    max-height: 180px; /* Give more space to the table on mobile */
+  }
+
+  .main-controls {
+    justify-content: center;
+  }
+  
+  .guess-section h3 {
+    margin-bottom: 5px;
+  }
+  
+  .clue-section {
+    min-height: 150px; /* Minimum height for clue section */
+  }
+  
+  .guess-history-container {
+    height: 120px; /* Slightly smaller on mobile */
+  }
+}
+
+@media (max-width: 600px) {
+  .digit-cell {
+    width: 30px;
+    height: 40px;
+    font-size: 1.3rem;
+    margin: 0 2px;
+  }
+  
+  .game-area {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  
+  .guess-display {
+    grid-column: span 1;
+  }
+  
+  #guessForm {
+    flex-direction: column;
+  }
+  
+  .number-display {
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+    height: 40px;
+  }
+  
+  .container {
+    padding: 5px;
+  }
+  
+  header {
+    padding: 8px 0;
+    margin-bottom: 10px;
+  }
+  
+  header h1 {
+    font-size: 1.6rem;
+    margin-bottom: 3px;
+  }
+  
+  .subtitle {
+    font-size: 0.9rem;
+  }
+  
+  .digit-input {
+    width: 35px;
+    height: 45px;
+    font-size: 1.4rem;
+  }
+  
+  .game-container {
+    max-height: none; /* Remove height restriction on mobile */
+    padding: 10px;
+  }
+  
+  .floating-message {
+    width: 90%;
+    max-width: 320px;
+    font-size: 0.9rem;
+    bottom: 10px;
+  }
+  
+  .popup-content {
+    width: 90%;
+    max-width: 300px;
+    padding: 15px;
+    font-size: 1rem;
+  }
+  
+  /* Make the hangman canvas smaller on mobile */
+  #hangmanCanvas {
+    width: 90px;
+    height: 60px;
+  }
+  
+  .attempts {
+    gap: 5px;
+  }
+}
+
+@media (max-width: 400px) {
+  .digit-input {
+    width: 30px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .digit-input {
+    width: 28px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+  
+  .guess-section h3,
+  .clue-section h3 {
+    font-size: 0.95rem;
+  }
+  
+  #checkGuessBtn {
+    padding: 8px 20px;
+    font-size: 1rem;
+  }
+  
+  /* Further reduce hangman canvas size */
+  #hangmanCanvas {
+    width: 80px;
+    height: 55px;
+  }
+}
+
+/* Fix for iOS Safari viewport height issue */
+@supports (-webkit-touch-callout: none) {
+  body, html {
+    height: -webkit-fill-available;
+  }
+  
+  body {
+    min-height: -webkit-fill-available;
+  }
+  
+  .container {
+    height: -webkit-fill-available;
+  }
+}
+
+/* Popup and Confetti Animations */
+.popup-overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background: rgba(0, 0, 0, 0.5);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 200;
+}
+
+.popup-content {
+	background: white;
+	padding: 20px 30px;
+	border-radius: var(--border-radius);
+	font-size: 1.2rem;
+	color: var(--correct-color);
+	text-align: center;
+	position: relative;
+	z-index: 210;
+	animation: popup 0.5s ease-out;
+}
+
+.popup-content.error-popup {
+  color: var(--incorrect-color);
+  border: 2px solid var(--incorrect-color);
+  background-color: rgba(243, 209, 206, 0.1);
+}
+
+@keyframes popup {
+	from { opacity: 0; transform: scale(0.8); }
+	to { opacity: 1; transform: scale(1); }
+}
+
+.confetti {
+	position: absolute;
+	width: 8px;
+	height: 8px;
+	background: red; /* Overwritten by inline style */
+	animation: confettiFall 3s linear infinite;
+	opacity: 0.7;
+	top: 0;
+}
+
+@keyframes confettiFall {
+	0% { transform: translateY(0) rotate(0deg); }
+	100% { transform: translateY(600px) rotate(360deg); }
+}
+
+/* Add these new rules */
+.floating-message {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 150;
+  transition: opacity 0.5s;
+}
+
+.message-area.mini {
+  font-size: 0.8rem;
+  padding: 5px;
+  opacity: 0.8;
+  min-height: 20px;
+}
+
+.digit-input.duplicate-guess {
+  animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+  background-color: rgba(255, 193, 7, 0.2);
+  border-color: #ffc107;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+  20%, 40%, 60%, 80% { transform: translateX(5px); }
+}

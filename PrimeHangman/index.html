@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Prime Number Hangman</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Prime Number Hangman</h1>
+      <div class="subtitle-container">
+        <p class="subtitle">Can you guess the hidden prime number?</p>
+        <div class="difficulty-selector">
+          <button data-level="easy" class="difficulty-btn active">5 digits</button>
+          <button data-level="medium" class="difficulty-btn">6 digits</button>
+          <button data-level="hard" class="difficulty-btn">7 digits</button>
+        </div>
+      </div>
+    </header>
+    
+    <div class="game-container">
+      <div class="clue-panel">
+        <div class="clue-section">
+          <h3>Clues</h3>
+          <ul id="cluesList"></ul>
+          <button id="getClueBtn">Get New Clue</button>
+        </div>
+      </div>
+      
+      <div class="game-area">
+        <div class="main-controls">
+          <div class="game-controls">
+            <button id="newGameBtn">New Number</button>
+            <button id="rulesBtn">Rules</button>
+          </div>
+        </div>
+        
+        <div class="guess-display">
+          <div class="number-display" id="numberDisplay"></div>
+          <div class="attempts">
+            <span>Attempts left: </span>
+            <span id="attemptsLeft">8</span>
+            <canvas id="hangmanCanvas" width="120" height="80"></canvas>
+          </div>
+        </div>
+        
+        <div class="guess-section">
+          <h3>Make a Guess</h3>
+          <form id="guessForm">
+            <div class="digit-input-container" id="digitInputContainer">
+              <!-- Digit inputs will be generated here based on difficulty -->
+            </div>
+            <button type="submit" id="checkGuessBtn">Check</button>
+          </form>
+          
+          <div class="guess-history-container">
+            <h3>Your Guesses</h3>
+            <table class="guesses-table">
+              <thead>
+                <tr>
+                  <th class="number-column">Number</th>
+                  <th class="feedback-column">Feedback</th>
+                </tr>
+              </thead>
+              <tbody id="guessesHistory">
+                <!-- Guess history will be populated here -->
+              </tbody>
+            </table>
+          </div>
+          
+          <div class="message-area" id="messageArea"></div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal" id="rulesModal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>How to Play</h2>
+        <p>Welcome to Prime Number Hangman! Here's how to play:</p>
+        <ol>
+          <li>A random prime number will be chosen based on your selected difficulty.</li>
+          <li>You have attempts based on difficulty: 5 for 5-digit, 6 for 6-digit, and 7 for 7-digit numbers.</li>
+          <li>Enter your guess by typing digits in each box</li>
+          <li>After checking, each digit will be color-coded:</li>
+          <ul>
+            <li><span class="color-example correct">Green</span> - Correct digit in the correct position</li>
+            <li><span class="color-example partial">Blue</span> - Correct digit in the wrong position</li>
+            <li><span class="color-example incorrect">Red</span> - Incorrect digit</li>
+          </ul>
+          <li>You can request clues to help you guess the number.</li>
+        </ol>
+        <p>Good luck!</p>
+      </div>
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>
