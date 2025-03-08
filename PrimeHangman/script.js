@@ -17,6 +17,56 @@ document.addEventListener('DOMContentLoaded', () => {
   const hangmanCanvas = document.getElementById('hangmanCanvas');
   const hangmanCtx = hangmanCanvas.getContext('2d');
 
+  // Mobile sidebar elements
+  const toggleCluesBtn = document.getElementById('toggleCluesBtn');
+  const clueOverlay = document.getElementById('clueOverlay');
+  const cluePanel = document.querySelector('.clue-panel');
+  const closeClueBtn = document.getElementById('closeClueBtn');
+  
+  // Toggle sidebar on button click
+  if (toggleCluesBtn) {
+    toggleCluesBtn.addEventListener('click', () => {
+      if (cluePanel.classList.contains('active')) {
+        // Close if already open
+        cluePanel.classList.remove('active');
+        clueOverlay.classList.remove('active');
+      } else {
+        // Open if currently closed
+        cluePanel.classList.add('active');
+        clueOverlay.classList.add('active');
+      }
+    });
+  }
+  
+  // Close sidebar on overlay or close button click
+  if (clueOverlay) {
+    clueOverlay.addEventListener('click', () => {
+      cluePanel.classList.remove('active');
+      clueOverlay.classList.remove('active');
+    });
+  }
+  if (closeClueBtn) {
+    closeClueBtn.addEventListener('click', () => {
+      cluePanel.classList.remove('active');
+      clueOverlay.classList.remove('active');
+    });
+  }
+  
+  // Optional: Swipe gesture to open sidebar on mobile
+  let touchStartX = null;
+  document.addEventListener('touchstart', e => {
+    touchStartX = e.changedTouches[0].clientX;
+  });
+  document.addEventListener('touchend', e => {
+    const touchEndX = e.changedTouches[0].clientX;
+    if (touchStartX !== null && (touchEndX - touchStartX) > 100) {
+      // Swipe right detected
+      cluePanel.classList.add('active');
+      clueOverlay.classList.add('active');
+    }
+    touchStartX = null;
+  });
+
   // Game state
   let gameState = {
     targetPrime: null,
@@ -213,9 +263,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const mostFrequent = Object.entries(digitCount).sort((a, b) => b[1] - a[1])[0];
     clues.push(`The digit ${mostFrequent[0]} appears ${mostFrequent[1]} time(s)`);
     
-    // Math property clues
-    clues.push(`The number is divisible by ${prime % 10 === 1 ? "nothing except 1 and itself" : prime % 3 === 0 ? "3" : prime % 7 === 0 ? "7" : "nothing except 1 and itself"}`);
-    
     // Digit comparison
     const maxDigit = Math.max(...digits);
     const minDigit = Math.min(...digits);
@@ -254,15 +301,15 @@ document.addEventListener('DOMContentLoaded', () => {
 	switch (gameState.difficulty) {
 		case 'easy':
 			gameState.digitsLength = 5;
-			gameState.attempts = 5;
+			gameState.attempts = 6;
 			break;
 		case 'medium':
 			gameState.digitsLength = 6;
-			gameState.attempts = 6;
+			gameState.attempts = 7;
 			break;
 		case 'hard':
 			gameState.digitsLength = 7;
-			gameState.attempts = 7;
+			gameState.attempts = 8;
 			break;
 	}
     
@@ -281,8 +328,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Clear any existing clues
     cluesList.innerHTML = '';
     
-    // Provide first clue for free
-    provideClue();
+    // Remove the call to provideClue() so no default clue is shown
+    // provideClue(); <- remove this line
     
     // Update the display
     updateDisplay();
@@ -300,10 +347,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Provide a clue
   function provideClue() {
+    // Check if only one attempt left - don't allow getting a clue
+    console.log(gameState.attempts);
+    if (gameState.attempts <= 2) {
+      showMessage("Can't get clues with only 2 attempts left! Make your final guess wisely!", "error");
+      return;
+    }
+    
     if (gameState.availableClues.length === 0) {
       showMessage("No more clues available!", "error");
       return;
     }
+    
+    // Decrease attempts when getting a clue
+    gameState.attempts--;
+    attemptsLeft.textContent = gameState.attempts;
     
     const clue = gameState.availableClues.shift();
     gameState.clues.push(clue);
@@ -312,10 +370,16 @@ document.addEventListener('DOMContentLoaded', () => {
     clueItem.textContent = clue;
     cluesList.appendChild(clueItem);
     
-    // Disable clue button if no more clues
-    if (gameState.availableClues.length === 0) {
+    // Disable clue button if no more clues or only one attempt left
+    if (gameState.availableClues.length === 0 || gameState.attempts <= 1) {
       getClueBtn.disabled = true;
     }
+    
+    // Show message about the attempt cost
+    showMessage("You used 1 attempt to get a clue!", "info");
+    
+    // Update hangman drawing since an attempt was used
+    drawHangman();
     
     // Scroll the clues list to the bottom to show the new clue
     cluesList.scrollTop = cluesList.scrollHeight;

@@ -3,6 +3,7 @@
     margin:0;
     padding:0;    
     text-align: center;
+    touch-action: pan-x pan-y;
 }
 body{
     background-color: rgb(169, 155, 221);
@@ -24,6 +25,7 @@ canvas{
     border: 1rem solid rgb(141, 190, 245);
     width: calc(100% - 2rem);
     display: block;
+    max-height: 70vh; /* Prevent canvas from being too tall on mobile */
 }
 #levelAndScore{
     top: 1rem;
@@ -87,6 +89,9 @@ canvas{
     width: 100px;
     text-align: center;
     transition: all 0.3s ease;
+    min-height: 44px; /* Apple's recommended minimum touch target size */
+    min-width: 44px;
+    touch-action: manipulation;
 }
 
 .planet-option:hover {
@@ -191,6 +196,9 @@ canvas{
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
+    min-height: 44px; /* Apple's recommended minimum touch target size */
+    min-width: 44px;
+    touch-action: manipulation;
 }
 
 #start-game-btn:hover {
@@ -403,4 +411,63 @@ canvas{
         padding-left: env(safe-area-inset-left);
         padding-right: env(safe-area-inset-right);
     }
+}
+
+/* Mobile-specific fixes */
+@media (max-width: 768px) {
+    canvas {
+        touch-action: none !important; /* Prevent browser handling of touch gestures */
+        width: calc(100% - 1.5rem) !important; /* Smaller border on mobile */
+        border-width: 0.75rem !important;
+        -webkit-tap-highlight-color: transparent; /* Remove tap highlight on Safari */
+    }
+    
+    #startScreen, #gameOverScreen {
+        width: 90% !important;
+        padding: 15px !important;
+    }
+    
+    /* Make gravity and score text more readable on small screens */
+    #score, #gravityText {
+        font-size: 1.2rem !important;
+        margin-right: 1rem !important;
+        margin-left: 1rem !important;
+    }
+}
+
+/* Fix iOS Safari issues with 100vh */
+@supports (-webkit-touch-callout: none) {
+    body {
+        height: -webkit-fill-available;
+    }
+    
+    html {
+        height: -webkit-fill-available;
+    }
+}
+
+/* Fix for iPhone notch */
+@supports (padding: max(0px)) {
+    body {
+        padding-top: max(0px, env(safe-area-inset-top));
+        padding-bottom: max(0px, env(safe-area-inset-bottom));
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+    }
+}
+
+/* Ensure responsive canvas scaling */
+canvas {
+    max-height: 70vh; /* Prevent canvas from being too tall on mobile */
+}
+
+/* Optimize touch targets for mobile */
+.planet-option, #start-game-btn {
+    min-height: 44px; /* Apple's recommended minimum touch target size */
+    min-width: 44px;
+}
+
+/* Fix tap delay on iOS Safari */
+a, button, input, select, textarea, .planet-option {
+    touch-action: manipulation;
 }

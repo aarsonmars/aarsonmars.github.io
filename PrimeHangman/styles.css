@@ -623,11 +623,34 @@ button:hover {
 
   .clue-panel {
     flex: 0 0 auto;
-    max-height: 180px; /* Slightly reduced height */
+    max-height: 250px; /* make it bigger */
+    top: 120px; /* move down further */
+    position: fixed;
+    top: 0; /* Reset this first */
+    height: 100vh; /* Use full viewport height */
+    max-height: none; /* Remove max-height constraint */
+  }
+  
+  .clue-panel.active {
+    top: 150px; /* Increased top position to move panel down */
+    height: calc(70vh); /* Use 70% of the viewport height */
+  }
+  
+  .clue-section {
+    height: 100%; /* Ensure section fills the panel */
+    min-height: auto; /* Remove minimum height constraint */
+    overflow-y: auto; /* Allow scrolling within section */
   }
   
   #cluesList {
-    max-height: 100px;
+    max-height: calc(60vh - 140px); /* Increased height for clue list */
+    overflow-y: auto;
+    padding-bottom: 20px; /* Reduced padding to give more space for content */
+  }
+  
+  .clue-section {
+    padding-bottom: 70px; /* Increase padding at bottom to account for button */
+    overflow-y: hidden; /* Let the list handle scrolling, not the section */
   }
   
   .game-area {
@@ -862,4 +885,81 @@ button:hover {
   0%, 100% { transform: translateX(0); }
   10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
   20%, 40%, 60%, 80% { transform: translateX(5px); }
+}
+
+/* Mobile-specific adjustments */
+.mobile-only {
+  display: none;
+}
+
+#toggleCluesBtn {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--primary-color);
+  color: white;
+  font-size: 22px;
+  z-index: 100;
+  display: none; /* will show in mobile */
+}
+
+.clue-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 90;
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-only {
+    display: block;
+  }
+  #toggleCluesBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .clue-panel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 80%;
+    max-width: 300px;
+    height: 100%;
+    background-color: white;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 110;
+  }
+  .clue-panel.active {
+    transform: translateX(0);
+    box-shadow: 2px 0 10px rgba(0,0,0,0.3);
+  }
+  .clue-overlay.active {
+    display: block;
+  }
+}
+
+.clue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 22px;
+  min-height: 30px;
+  min-width: 30px;
+  padding: 0;
+  color: var(--dark-bg);
 }

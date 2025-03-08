@@ -18,9 +18,21 @@ var level=1;
 img= new Image()
 img.src='./img/bird.png'
 
+// Create a fallback in case the image doesn't load
+img.onerror = function() {
+  console.log("Bird image failed to load, using placeholder");
+  if (window.placeholderImages && window.placeholderImages.bird) {
+    img.src = window.placeholderImages.bird;
+  }
+};
+
+// Support for mobile devices - smoother tap response
+var lastTapTime = 0;
+var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
 levelElement=document.getElementById('level');
 levelElement.innerText=level;
-[h,w]=[img.height,img.width];
+[h,w]=[img.height || 100,img.width || 100]; // Add fallback values
 let [sx,sy,sWidth,sHeight,dWidth,dHeight]=[0,0,h/3,w/5,60,60];
 
 imageNo=0
@@ -34,7 +46,16 @@ class Ball {
     this.x = x;
     this.y = y;
 
-    ctx.drawImage(img, sx, sHeight*imageNo, sWidth, sHeight, this.x, this.y, dWidth, dHeight)
+    try {
+      ctx.drawImage(img, sx, sHeight*imageNo, sWidth, sHeight, this.x, this.y, dWidth, dHeight);
+    } catch(e) {
+      // Fallback if image drawing fails
+      console.error("Error drawing bird image:", e);
+      ctx.fillStyle = "yellow";
+      ctx.beginPath();
+      ctx.arc(this.x + dWidth/2, this.y + dHeight/2, this.radius, 0, Math.PI * 2);
+      ctx.fill();
+    }
     imageNo=0
     // if(imageNo>2){imageNo=2}else{imageNo++}
 
@@ -105,6 +126,12 @@ function startGame() {
         levelElement.innerText=level
         middleGap=150
         pipeDistance=200
+        
+        // Show game over screen on mobile
+        const gameOverScreen = document.getElementById('gameOverScreen');
+        if (gameOverScreen) {
+          gameOverScreen.classList.remove('hidden');
+        }
       }
       setTimeout(() => {
         ball.draw()
@@ -121,30 +148,33 @@ function startGame() {
 }
 
 function createPipes() {
-  while(x<width){ 
-  var currentHeight = Math.random() * 200 +50;
-  ctx.beginPath();
-  ctx.rect(x, 0, pipeWidth, currentHeight);
+  // Clear any existing pipes first
+  ctx.clearRect(0, 0, width, height);
+  x = 200; // Reset pipe position
   
-  ctx.rect(
-    x,
-    currentHeight + middleGap,
-    pipeWidth,
-    height - currentHeight - middleGap
-  );
-  ctx.fillStyle = "green";
-  ctx.stroke();
-  ctx.fill();
-  x = x + pipeDistance;
-    }}
-createPipes();
+  while(x<width){ 
+    var currentHeight = Math.random() * 200 +50;
+    ctx.beginPath();
+    ctx.rect(x, 0, pipeWidth, currentHeight);
+    
+    ctx.rect(
+      x,
+      currentHeight + middleGap,
+      pipeWidth,
+      height - currentHeight - middleGap
+    );
+    ctx.fillStyle = "green";
+    ctx.stroke();
+    ctx.fill();
+    x = x + pipeDistance;
+  }
+}
 
 function keyboardGameplay(e){
     if (e.key==' '){
       c.click(); 
     }
 }
-
 
 function controlGamePlay(){
   imageNo=0
@@ -159,9 +189,25 @@ function controlGamePlay(){
 }
 
 function clickGamePlay(){
+  // On mobile, prevent too rapid tapping
+  if (isMobile) {
+    const now = Date.now();
+    if (now - lastTapTime < 300) { // 300ms debounce
+      return;
+    }
+    lastTapTime = now;
+  }
+  
   if (gameover){
-    startGame()
-    gameover=false
+    // Hide any UI screens
+    const startScreen = document.getElementById('startScreen');
+    if (startScreen) startScreen.classList.add('hidden');
+    
+    const gameOverScreen = document.getElementById('gameOverScreen');
+    if (gameOverScreen) gameOverScreen.classList.add('hidden');
+    
+    startGame();
+    gameover=false;
   }
   else{
     controlGamePlay();
@@ -174,17 +220,7 @@ function registerEventListener(){
 }
 registerEventListener();
 
-
-
-// ctx.getImageData(ball.x + ball.radius+tol+1, ball.y - ball.radius-tol-1, 1, 1)
-// .data[1] == 128 ||
-// ctx.getImageData(ball.x + ball.radius+tol+1, ball.y + ball.radius+tol+1, 1, 1)
-// .data[1] == 128 ||
-// ctx.getImageData(ball.x , ball.y - ball.radius-tol-1, 1, 1)
-// .data[1] == 128||
-// ctx.getImageData(ball.x , ball.y - ball.radius-tol-1, 1, 1)
-// .data[1] == 128||
-// ctx.getImageData(ball.x-ball.radius-1 , ball.y + ball.radius+tol+1, 1, 1)
-// .data[1] == 128 ||
-// ctx.getImageData(ball.x -ball.radius-1, ball.y - ball.radius-tol-1, 1, 1)
-// .data[1] == 128        
+// Make important functions globally available for mobile-controls.js
+window.createPipes = createPipes;
+window.clickGamePlay = clickGamePlay;
+window.controlGamePlay = controlGamePlay;

@@ -6,18 +6,30 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- New sound toggle button with logo -->
+    <!-- Info button and panel -->
+    <button class="info-button"><img src="./icons/icons8-info-50.png" alt="Info" /></button>
+    <div class="info-panel">
+        <button class="close-btn">&times;</button>
+        <h2>Newton's Cradle Simulation</h2>
+        <p>This interactive simulation demonstrates the conservation of momentum and energy using a Newton's cradle.</p>
+        
+        <p><strong>Drag and Drop:</strong> Grab any ball with your mouse or finger and pull it to any angle, then release to watch the physics in action!</p>
+        
+        <div class="keyboard-shortcuts">
+            <h3>Keyboard Shortcuts:</h3>
+            <p><kbd>1</kbd>-<kbd>5</kbd> - Release 1-5 balls</p>
+            <p><kbd>Space</kbd> - Toggle sound</p>
+            <p><kbd>R</kbd> - Reset simulation</p>
+            <p><kbd>I</kbd> - Toggle this info panel</p>
+        </div>
+        
+        <p class="mobile-note">All features work on mobile devices - drag balls with your finger!</p>
+    </div>
+
+    <!-- Control buttons -->
     <button class="sound-toggle"><img src="./icons/icons8-sound-100.png" alt="Sound" /></button>
     <button class="reset-button"><img src="./icons/icons8-reset-48.png" alt="Reset" /></button>
-
-    <!-- Wrap cradle buttons in a container for proper alignment -->
-    <div class="button-container">
-        <button class="cradle-button">1</button>
-        <button class="cradle-button">2</button>
-        <button class="cradle-button">3</button>
-        <button class="cradle-button">4</button>
-        <button class="cradle-button">5</button>
-    </div>
+    
     <canvas id="cradleCanvas"></canvas>
     <script src="script.js"></script>
 </body>

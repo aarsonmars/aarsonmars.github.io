@@ -9,7 +9,14 @@
     <!-- Added mobile-specific meta tags -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#4287f5">
+    
+    <!-- Prevent iOS phone number detection -->
+    <meta name="format-detection" content="telephone=no">
+    
+    <!-- Preload critical resources -->
+    <link rel="preload" href="img/bird.png" as="image">
   </head>
 
   <body>
@@ -31,14 +38,14 @@
           <div class="planet-option selected" data-gravity="0.5" data-name="Earth" data-color="#4287f5">
             <div class="planet-icon earth"></div>
             <span>Earth</span>
-            <div class="gravity-info">Gravity: 1g</div>
+            <div class="gravity-info">Gravity: 1.0g</div>
           </div>
           <div class="planet-option" data-gravity="1.0" data-name="Jupiter" data-color="#E8B247">
             <div class="planet-icon jupiter"></div>
             <span>Jupiter</span>
             <div class="gravity-info">Gravity: 2.6g</div>
           </div>
-          <div class="planet-option" data-gravity="2.0" data-name="Sun" data-color="#FFA500">
+          <div class="planet-option" data-gravity="3.0" data-name="Sun" data-color="#FFA500">
             <div class="planet-icon sun"></div>
             <span>Sun</span>
             <div class="gravity-info">Gravity: 27.1g</div>
@@ -46,7 +53,7 @@
         </div>
         <button id="start-game-btn" class="pulse-button">Start Game</button>
       </div>
-      <div id="gameOverScreen" class="hidden">Game Over<br><span id="finalScore"></span><br>Click to Choose Planet</div>
+      <div id="gameOverScreen" class="hidden">Game Over<br><span id="finalScore"></span><br>Tap to Choose Planet</div>
       <div id="infoText" style="font-size: 12px; color: #666; text-align: center; margin-top: 10px;">
         Using placeholder images. Press Debug button to switch to real images if available.
       </div>

@@ -21,10 +21,17 @@
       </div>
     </header>
     
+    <!-- Insert mobile toggle button and overlay -->
+    <button id="toggleCluesBtn" class="mobile-only">☰</button>
+    <div id="clueOverlay" class="clue-overlay"></div>
+    
     <div class="game-container">
       <div class="clue-panel">
         <div class="clue-section">
-          <h3>Clues</h3>
+          <div class="clue-header">
+            <h3>Clues</h3>
+            <button id="closeClueBtn" class="mobile-only close-btn">×</button>
+          </div>
           <ul id="cluesList"></ul>
           <button id="getClueBtn">Get New Clue</button>
         </div>
