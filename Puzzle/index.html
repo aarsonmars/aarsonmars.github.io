@@ -3,30 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="./style.css">
     <title>Puzzle</title>
 </head>
 <body>
     <header>
         <h1>Word Puzzle Game</h1>
+        <div class="game-controls">
+            <label for="puzzleType">Category:</label>
+            <select id="puzzleType">
+                <option value="canadian_cities">Canadian Cities</option>
+                <option value="fruits">Fruits</option>
+                <option value="countries">Countries</option>
+            </select>
+        </div>
     </header>
     <main id="gameContainer">
         <div id="gameWindow">
-            <canvas id="bg" width="1000" height="900"></canvas>
+            <div class="puzzle-container">
+                <div id="mainContainer"></div>
+            </div>
         </div>
-        <div class="word-list">
-            <h2>Find the following words:</h2>
-            <select id="puzzleType">
-                <option value="fruits">Fruits</option>
-                <option value="cities">Cities</option>
-                <option value="countries">Countries</option>
-            </select>
-            <ul id="wordList">
-                <!-- Words will be populated here -->
-            </ul>
-        </div>
-        <div id="mainContainer"></div>
     </main>
     <footer>
         <p>&copy; 2023 Sagar Bhandari</p>

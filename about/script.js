@@ -21,6 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
         burger.classList.toggle('toggle');
     });
     
+    // Close menu when clicking a link
+    document.querySelectorAll('.nav-links li').forEach(link => {
+        link.addEventListener('click', () => {
+            nav.classList.remove('nav-active');
+            burger.classList.remove('toggle');
+        });
+    });
+    
     // Add scroll animations
     const sections = document.querySelectorAll('.about-section, .research-section, .skills-section, .education-section');
     
