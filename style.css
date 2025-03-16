@@ -115,21 +115,16 @@ hr {
   padding:10px;
 }
 
-#apps,#games{
-  
- display: flex;
- flex-direction: column;
- align-items: left;
- max-height: 400px;  /* Fixed height for the sections */
- overflow-y: auto;   /* Enable vertical scrolling */
- overflow-x: hidden; /* Prevent horizontal scrolling */
- padding-right: 5px; /* Add padding for scrollbar */
- /* width: calc(50% - 20px); Adjust width to prevent horizontal overflow */
- box-sizing: border-box; /* Include padding in width calculation */
- position: relative; /* Position relative for sticky child elements */
- /* Hide scrollbar but maintain scrolling functionality */
-  scrollbar-width: none; /* For Firefox */
-  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+#apps, #games {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+  max-height: 400px;  /* Fixed height for the sections */
+  overflow-y: auto;   /* Enable vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal scrolling */
+  padding-right: 5px; /*Add padding for scrollbar */
+  box-sizing: border-box; /* Include padding in width calculation */
+  position: relative; /* Position relative for sticky child elements */
   padding-bottom: 15px; /* Add padding at the bottom to show shadows */
 }
 
