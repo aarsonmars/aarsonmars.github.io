@@ -94,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function initGame() {
     targetEquation = getTodaysEquation();
     console.log('Target equation:', targetEquation); // For debugging
+    updateActiveTile(); // Add this line
   }
   
   function preventZoom() {
@@ -136,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (currentTile < COLS && !gameOver) {
       updateTile(currentTile, key);
       currentTile++;
+      updateActiveTile(); // Add this line
     }
   }
   
@@ -146,6 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const tile = document.querySelector(`.tile[data-row="${currentRow}"][data-col="${currentTile}"]`);
       tile.textContent = '';
       tile.classList.remove('filled');
+      updateActiveTile(); // Add this line
     }
   }
   
@@ -262,6 +265,7 @@ document.addEventListener('DOMContentLoaded', () => {
               // Move to next row
               currentRow++;
               currentTile = 0;
+              updateActiveTile(); // Add this line
             }
           }
         }, 250); // Half of the flip animation duration
@@ -327,7 +331,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const message = document.getElementById('message');
     message.textContent = text;
     message.classList.remove('hidden');
-    setTimeout(() => {
+    
+    // Clear any existing timeout
+    if (window.messageTimeout) {
+      clearTimeout(window.messageTimeout);
+    }
+    
+    // Hide after 2 seconds
+    window.messageTimeout = setTimeout(() => {
       message.classList.add('hidden');
     }, 2000);
   }
@@ -386,6 +397,23 @@ document.addEventListener('DOMContentLoaded', () => {
       helpModal.classList.remove('show');
     }
   });
+  
+  // Highlight the active tile
+  function updateActiveTile() {
+    // First, remove active class from all tiles
+    document.querySelectorAll('.tile').forEach(tile => {
+      tile.classList.remove('active');
+    });
+    
+    // If game is over, don't highlight any tiles
+    if (gameOver) return;
+    
+    // Set active class on current tile if within bounds
+    if (currentTile < COLS) {
+      const activeTile = document.querySelector(`.tile[data-row="${currentRow}"][data-col="${currentTile}"]`);
+      if (activeTile) activeTile.classList.add('active');
+    }
+  }
   
   // Initialize the game
   initGame();

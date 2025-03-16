@@ -134,6 +134,12 @@ h1 {
   animation: flip 0.5s ease;
 }
 
+.tile.active {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-color: var(--accent-color);
+  box-shadow: 0 0 2px var(--accent-color);
+}
+
 @keyframes flip {
   0% { transform: rotateX(0); }
   50% { transform: rotateX(90deg); }
@@ -196,20 +202,39 @@ h1 {
 }
 
 #message {
-  padding: 10px 20px;
-  margin: 15px 0;
-  border-radius: 4px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px 25px;
+  border-radius: 8px;
   font-weight: bold;
   opacity: 1;
-  transition: opacity 0.3s ease;
-  background-color: var(--accent-color); /* Changed from #333 to accent color */
+  transition: all 0.3s ease;
+  background-color: var(--accent-color);
   color: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  z-index: 1000;
+  text-align: center;
+  max-width: 90%;
+  animation: popup 0.3s ease-out;
 }
 
 #message.hidden {
   opacity: 0;
+  transform: translate(-50%, -60%);
   pointer-events: none;
+}
+
+@keyframes popup {
+  0% {
+    transform: translate(-50%, -40%);
+    opacity: 0;
+  }
+  100% {
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
 }
 
 .modal {
