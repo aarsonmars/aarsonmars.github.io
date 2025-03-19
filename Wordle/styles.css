@@ -1,0 +1,552 @@
+:root {
+    --background-color: #0c0c18;
+    --text-color: #ffffff;
+    --tile-color: #121213;
+    --border-color: #3a3a3c;
+    --key-color: #818384;
+    --key-text-color: #ffffff;
+    --correct-color: #538d4e;
+    --present-color: #b59f3b;
+    --absent-color: #3a3a3c;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', Arial, sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    height: 100vh;
+    width: 100%;
+    overflow: hidden;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 16px; /* Reduced from 10px to 5px */
+    border-bottom: 1px solid var(--border-color);
+    position: relative;
+}
+
+h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.menu-button {
+    font-size: 24px;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s;
+}
+
+.menu-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#game-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    height: calc(100% - 50px); /* Reduced from 60px to 50px */
+    width: 100%;
+    padding: 5px 10px 10px; /* Reduced top padding */
+}
+
+#board-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    overflow: hidden;
+    padding: 0; /* Removed vertical padding completely */
+    /* margin-bottom: -15px; Added negative margin to move content up */
+    position: relative;
+    top: -10px; /* Move board up */
+}
+
+#board {
+    display: grid;
+    grid-template-rows: repeat(6, 1fr);
+    grid-gap: 5px;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 320px; /* Decreased from 350px to 320px */
+    height: 380px; /* Decreased from 420px to 380px */
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+}
+
+.tile {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 2px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    user-select: none;
+    transition: transform 0.2s;
+}
+
+.tile.pop {
+    transform: scale(1.1);
+}
+
+.tile.flip {
+    transform: rotateX(90deg);
+    transition: transform 0.25s;
+}
+
+.tile.flip-back {
+    transform: rotateX(0deg);
+    transition: transform 0.25s;
+    transition-delay: 0.25s;
+}
+
+.tile.correct {
+    background-color: var(--correct-color);
+    border-color: var(--correct-color);
+}
+
+.tile.present {
+    background-color: var(--present-color);
+    border-color: var(--present-color);
+}
+
+.tile.absent {
+    background-color: var(--absent-color);
+    border-color: var(--absent-color);
+}
+
+#keyboard-container {
+    width: 100%;
+    margin: 5px 8px 10px; /* Reduced top margin from 10px to 5px */
+    position: relative; /* Add position relative */
+    top: 0px; /* Increased from -10px to -15px */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto 6px;
+    touch-action: manipulation;
+}
+
+.keyboard-row button {
+    font-family: inherit;
+    font-weight: bold;
+    border: 0;
+    padding: 0;
+    margin: 0 4px 0 0;
+    height: 52px;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    background-color: var(--key-color);
+    color: var(--key-text-color);
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-transform: uppercase;
+    -webkit-tap-highlight-color: transparent;
+    font-size: 1.1rem;
+    box-shadow: 0 3px 0 rgba(0,0,0,0.3);
+    transition: all 0.1s;
+}
+
+.keyboard-row button:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.3);
+}
+
+.keyboard-row button.correct {
+    background-color: var(--correct-color);
+    color: white;
+}
+
+.keyboard-row button.present {
+    background-color: var(--present-color);
+    color: white;
+}
+
+.keyboard-row button.absent {
+    background-color: var(--absent-color);
+    color: white;
+}
+
+.keyboard-row button.valid-word {
+    background-color: var(--correct-color);
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.keyboard-row button.invalid-word {
+    background-color: #dc3545; /* red color for invalid words */
+    color: white;
+    transition: background-color 0.3s;
+}
+
+.wide-button {
+    flex: 1.5;
+    font-size: 0.9rem !important;
+}
+
+/* Special styling for Enter and Backspace buttons */
+button[data-key="enter"] {
+    /* background-color: #4a7c59; */
+    font-weight: 700;
+}
+
+button[data-key="backspace"] {
+    /* background-color: #8e4a59; */
+    font-weight: 700;
+}
+
+.spacer {
+    flex: 0.5;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background-color: var(--background-color);
+    margin: 50vh auto 0;
+    transform: translateY(-50%);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    animation: slideIn 0.3s;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-30px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+.examples {
+    margin-top: 20px;
+}
+
+.example {
+    margin: 15px 0;
+}
+
+.example .row {
+    margin-bottom: 10px;
+    width: 100%;
+    max-width: 300px;
+}
+
+/* Fix for example tiles in instructions */
+.examples .tile {
+    color: var(--text-color);
+    font-size: 1.5rem;
+    border: 2px solid var(--border-color);
+    background-color: var(--tile-color);
+}
+
+.examples .tile.correct {
+    background-color: var(--correct-color);
+    border-color: var(--correct-color);
+    color: white;
+}
+
+.examples .tile.present {
+    background-color: var(--present-color);
+    border-color: var(--present-color);
+    color: white;
+}
+
+.examples .tile.absent {
+    background-color: var(--absent-color);
+    border-color: var(--absent-color);
+    color: white;
+}
+
+/* Example tiles in the instructions modal */
+.example-row {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 5px;
+    width: 100%;
+    max-width: 300px;
+    margin-bottom: 10px;
+}
+
+.example-tile {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border: 2px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    background-color: var(--tile-color);
+    color: var(--text-color);
+}
+
+.example-tile.correct {
+    background-color: var(--correct-color);
+    border-color: var(--correct-color);
+    color: white;
+}
+
+.example-tile.present {
+    background-color: var(--present-color);
+    border-color: var(--present-color);
+    color: white;
+}
+
+.example-tile.absent {
+    background-color: var(--absent-color);
+    border-color: var(--absent-color);
+    color: white;
+}
+
+/* Stats modal styles */
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.stat-box {
+    text-align: center;
+}
+
+.stat-box div:first-child {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.stat-label {
+    font-size: 12px;
+}
+
+#guess-distribution {
+    margin: 20px 0;
+}
+
+.distribution-row {
+    display: flex;
+    align-items: center;
+    margin: 5px 0;
+}
+
+.guess-number {
+    width: 20px;
+    text-align: center;
+}
+
+.graph-bar {
+    background-color: var(--absent-color);
+    color: white;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 8px;
+    border-radius: 3px;
+    margin-left: 8px;
+    min-width: 30px;
+    transition: width 0.3s;
+}
+
+.graph-bar.highlight {
+    background-color: var(--correct-color);
+}
+
+.button-container {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    background: var(--absent-color);
+    color: white;
+    font-family: inherit;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #4a4a4c;
+}
+
+/* Shake animation for invalid words */
+@keyframes shake {
+    10%, 90% { transform: translateX(-1px); }
+    20%, 80% { transform: translateX(2px); }
+    30%, 50%, 70% { transform: translateX(-4px); }
+    40%, 60% { transform: translateX(4px); }
+}
+
+.shake {
+    animation: shake 0.5s;
+}
+
+/* Media queries for mobile responsiveness */
+@media (max-height: 750px) {
+    #board {
+        height: 350px;
+    }
+    
+    .keyboard-row button {
+        height: 48px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-height: 650px) {
+    #board {
+        height: 300px;
+    }
+    
+    .keyboard-row button {
+        height: 40px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 350px) {
+    h1 {
+        font-size: 22px;
+    }
+    
+    .menu-button {
+        width: 30px;
+        height: 30px;
+        font-size: 18px;
+    }
+    
+    .keyboard-row button {
+        margin: 0 4px 0 0;
+    }
+}
+
+/* Media queries for different devices */
+@media (max-width: 500px) {
+    /* On mobile, use the original larger board size */
+    #board {
+        width: 350px; 
+        height: 420px;
+    }
+}
+
+/* Adjust keyboard position for phones */
+@media (max-width: 500px), (max-height: 750px) {
+    #keyboard-container {
+        top: -15px; /* Move keyboard up more on phones */
+        margin-bottom: 5px; /* Add bottom margin on phones */
+    }
+}
+
+/* Dark mode styles */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --tile-color: #121213;
+        --background-color: #0c0c18;
+    }
+}
+
+.additional-info {
+    margin-top: 20px;
+    border-top: 1px solid var(--border-color);
+    padding-top: 15px;
+}
+
+.additional-info ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.additional-info li {
+    margin: 8px 0;
+    line-height: 1.4;
+}
+
+/* Game complete modal styling */
+#game-result-message.success {
+    color: var(--correct-color);
+    font-weight: bold;
+}
