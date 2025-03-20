@@ -465,30 +465,15 @@ button:hover {
     animation: shake 0.5s;
 }
 
-/* Media queries for mobile responsiveness */
-@media (max-height: 750px) {
-    #board {
-        height: 350px;
+/* Media queries for mobile responsiveness - consolidated */
+@media (max-width: 500px) {
+    /* Header adjustments */
+    header {
+        min-height: 40px;
+        padding: 2px 16px;
+        margin-bottom: 0;
     }
     
-    .keyboard-row button {
-        height: 48px;
-        font-size: 1rem;
-    }
-}
-
-@media (max-height: 650px) {
-    #board {
-        height: 300px;
-    }
-    
-    .keyboard-row button {
-        height: 40px;
-        font-size: 0.9rem;
-    }
-}
-
-@media (max-width: 350px) {
     h1 {
         font-size: 22px;
     }
@@ -499,25 +484,60 @@ button:hover {
         font-size: 18px;
     }
     
-    .keyboard-row button {
-        margin: 0 4px 0 0;
+    /* Game container adjustments */
+    #game-container {
+        padding: 5px 10px;
+        height: calc(100svh - 40px);
+        justify-content: space-between;
+        gap: 0;
+        overflow-y: visible;
+        margin-top: 20px;
     }
-}
-
-/* Media queries for different devices */
-@media (max-width: 500px) {
-    /* On mobile, use the original larger board size */
+    
+    /* Board adjustments */
+    #board-container {
+        flex: 0 0 auto;
+        padding: 0;
+        margin: 5px 0;
+        overflow: visible;
+        top: 0;
+        height: auto;
+    }
+    
     #board {
-        width: 350px; 
+        width: 350px;
         height: 420px;
+        padding: 5px;
+        grid-gap: 4px;
+        overflow: visible;
     }
-}
-
-/* Adjust keyboard position for phones */
-@media (max-width: 500px), (max-height: 750px) {
+    
+    /* Keyboard position adjustments */
     #keyboard-container {
-        top: -15px; /* Move keyboard up more on phones */
-        margin-bottom: 5px; /* Add bottom margin on phones */
+        flex: 0 0 auto;
+        top: 0;
+        position: relative;
+        margin: 5px 8px 15px;
+    }
+    
+    .keyboard-row {
+        margin: 0 auto 4px;
+    }
+    
+    .keyboard-row button {
+        height: 60px;
+        margin: 0 4px 4px 0;
+        font-size: 0.9rem;
+        padding: 0;
+    }
+    
+    .wide-button {
+        font-size: 0.9rem !important;
+    }
+    
+    /* Create more space for the entire layout */
+    .container {
+        height: 100svh;
     }
 }
 
