@@ -47,6 +47,8 @@ canvas{
     text-align: center;
     color: rgb(0, 128, 128);
     margin-bottom: 10px;
+    position: relative;
+    top: -15px;
 }
 
 #startScreen, #gameOverScreen {
@@ -470,4 +472,45 @@ canvas {
 /* Fix tap delay on iOS Safari */
 a, button, input, select, textarea, .planet-option {
     touch-action: manipulation;
+}
+
+/* Rotate screen message styling */
+#rotate-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    color: white;
+    text-align: center;
+}
+
+#rotate-screen.hidden {
+    display: none;
+}
+
+.rotate-message p {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+#rotate-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#rotate-button:hover {
+    background-color: #45a049;
 }

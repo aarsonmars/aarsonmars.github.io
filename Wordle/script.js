@@ -310,6 +310,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     if (letter === currentWord[i]) {
                         tile.classList.add('correct');
+                        // Always update to correct class if the letter is in the right position,
+                        // regardless of previous state
+                        keyButton.classList.remove('present', 'absent');
                         keyButton.classList.add('correct');
                     } else if (wordArray.includes(letter)) {
                         tile.classList.add('present');

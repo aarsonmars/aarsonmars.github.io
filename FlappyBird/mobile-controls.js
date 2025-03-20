@@ -12,6 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
         enableTouchControls();
         optimizeForMobile();
     }
+
+    // Check orientation and show rotate screen message if needed
+    checkOrientation();
+
+    // Listen for orientation changes
+    window.addEventListener('orientationchange', checkOrientation);
+    window.addEventListener('resize', checkOrientation);
+
+    // Add event listener to the rotate button
+    const rotateButton = document.getElementById('rotate-button');
+    if (rotateButton) {
+        rotateButton.addEventListener('click', () => {
+            alert('Please rotate your device manually.');
+        });
+    }
 });
 
 // Enable touch controls for the game
@@ -262,3 +277,17 @@ function integrateWithSketchJs() {
 
 // Call the integration function when the document is ready
 document.addEventListener('DOMContentLoaded', integrateWithSketchJs);
+
+// Check orientation and show rotate screen message if needed
+function checkOrientation() {
+    const rotateScreen = document.getElementById('rotate-screen');
+    if (!rotateScreen) return;
+
+    const isPortrait = window.innerHeight > window.innerWidth;
+
+    if (isPortrait) {
+        rotateScreen.classList.remove('hidden');
+    } else {
+        rotateScreen.classList.add('hidden');
+    }
+}

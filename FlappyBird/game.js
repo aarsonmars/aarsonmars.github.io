@@ -281,7 +281,22 @@ class FlappyBirdGame {
         
         // Update pipe gap based on gravity (inversely proportional)
         // Adjusted for better gameplay at lower gravities
-        this.pipeGap = Math.max(100, Math.min(200, 160 / Math.sqrt(gravityFactor)));
+        this.pipeGap = Math.max(100, Math.min(250, 160 / Math.sqrt(gravityFactor)));
+        
+        // Update pipe distance based on celestial body
+        if (planetName === 'Moon') {
+            // Significantly increase pipe distance for Moon (low gravity environment)
+            this.pipeDistance = 650; // Much more space between pipes on the Moon
+        } else if (gravityFactor < 0.5) {
+            // For other low gravity planets
+            this.pipeDistance = 300;
+        } else if (gravityFactor >= 1.5) {
+            // For high gravity planets, put pipes closer
+            this.pipeDistance = 300;
+        } else {
+            // Default pipe distance for medium gravity
+            this.pipeDistance = 350;
+        }
         
         // Update the background scrolling speed
         this.bgScrollSpeed = Math.min(2, 0.4 + gravityFactor * 0.2);
