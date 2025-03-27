@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenStreetMap Data Explorer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>OpenStreetMap Data Explorer</h1>
+        </header>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="section">
+                    <h2>Select Area</h2>
+                    <div class="area-selection">
+                        <div class="button-group">
+                            <button id="draw-area">Draw on Map</button>
+                            <button id="use-visible">Use Visible Area</button>
+                        </div>
+                        <input type="text" id="coordinates" placeholder="lat,lon,lat,lon (S,W,N,E)">
+                    </div>
+                </div>
+                
+                <div class="section">
+                    <h2>Data Selection</h2>
+                    <div class="data-selection-search">
+                        <input type="text" id="data-option-search" placeholder="Search options...">
+                        <button id="expand-all">Expand All</button>
+                        <button id="collapse-all">Collapse All</button>
+                    </div>
+                    <div class="data-quick-select">
+                        <!-- <button id="select-common">Common Features</button> -->
+                        <button id="select-none">Clear All</button>
+                    </div>
+                    <div class="data-categories">
+                        <!-- Example Category: Roads & Highways -->
+                        <div class="category">
+                            <div class="category-header">
+                                <input type="checkbox" class="category-checkbox" id="roads-highways-checkbox">
+                                <label for="roads-highways-checkbox" class="category-name">Roads & Highways</label>
+                                <span class="expand-icon">▼</span>
+                            </div>
+                            <div class="subcategories">
+                                <!-- Subcategory: Highway Types -->
+                                <div class="subcategory">
+                                    <div class="subcategory-header">
+                                        <input type="checkbox" class="subcategory-checkbox" id="highway-types-checkbox">
+                                        <label for="highway-types-checkbox" class="subcategory-name">Highway Types</label>
+                                        <span class="expand-icon">▼</span>
+                                    </div>
+                                    <div class="subcategory-options">
+                                        <div><input type="checkbox" id="motorway"> <label for="motorway">Motorway</label></div>
+                                        <div><input type="checkbox" id="trunk"> <label for="trunk">Trunk</label></div>
+                                        <div><input type="checkbox" id="primary"> <label for="primary">Primary</label></div>
+                                        <!-- ...other highway types... -->
+                                    </div>
+                                </div>
+                                <!-- Add more subcategories here -->
+                            </div>
+                        </div>
+                        <!-- Add more categories here -->
+                    </div>
+                    
+                    <div class="custom-query">
+                        <h3>Custom Overpass Query</h3>
+                        <textarea id="query-editor" rows="6"></textarea>
+                    </div>
+                </div>
+                
+                <div class="section static-button-container">
+                    <button id="fetch-data" class="primary-btn static-button">Fetch Data</button>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+        
+        <div class="data-display">
+            <h2>Results</h2>
+            <div class="data-info">
+                <span id="data-count">0</span> elements retrieved
+            </div>
+            
+            <div class="view-tabs">
+                <button id="json-view-tab" class="view-tab active">JSON View</button>
+                <button id="table-view-tab" class="view-tab">Table View</button>
+            </div>
+            
+            <div id="json-view" class="view-content active">
+                <div class="data-preview">
+                    <pre id="data-preview-content"></pre>
+                </div>
+            </div>
+            
+            <div id="table-view" class="view-content">
+                <div class="table-container">
+                    <table id="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Type</th>
+                                <th>Tags</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table rows will be added dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="download-options">
+                <h3>Download Data</h3>
+                <button data-format="osm">OSM XML</button>
+                <button data-format="geojson">GeoJSON</button>
+                <button data-format="csv">CSV</button>
+                <button data-format="json">JSON</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Use module script instead of regular script -->
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>

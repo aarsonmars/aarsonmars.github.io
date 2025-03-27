@@ -1,0 +1,304 @@
+[
+  {
+    "id": "highways",
+    "name": "Roads & Highways",
+    "options": [
+      { "id": "highway_all", "label": "All Highways/Roads" },
+      { 
+        "id": "highway_subcategories",
+        "label": "Highway Types",
+        "subcategories": [
+          { "id": "highway_motorway", "label": "Motorway/Freeway", "tag": "highway=motorway" },
+          { "id": "highway_trunk", "label": "Trunk Road", "tag": "highway=trunk" },
+          { "id": "highway_primary", "label": "Primary Road", "tag": "highway=primary" },
+          { "id": "highway_secondary", "label": "Secondary Road", "tag": "highway=secondary" },
+          { "id": "highway_tertiary", "label": "Tertiary Road", "tag": "highway=tertiary" },
+          { "id": "highway_residential", "label": "Residential Street", "tag": "highway=residential" },
+          { "id": "highway_service", "label": "Service Road", "tag": "highway=service" },
+          { "id": "highway_pedestrian", "label": "Pedestrian", "tag": "highway=pedestrian" },
+          { "id": "highway_footway", "label": "Footway/Path", "tag": "highway=footway" },
+          { "id": "highway_cycleway", "label": "Cycle Path", "tag": "highway=cycleway" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "public_transport",
+    "name": "Public Transport",
+    "options": [
+      { "id": "public_transport_all", "label": "All Public Transport" },
+      {
+        "id": "public_transport_subcategories",
+        "label": "Transport Types",
+        "subcategories": [
+          { "id": "public_transport_station", "label": "Transit Stations", "tag": "public_transport=station" },
+          { "id": "public_transport_stop", "label": "Transit Stops", "tag": "public_transport=stop_position" },
+          { "id": "railway_station", "label": "Railway Stations", "tag": "railway=station" },
+          { "id": "railway_tram_stop", "label": "Tram Stops", "tag": "railway=tram_stop" },
+          { "id": "highway_bus_stop", "label": "Bus Stops", "tag": "highway=bus_stop" },
+          { "id": "aeroway_aerodrome", "label": "Airports", "tag": "aeroway=aerodrome" },
+          { "id": "amenity_ferry_terminal", "label": "Ferry Terminals", "tag": "amenity=ferry_terminal" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "buildings",
+    "name": "Buildings",
+    "options": [
+      { "id": "building_all", "label": "All Buildings" },
+      {
+        "id": "building_subcategories",
+        "label": "Building Types",
+        "subcategories": [
+          { "id": "building_apartments", "label": "Apartment Buildings", "tag": "building=apartments" },
+          { "id": "building_commercial", "label": "Commercial Buildings", "tag": "building=commercial" },
+          { "id": "building_industrial", "label": "Industrial Buildings", "tag": "building=industrial" },
+          { "id": "building_house", "label": "Houses", "tag": "building=house" },
+          { "id": "building_retail", "label": "Retail Buildings", "tag": "building=retail" },
+          { "id": "building_school", "label": "School Buildings", "tag": "building=school" },
+          { "id": "building_university", "label": "University Buildings", "tag": "building=university" },
+          { "id": "building_hospital", "label": "Hospital Buildings", "tag": "building=hospital" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "amenities",
+    "name": "Amenities",
+    "options": [
+      { "id": "amenity_all", "label": "All Amenities" },
+      {
+        "id": "amenity_food",
+        "label": "Food & Drink",
+        "subcategories": [
+          { "id": "amenity_restaurant", "label": "Restaurants", "tag": "amenity=restaurant" },
+          { "id": "amenity_cafe", "label": "Cafes", "tag": "amenity=cafe" },
+          { "id": "amenity_fast_food", "label": "Fast Food", "tag": "amenity=fast_food" },
+          { "id": "amenity_pub", "label": "Pubs", "tag": "amenity=pub" },
+          { "id": "amenity_bar", "label": "Bars", "tag": "amenity=bar" }
+        ]
+      },
+      {
+        "id": "amenity_education",
+        "label": "Education",
+        "subcategories": [
+          { "id": "amenity_school", "label": "Schools", "tag": "amenity=school" },
+          { "id": "amenity_university", "label": "Universities", "tag": "amenity=university" },
+          { "id": "amenity_library", "label": "Libraries", "tag": "amenity=library" },
+          { "id": "amenity_kindergarten", "label": "Kindergartens", "tag": "amenity=kindergarten" }
+        ]
+      },
+      {
+        "id": "amenity_healthcare",
+        "label": "Healthcare",
+        "subcategories": [
+          { "id": "amenity_hospital", "label": "Hospitals", "tag": "amenity=hospital" },
+          { "id": "amenity_doctors", "label": "Doctor Offices", "tag": "amenity=doctors" },
+          { "id": "amenity_clinic", "label": "Clinics", "tag": "amenity=clinic" },
+          { "id": "amenity_pharmacy", "label": "Pharmacies", "tag": "amenity=pharmacy" },
+          { "id": "amenity_dentist", "label": "Dentists", "tag": "amenity=dentist" }
+        ]
+      },
+      {
+        "id": "amenity_financial",
+        "label": "Financial Services",
+        "subcategories": [
+          { "id": "amenity_bank", "label": "Banks", "tag": "amenity=bank" },
+          { "id": "amenity_atm", "label": "ATMs", "tag": "amenity=atm" }
+        ]
+      },
+      {
+        "id": "amenity_entertainment",
+        "label": "Entertainment & Arts",
+        "subcategories": [
+          { "id": "amenity_cinema", "label": "Cinemas", "tag": "amenity=cinema" },
+          { "id": "amenity_theatre", "label": "Theaters", "tag": "amenity=theatre" },
+          { "id": "amenity_arts_centre", "label": "Arts Centers", "tag": "amenity=arts_centre" },
+          { "id": "amenity_community_centre", "label": "Community Centers", "tag": "amenity=community_centre" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "shops",
+    "name": "Shops & Retail",
+    "options": [
+      { "id": "shop_all", "label": "All Shops" },
+      {
+        "id": "shop_food",
+        "label": "Food Shops",
+        "subcategories": [
+          { "id": "shop_supermarket", "label": "Supermarkets", "tag": "shop=supermarket" },
+          { "id": "shop_convenience", "label": "Convenience Stores", "tag": "shop=convenience" },
+          { "id": "shop_bakery", "label": "Bakeries", "tag": "shop=bakery" },
+          { "id": "shop_butcher", "label": "Butchers", "tag": "shop=butcher" }
+        ]
+      },
+      {
+        "id": "shop_clothing",
+        "label": "Clothing & Fashion",
+        "subcategories": [
+          { "id": "shop_clothes", "label": "Clothing Stores", "tag": "shop=clothes" },
+          { "id": "shop_shoes", "label": "Shoe Stores", "tag": "shop=shoes" },
+          { "id": "shop_jewelry", "label": "Jewelry Stores", "tag": "shop=jewelry" }
+        ]
+      },
+      {
+        "id": "shop_health_beauty",
+        "label": "Health & Beauty",
+        "subcategories": [
+          { "id": "shop_hairdresser", "label": "Hairdressers", "tag": "shop=hairdresser" },
+          { "id": "shop_beauty", "label": "Beauty Shops", "tag": "shop=beauty" },
+          { "id": "shop_cosmetics", "label": "Cosmetics Shops", "tag": "shop=cosmetics" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "natural",
+    "name": "Natural Features",
+    "options": [
+      { "id": "natural_all", "label": "All Natural Features" },
+      {
+        "id": "natural_water",
+        "label": "Water Features",
+        "subcategories": [
+          { "id": "natural_water", "label": "Lakes/Ponds", "tag": "natural=water" },
+          { "id": "natural_coastline", "label": "Coastlines", "tag": "natural=coastline" },
+          { "id": "natural_beach", "label": "Beaches", "tag": "natural=beach" },
+          { "id": "waterway_river", "label": "Rivers", "tag": "waterway=river" },
+          { "id": "waterway_stream", "label": "Streams", "tag": "waterway=stream" }
+        ]
+      },
+      {
+        "id": "natural_terrain",
+        "label": "Terrain Features",
+        "subcategories": [
+          { "id": "natural_wood", "label": "Woods/Forests", "tag": "natural=wood" },
+          { "id": "natural_grassland", "label": "Grasslands", "tag": "natural=grassland" },
+          { "id": "natural_scrub", "label": "Scrublands", "tag": "natural=scrub" },
+          { "id": "natural_heath", "label": "Heaths", "tag": "natural=heath" },
+          { "id": "natural_cliff", "label": "Cliffs", "tag": "natural=cliff" },
+          { "id": "natural_peak", "label": "Peaks/Mountains", "tag": "natural=peak" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "leisure_recreation",
+    "name": "Leisure & Recreation",
+    "options": [
+      { "id": "leisure_all", "label": "All Leisure Areas" },
+      {
+        "id": "leisure_parks",
+        "label": "Parks & Green Spaces",
+        "subcategories": [
+          { "id": "leisure_park", "label": "Parks", "tag": "leisure=park" },
+          { "id": "leisure_garden", "label": "Gardens", "tag": "leisure=garden" },
+          { "id": "leisure_playground", "label": "Playgrounds", "tag": "leisure=playground" },
+          { "id": "leisure_dog_park", "label": "Dog Parks", "tag": "leisure=dog_park" }
+        ]
+      },
+      {
+        "id": "leisure_sports",
+        "label": "Sports Facilities",
+        "subcategories": [
+          { "id": "leisure_sports_centre", "label": "Sports Centers", "tag": "leisure=sports_centre" },
+          { "id": "leisure_stadium", "label": "Stadiums", "tag": "leisure=stadium" },
+          { "id": "leisure_swimming_pool", "label": "Swimming Pools", "tag": "leisure=swimming_pool" },
+          { "id": "leisure_pitch", "label": "Sports Fields/Courts", "tag": "leisure=pitch" },
+          { "id": "leisure_golf_course", "label": "Golf Courses", "tag": "leisure=golf_course" },
+          { "id": "leisure_fitness_centre", "label": "Fitness Centers", "tag": "leisure=fitness_centre" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "landuse",
+    "name": "Land Use",
+    "options": [
+      { "id": "landuse_all", "label": "All Land Use Areas" },
+      {
+        "id": "landuse_urban",
+        "label": "Urban Land Use",
+        "subcategories": [
+          { "id": "landuse_residential", "label": "Residential Areas", "tag": "landuse=residential" },
+          { "id": "landuse_commercial", "label": "Commercial Areas", "tag": "landuse=commercial" },
+          { "id": "landuse_industrial", "label": "Industrial Areas", "tag": "landuse=industrial" },
+          { "id": "landuse_retail", "label": "Retail Areas", "tag": "landuse=retail" }
+        ]
+      },
+      {
+        "id": "landuse_rural",
+        "label": "Rural Land Use",
+        "subcategories": [
+          { "id": "landuse_farmland", "label": "Farmland", "tag": "landuse=farmland" },
+          { "id": "landuse_forest", "label": "Forests", "tag": "landuse=forest" },
+          { "id": "landuse_meadow", "label": "Meadows", "tag": "landuse=meadow" },
+          { "id": "landuse_orchard", "label": "Orchards", "tag": "landuse=orchard" },
+          { "id": "landuse_vineyard", "label": "Vineyards", "tag": "landuse=vineyard" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tourism",
+    "name": "Tourism & Culture",
+    "options": [
+      { "id": "tourism_all", "label": "All Tourism Features" },
+      {
+        "id": "tourism_accommodation",
+        "label": "Accommodation",
+        "subcategories": [
+          { "id": "tourism_hotel", "label": "Hotels", "tag": "tourism=hotel" },
+          { "id": "tourism_motel", "label": "Motels", "tag": "tourism=motel" },
+          { "id": "tourism_hostel", "label": "Hostels", "tag": "tourism=hostel" },
+          { "id": "tourism_guest_house", "label": "Guest Houses", "tag": "tourism=guest_house" },
+          { "id": "tourism_camp_site", "label": "Camp Sites", "tag": "tourism=camp_site" }
+        ]
+      },
+      {
+        "id": "tourism_attractions",
+        "label": "Attractions",
+        "subcategories": [
+          { "id": "tourism_attraction", "label": "Tourist Attractions", "tag": "tourism=attraction" },
+          { "id": "tourism_museum", "label": "Museums", "tag": "tourism=museum" },
+          { "id": "tourism_gallery", "label": "Art Galleries", "tag": "tourism=gallery" },
+          { "id": "tourism_zoo", "label": "Zoos", "tag": "tourism=zoo" },
+          { "id": "tourism_theme_park", "label": "Theme Parks", "tag": "tourism=theme_park" },
+          { "id": "tourism_viewpoint", "label": "Viewpoints", "tag": "tourism=viewpoint" }
+        ]
+      },
+      {
+        "id": "historic_sites",
+        "label": "Historic Sites",
+        "subcategories": [
+          { "id": "historic_castle", "label": "Castles", "tag": "historic=castle" },
+          { "id": "historic_monument", "label": "Monuments", "tag": "historic=monument" },
+          { "id": "historic_archaeological_site", "label": "Archaeological Sites", "tag": "historic=archaeological_site" },
+          { "id": "historic_memorial", "label": "Memorials", "tag": "historic=memorial" },
+          { "id": "historic_ruins", "label": "Ruins", "tag": "historic=ruins" }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "boundaries",
+    "name": "Boundaries & Administrative",
+    "options": [
+      { "id": "boundary_administrative", "label": "Administrative Boundaries", "tag": "boundary=administrative" },
+      {
+        "id": "boundary_admin_levels",
+        "label": "By Admin Level",
+        "subcategories": [
+          { "id": "boundary_admin_level2", "label": "Country", "tag": "boundary=administrative and admin_level=2" },
+          { "id": "boundary_admin_level4", "label": "State/Province", "tag": "boundary=administrative and admin_level=4" },
+          { "id": "boundary_admin_level6", "label": "County/District", "tag": "boundary=administrative and admin_level=6" },
+          { "id": "boundary_admin_level8", "label": "City/Municipality", "tag": "boundary=administrative and admin_level=8" },
+          { "id": "boundary_admin_level10", "label": "Neighborhood/Borough", "tag": "boundary=administrative and admin_level=10" }
+        ]
+      }
+    ]
+  }
+]
