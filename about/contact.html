@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact - Sagar Bhandari</title>
+    <link rel='icon' href='../img/sagar.png'>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: rgb(12, 12, 24);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(74, 158, 255, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(74, 158, 255, 0.1) 0%, transparent 20%);
+            color: white;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0px auto;
+            padding: 20px;
+            background-color: rgba(30, 30, 50, 0.7);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.8s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #4a9eff;
+            font-size: 2rem;
+            letter-spacing: 1px;
+            border-bottom: 2px solid rgba(74, 158, 255, 0.3);
+            /* padding-bottom: 15px; */
+        }
+        
+        .form-group {
+            margin-bottom: 8px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: #e6e6e6;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        input, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: white;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #4a9eff;
+            box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: #4a9eff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);
+        }
+        
+        button:hover {
+            background-color: #3a7dd0;
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(1px);
+        }
+        
+        .success-message, .error-message {
+            padding: 12px;
+            margin-top: 10px;
+            border-radius: 8px;
+            text-align: center;
+            display: none;
+            font-weight: 500;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .success-message {
+            background-color: rgba(40, 167, 69, 0.2);
+            border: 1px solid rgba(40, 167, 69, 0.4);
+            color: #a3f5b4;
+        }
+        
+        .error-message {
+            background-color: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.4);
+            color: #ffb3bd;
+        }
+        
+        .home-link {
+            display: inline-block;
+            text-align: center;
+            margin: 15px;
+            color: #4a9eff;
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid rgba(74, 158, 255, 0.3);
+            border-radius: 20px;
+            transition: all 0.3s;
+            
+         
+        }
+        
+        .home-link:hover {
+            background-color: rgba(74, 158, 255, 0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                width: calc(100% - 40px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Contact Me</h1>
+        
+        <form id="contactForm">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" name="subject" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="message">Message</label>
+                <textarea id="message" name="message" required></textarea>
+            </div>
+            
+            <button type="submit">Send Message</button>
+        </form>
+        
+        <div class="success-message" id="successMessage">
+            Your message has been sent successfully. I'll get back to you soon!
+        </div>
+        
+        <div class="error-message" id="errorMessage">
+            There was an error sending your message. Please try again later.
+        </div>
+        
+        <a href="../" class="home-link">Return to Homepage</a>
+    </div>
+    
+    <script src="contact.js"></script>
+</body>
+</html>

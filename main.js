@@ -1,118 +1,167 @@
-// Detect mobile devices and adjust scene complexity for better performance
-const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+// Background canvas animation setup
+let canvas;
+let ctx;
 
-if (isMobile) {
-  // Reduce stars for better mobile performance
-  stars.forEach((star, index) => {
-    if (index % 3 !== 0) { // Keep only 1/3 of the stars
-      scene.remove(star);
-    }
-  });
+// Initialize the canvas animation when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+  canvas = document.getElementById('bg');
+  ctx = canvas.getContext('2d');
   
-  // Simplify torus geometry for mobile
-  torus.geometry.dispose();
-  torus.geometry = new THREE.TorusGeometry(150, 40, 8, 50); // Less complex geometry
+  // Set canvas dimensions to match window
+  resizeCanvas();
   
-  // Slower animation on mobile for better performance
-  function animate() {
-    requestAnimationFrame(animate);
-    
-    torus.rotation.x += 0.0001;
-    torus.rotation.y += 0.00005;
-    torus.rotation.z += 0.0001;
-    
-    moon.rotation.y += 0.002;
-    
-    // Slow down moon movement
-    if (moon.position.x<-moonMax.x||moon.position.x>moonMax.x)ix=-ix
-    moon.position.x-=ix*0.5;
-    if (moon.position.y<-moonMax.y||moon.position.y>moonMax.y)iy=-iy
-    moon.position.y-=iy*0.5;
-    if (moon.position.z<-moonMax.z||moon.position.z>moonMax.z)iz=-iz
-    moon.position.z-=iz*0.5;
-    
-    jeff.rotation.y+=0.005;
-    
-    // Update fewer stars and less often on mobile
-    if (Math.random() > 0.7) {
-      stars.slice(0, stars.length/3).forEach((x) => {
-        x.position.x+=.03*(Math.random()-0.5);
-        x.position.y+=.03*(Math.random()-0.5);
-        x.position.z+=.03*(Math.random()-0.5);
-      });
-    }
-    
-    renderer.render(scene, camera);
-  }
-} else {
-  // Original animation for desktop
-  function animate() {
-    requestAnimationFrame(animate);
+  // Start animation
+  animateBackground();
   
-    torus.rotation.x += 0.0002;
-    torus.rotation.y += 0.0001;
-    torus.rotation.z += 0.0002;
-  
-    moon.rotation.y += 0.003;
-    // borderChange(moon.position.x,moonMax.x,0.05)
-    if (moon.position.x<-moonMax.x||moon.position.x>moonMax.x)ix=-ix
-    moon.position.x-=ix
-    if (moon.position.y<-moonMax.y||moon.position.y>moonMax.y)iy=-iy
-    moon.position.y-=iy
-    if (moon.position.z<-moonMax.z||moon.position.z>moonMax.z)iz=-iz
-    moon.position.z-=iz
-    // moon.position.z-=.03
-    // console.log(moon.position)
-  
-    jeff.rotation.y+=0.01
-    // controls.update();
-      stars.forEach((x)=>{
-          x.position.x+=.05*(Math.random()-0.5);
-          x.position.y+=.05*(Math.random()-0.5);
-          x.position.z+=.05*(Math.random()-0.5);
-      })
-    renderer.render(scene, camera);
-  }
-}
-
-// Handle orientation changes for mobile
-window.addEventListener('orientationchange', function() {
-  // Wait for orientation change to complete
-  setTimeout(() => {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-    camera.aspect = window.innerWidth / window.innerHeight;
-    camera.updateProjectionMatrix();
-  }, 200);
+  // Improve accessibility with keyboard navigation
+  setupKeyboardNavigation();
 });
 
-camera.position.x=0
-camera.position.y=0
-camera.position.z=100
-
-animate();
-
-function moveCamera() {
-  const t = document.body.getBoundingClientRect().top;
-  moon.rotation.x += 0.05;
-  moon.rotation.y += 0.075;
-  moon.rotation.z += 0.05;
-
-  jeff.rotation.y += 0.01;
-  jeff.rotation.z += 0.01;
-
-  camera.position.z = t * -0.01;
-  camera.position.x = t * -0.0002;
-  camera.rotation.y = t * -0.0002;
+// Responsive canvas sizing
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
 }
-document.body.onscroll = moveCamera;
 
+window.addEventListener('resize', function() {
+  // Resize canvas on window resize
+  resizeCanvas();
+  
+  // Handle section overflow
+  const gameSection = document.getElementById('games');
+  const appSection = document.getElementById('apps');
+  
+  // Force recalculation of overflow
+  if (gameSection) {
+    gameSection.style.overflow = 'hidden';
+    setTimeout(() => { 
+      gameSection.style.overflowY = 'auto';
+      gameSection.style.overflowX = 'hidden';
+    }, 10);
+  }
+  
+  if (appSection) {
+    appSection.style.overflow = 'hidden';
+    setTimeout(() => {
+      appSection.style.overflowY = 'auto'; 
+      appSection.style.overflowX = 'hidden';
+    }, 10);
+  }
+});
 
-// Helpers
+// Background animation function
+function animateBackground() {
+  if (!canvas || !ctx) return;
+  
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Set background
+  ctx.fillStyle = 'rgb(12, 12, 24)';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Draw subtle floating particles
+  drawParticles();
+  
+  // Continue animation
+  requestAnimationFrame(animateBackground);
+}
 
-// const lightHelper = new THREE.PointLightHelper(pointLight)
-// const gridHelper = new THREE.GridHelper(0, 0);
-// scene.add(lightHelper, gridHelper)
+// Particles for background effect
+const particles = [];
+for (let i = 0; i < 50; i++) {
+  particles.push({
+    x: Math.random() * window.innerWidth,
+    y: Math.random() * window.innerHeight,
+    size: Math.random() * 3 + 1,
+    speed: Math.random() * 0.5 + 0.1,
+    opacity: Math.random() * 0.5 + 0.1
+  });
+}
 
-// const controls = new OrbitControls(camera, renderer.domElement);
+function drawParticles() {
+  particles.forEach(particle => {
+    // Move particle
+    particle.y -= particle.speed;
+    
+    // Reset if off screen
+    if (particle.y < 0) {
+      particle.y = canvas.height;
+      particle.x = Math.random() * canvas.width;
+    }
+    
+    // Draw particle
+    ctx.beginPath();
+    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(74, 158, 255, ${particle.opacity})`;
+    ctx.fill();
+  });
+}
 
+// Fix for iOS Safari 100vh issue
+function setViewportHeight() {
+  document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+}
 
+window.addEventListener('resize', setViewportHeight);
+window.addEventListener('orientationchange', setViewportHeight);
+setViewportHeight();
+
+// Enhance touch scrolling for mobile
+document.addEventListener('touchmove', function(e) {
+  const targetElement = e.target;
+  if (targetElement.closest('#games') || targetElement.closest('#apps')) {
+    e.stopPropagation();
+  }
+}, { passive: true });
+
+// Improve keyboard accessibility
+function setupKeyboardNavigation() {
+  // Get all interactive elements
+  const interactiveElements = document.querySelectorAll('a, button');
+  
+  interactiveElements.forEach(element => {
+    // Add focus styles
+    element.addEventListener('focus', () => {
+      element.classList.add('keyboard-focus');
+    });
+    
+    element.addEventListener('blur', () => {
+      element.classList.remove('keyboard-focus');
+    });
+  });
+}
+
+// Add loading indicator
+window.addEventListener('load', function() {
+  // Hide any loading elements once page is fully loaded
+  const loader = document.getElementById('loader');
+  if (loader) {
+    loader.style.display = 'none';
+  }
+  
+  // Fade in content
+  document.body.classList.add('loaded');
+});
+
+// Lazy load images
+if ('IntersectionObserver' in window) {
+  const imgObserver = new IntersectionObserver((entries, observer) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const img = entry.target;
+        const src = img.getAttribute('data-src');
+        if (src) {
+          img.src = src;
+          img.removeAttribute('data-src');
+        }
+        observer.unobserve(img);
+      }
+    });
+  });
+  
+  // Apply to all images with data-src attribute
+  document.querySelectorAll('img[data-src]').forEach(img => {
+    imgObserver.observe(img);
+  });
+}

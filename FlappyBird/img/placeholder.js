@@ -241,22 +241,33 @@ function generateAndApplyPlaceholders() {
 function savePlaceholdersToDOM() {
     if (!window.placeholderImages) return;
     
-    // Create a container for the images
-    const container = document.createElement('div');
-    container.id = 'placeholder-images';
-    container.style.display = 'none';
-    
-    // Add each image
-    Object.entries(window.placeholderImages).forEach(([name, src]) => {
-        const img = new Image();
-        img.id = `placeholder-${name}`;
-        img.src = src;
-        img.setAttribute('alt', name);
-        container.appendChild(img);
-    });
-    
-    // Add to document body
-    document.body.appendChild(container);
+    try {
+        // Create container for placeholder images
+        const container = document.createElement('div');
+        container.id = 'placeholder-images';
+        container.style.display = 'none';
+        
+        // Add each placeholder image to the container
+        Object.entries(window.placeholderImages).forEach(([name, src]) => {
+            const img = document.createElement('img');
+            img.id = `placeholder-${name}`;
+            img.src = src;
+            img.style.maxWidth = '100px';
+            container.appendChild(img);
+        });
+        
+        // Only append to body if document is ready
+        if (document.body) {
+            document.body.appendChild(container);
+        } else {
+            // If document isn't ready, wait for it
+            window.addEventListener('DOMContentLoaded', () => {
+                document.body.appendChild(container);
+            });
+        }
+    } catch (e) {
+        console.error('Error saving placeholders to DOM:', e);
+    }
 }
 
 // Function to check if images exist

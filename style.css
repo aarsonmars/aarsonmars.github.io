@@ -1,11 +1,4 @@
-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-}
+/* Base styles */
 * {
   margin: 0;
   padding: 0;
@@ -14,47 +7,73 @@ canvas {
   text-align: center;
 }
 
+/* Canvas background */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+}
+
+/* Body styling */
+body {
+  background: rgb(12, 12, 24);
+}
+
+/* Link styles */
 a {
   text-decoration: none;
   text-align: center;
 }
 
-a.hover-animate {
+/* Hover animation styles */
+.hover-animate {
   position: relative;
   display: inline-block;
-  overflow: hidden; /* Ensure the underline does not cause overflow */
+  overflow: hidden;
+  transition: color 0.3s ease, transform 0.3s ease;
 }
 
-a.hover-animate::after {
+.hover-animate:hover {
+  color: #007BFF;
+  transform: scale(1.1);
+}
+
+.hover-animate::after {
   content: '';
   position: absolute;
   width: 100%;
   height: 2px;
-  bottom: 0; /* Adjusted to ensure the underline is within the element */
+  bottom: 0;
   left: 0;
-  background-color: #007BFF; /* Change to your preferred color */
+  background-color: #007BFF;
   transform: scaleX(0);
   transition: transform 0.3s ease;
 }
 
-a.hover-animate:hover::after {
+.hover-animate:hover::after {
   transform: scaleX(1);
 }
 
+/* Horizontal rule */
 hr {
   margin-left: 1%;
   width: 98%;
   border: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-#mainConatiner{
-  position:absolute;
-  z-index: 99;
+/* Main container */
+#mainContainer {
+  margin: 5% 5% 0;
+  width: 90%;
 }
 
-@keyframes title-animation{
-  0%{color:rgba(255, 255, 255, 0.25)}
-  100%{color:rgba(255, 255, 255, 0.75); }
+/* Title styles */
+@keyframes title-animation {
+  0% {color: rgba(255, 255, 255, 0.25);}
+  100% {color: rgba(255, 255, 255, 0.75);}
 }
 
 #titleName {
@@ -64,8 +83,8 @@ hr {
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
-  overflow: hidden; /* Ensure the underline does not cause overflow */
-  margin-bottom: 10px; /* Adjust this value to decrease the gap */
+  overflow: hidden;
+  margin-bottom: 10px;
 }
 
 #titleName:hover {
@@ -89,64 +108,66 @@ hr {
   transform: scaleX(1);
 }
 
-#mainContainer {
-  margin-left: 5%;
-  width: 90%;
-  margin-top: 5%;
-}
-#project{
-  top:0;
+#project {
   position: sticky;
-  font-size:2.5em;
-  background: rgb(12,12,24);
-  margin-top: 10px; /* Adjust this value to decrease the gap */
-}
-.black{
-  color:rgb(90, 14, 233);
+  top: 0;
+  font-size: 2.5em;
+  background: rgb(12, 12, 24);
+  margin-top: 10px;
+  z-index: 10;
 }
 
+/* Games and Apps layout */
 #gamesAndApps {
   display: flex;
-  align-items:stretch;
+  align-items: stretch;
   margin-top: 10px;
-  display: flex;
   justify-content: space-evenly;
   font-size: 30px;
-  padding:10px;
+  padding: 10px;
 }
 
 #apps, #games {
   display: flex;
   flex-direction: column;
   align-items: left;
-  max-height: 400px;  /* Fixed height for the sections */
-  overflow-y: auto;   /* Enable vertical scrolling */
-  overflow-x: hidden; /* Prevent horizontal scrolling */
-  padding-right: 5px; /*Add padding for scrollbar */
-  box-sizing: border-box; /* Include padding in width calculation */
-  position: relative; /* Position relative for sticky child elements */
-  padding-bottom: 15px; /* Add padding at the bottom to show shadows */
+  max-height: 480px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 5px;
+  box-sizing: border-box;
+  position: relative;
+  padding-bottom: 15px;
 }
 
-/* Hide all scrollbars by default (both horizontal and vertical) */
+/* Section headers */
+.section-header {
+  position: sticky;
+  top: 0;
+  background-color: rgb(12, 12, 24);
+  width: 100%;
+  padding: 5px 0;
+  z-index: 10;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Scrollbar styles */
 #apps::-webkit-scrollbar, 
 #games::-webkit-scrollbar,
 #apps::-webkit-scrollbar-horizontal, 
 #games::-webkit-scrollbar-horizontal {
-  width: 0;
-  height: 0; /* Height for horizontal scrollbar */
+  width: 0px;
+  height: 0;
   background: transparent;
-  display: none;
+  /* display: none; */
 }
 
-/* Only show vertical scrollbar on hover */
 #apps:hover::-webkit-scrollbar, 
 #games:hover::-webkit-scrollbar {
   width: 8px;
   display: block;
 }
 
-/* Keep horizontal scrollbar hidden even on hover */
 #apps:hover::-webkit-scrollbar-horizontal, 
 #games:hover::-webkit-scrollbar-horizontal {
   height: 0;
@@ -167,23 +188,21 @@ hr {
   background: rgba(74, 158, 255, 0.8);
 }
 
+/* App cards */
 .apps {
   background-color: rgb(20, 20, 40);
-  width: calc(100% - 10px); /* Adjust width to prevent horizontal overflow */
-  padding: 12px 15px;  /* Increased padding for better spacing */
-  margin-top: 15px;
-  margin-bottom: 8px; /* Add bottom margin to ensure shadow visibility */
+  width: calc(100% - 10px);
+  padding: 12px 15px;
+  margin: 15px 0 8px;
   border: 1px solid rgb(56, 44, 44);
   border-radius: 20px;
   box-shadow: 0.1em 0.1em 0.1em 0.1em rgb(77, 73, 73);
-  box-sizing: border-box; /* Include padding and border in width calculation */
-  /* New layout for side-by-side arrangement */
+  box-sizing: border-box;
   display: flex;
-  align-items: center;  /* Better vertical alignment */
+  align-items: center;
   justify-content: flex-start;
 }
 
-/* For the last item in each section, add extra margin to ensure shadow visibility */
 #games a:last-child .apps,
 #apps a:last-child .apps {
   margin-bottom: 15px;
@@ -195,17 +214,15 @@ hr {
   align-items: center;
   width: 100%;
   justify-content: flex-start;
-  /* Added to prevent extra space */
   min-width: 0;
-  overflow: hidden; /* Prevent any potential overflow */
+  overflow: hidden;
 }
 
 .app-info {
   margin-left: 15px;
   text-align: center;
   display: flex;
-  align-items: center; /* Center text vertically */
-  /* Adjusted to prevent extra space */
+  align-items: center;
   flex: 1;
   min-width: 0;
 }
@@ -213,43 +230,48 @@ hr {
 .app-info p {
   text-align: left;
   font-size: 0.8em;
-  width: auto; /* Let text take natural width */
+  width: auto;
   margin: 0;
   padding: 0;
   line-height: 1;
-  /* Remove text truncation properties */
-  white-space: normal; /* Allow text to wrap */
-  overflow: visible;   /* Show overflow text */
-  text-overflow: clip; /* Don't add ellipsis */
-  word-break: break-word; /* Break long words if needed */
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  word-break: break-word;
 }
 
 img {
-  margin: 0; /* Remove all margins */
+  margin: 0;
   height: 50px;
   width: 50px;
   border-radius: 50%;
   flex-shrink: 0;
-  object-fit: cover; /* Ensure images maintain aspect ratio */
-  display: block; /* Remove extra space below image */
+  object-fit: cover;
+  display: block;
 }
 
-#bottomBar,#source {
-  color: rgba(255, 255, 255, 0.25);
-  position:fixed;
+/* Footer styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
 
+#source {
+  position: fixed;
   bottom: 0;
+  width: 100%;
+  color: rgba(255, 255, 255, 0.25);
   font-size: 1.5em;
   padding: 5px 0;
-  width: 100%;
   background: rgba(0, 0, 0, 0.5);
 }
-#source{
-  bottom:1.1em;
-  font-size: 2em;
+
+#source span {
+  margin: 0 10px;
 }
 
-/* New styles for cradle buttons */
+/* Cradle button styles */
 #buttonContainer {
   position: absolute;
   top: 10px;
@@ -271,17 +293,13 @@ img {
   cursor: pointer;
 }
 
-.section-header {
-  position: sticky;
-  top: 0;
-  background-color: rgb(12, 12, 24);
-  width: 100%;
-  padding: 5px 0;
-  z-index: 10;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+/* Utility classes */
+.black {
+  color: rgb(90, 14, 233);
 }
 
-@media only screen and (max-width:768px) {
+/* Media Queries */
+@media only screen and (max-width: 768px) {
   /* Medium-sized mobile devices and tablets */
   #titleName {
     font-size: 4.8em;
@@ -291,7 +309,6 @@ img {
     font-size: 2.2em;
   }
   
-  /* Keep the side-by-side layout but slightly adjusted */
   #gamesAndApps {
     flex-direction: column;
   }
@@ -302,52 +319,47 @@ img {
   }
 }
 
-@media only screen and (max-width:512px){
-#titleName{
-  font-size: 4.5em;
-}
+@media only screen and (max-width: 512px) {
+  #titleName {
+    font-size: 4.5em;
+  }
 
-  #mainContainer{
-    width:98%;
-    margin:1%;
+  #mainContainer {
+    width: 98%;
+    margin: 1%;
     justify-content: space-evenly;
-    height:80%;
-    margin-bottom:6em;
+    height: 80%;
+    margin-bottom: 6em;
     margin-top: 3%;
   }
-  #games,#apps{
-    margin-top:1em;
-    max-height: 300px;  /* Smaller height on mobile devices */
-    width: 100%; /* Full width on mobile */
+  
+  #games, #apps {
+    margin-top: 1em;
+    max-height: 300px;
+    width: 100%;
     overflow-x: hidden;
   }
-  .apps{
+  
+  .apps {
     padding: 10px;
-    padding-bottom: 10px; /* Make padding consistent */
-    margin-top:1em;
+    margin-top: 1em;
     border-radius: 1em;
-    margin-bottom: 10px; /* Increase bottom margin on mobile for better shadows */
+    margin-bottom: 10px;
   }
 
   #gamesAndApps {
     width: 100%;
     display: flex;
     flex-direction: column;
-    align-items:stretch;
+    align-items: stretch;
     margin-top: 1%;
-    justify-content: space-evenly;
     font-size: 1.6em;
   }
 
-  #bottomBar {
-    font-size: 1em;
-    padding: 8px 0;
-    box-sizing: border-box;
+  #source {
+    font-size: 1.3em;
+    bottom: 0; /* Fixed position to remove gap above bottom bar */
   }
-#source{
-  font-size:1.3em;
-  bottom: 2.5em;
-}
 
   .section-header {
     font-size: 1.2em;
@@ -355,13 +367,12 @@ img {
   }
 
   .app-info {
-    margin-left: 12px; /* Adjust margin for mobile */
-    width: calc(100% - 52px); /* Adjust for smaller image on mobile */
+    margin-left: 12px;
+    width: calc(100% - 52px);
   }
 
   .app-info p {
-    font-size: 0.9em; /* Slightly increase font size for better visibility */
-    /* Ensure text is visible on mobile */
+    font-size: 0.9em;
     white-space: normal;
     overflow: visible;
   }
@@ -373,7 +384,7 @@ img {
 
   #games a:last-child .apps,
   #apps a:last-child .apps {
-    margin-bottom: 20px; /* More margin on mobile for last items */
+    margin-bottom: 20px;
   }
 }
 
@@ -398,16 +409,12 @@ img {
   #source {
     font-size: 1em;
   }
-  
-  #bottomBar {
-    font-size: 0.8em;
-  }
 }
 
 @media screen and (max-height: 600px) {
   #mainContainer {
     margin-top: 2%;
-    margin-bottom: 90px; /* Extra space for bottom bars */
+    margin-bottom: 90px;
   }
   
   #games, #apps {
