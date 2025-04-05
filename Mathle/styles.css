@@ -153,23 +153,25 @@ h1 {
 }
 
 #keyboard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   max-width: 400px; /* Adjust max-width for better responsiveness */
-  margin-top: 0px;
+  margin-top: 10px; /* Add spacing above the keyboard */
+  gap: 8px; /* Add spacing between rows */
 }
 
 .keyboard-row {
   display: flex;
   justify-content: center;
-  margin: 5px 0;
-  touch-action: manipulation;
+  gap: 5px; /* Add spacing between keys */
 }
 
 .key {
   font-size: 18px;
   font-weight: bold;
-  padding: 15px 10px;
-  margin: 0 2px;
+  padding: 12px 8px; /* Adjust padding for better touch targets */
   min-width: 40px;
   border-radius: 4px;
   cursor: pointer;
@@ -182,8 +184,16 @@ h1 {
 }
 
 .key.wide {
-  min-width: 80px;
-  font-size: 14px;
+  min-width: 80px; /* Wider keys for Enter and Delete */
+  font-size: 16px;
+}
+
+.key.operator {
+  background-color: #f0f0f0; /* Different background for operators */
+}
+
+.key.number {
+  background-color: var(--key-bg); /* Default background for numbers */
 }
 
 .key.correct {
@@ -313,49 +323,70 @@ h1 {
 
 @media (max-width: 480px) {
   h1 {
-    font-size: 28px;
+    font-size: 24px; /* Reduced font size */
+    margin-bottom: 5px; /* Reduced margin */
   }
   
   .subtitle {
-    font-size: 12px;
-  }
-  
-  .tile {
-    font-size: 18px;
-  }
-  
-  #game-board {
-    max-width: 320px;
-    gap: 3px;
-  }
-  
-  .row {
-    gap: 3px;
-  }
-  
-  .key {
-    font-size: 16px;
-    padding: 12px 5px;
-    min-width: 32px;
-    margin: 0 1px;
-  }
-  
-  .key.wide {
-    min-width: 60px;
-    font-size: 12px;
+    font-size: 11px; /* Reduced font size */
+    margin-bottom: 5px; /* Reduced margin */
   }
   
   .info-bar {
-    max-width: 320px;
+    margin-bottom: 10px; /* Reduced spacing */
   }
   
-  .info {
-    font-size: 11px;
+  #game-board {
+    max-width: 95%; /* Use more of the screen width */
+    gap: 4px; /* Slightly reduced gap */
+    margin-bottom: 25px; /* Increased margin below the board */
   }
-}
-
-/* Prevent zoom on input focus for mobile */
-@viewport {
-  width: device-width;
-  zoom: 1.0;
+  
+  .tile {
+    font-size: 30px; /* Slightly smaller font for compactness */
+  }
+  
+  .key {
+    font-size: 20px; /* Maintain larger font for readability */
+    padding: 12px 6px; /* Slightly reduced padding */
+    min-width: 36px; /* Slightly reduced width */
+    height: 44px; /* Reduced height */
+  }
+  
+  .keyboard-row {
+    margin: 3px 0; /* Reduced spacing between rows */
+  }
+  
+  #keyboard {
+    margin-top: 85px; /* Increased spacing above the keyboard */
+    max-width: 100%;
+    gap: 6px;
+  }
+  
+  .keyboard-row {
+    gap: 6px;
+    margin: 5px 0;
+  }
+  
+  .key {
+    font-size: 22px; /* Larger font size */
+    padding: 10px 2px; /* Adjust padding */
+    min-width: 42px; /* Wider keys */
+    height: 55px; /* Taller keys */
+    border-radius: 6px; /* Slightly rounded corners */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Add subtle shadow */
+  }
+  
+  .key.wide {
+    min-width: 90px; /* Wider special keys */
+    font-size: 16px; /* Maintain readable font size */
+  }
+  
+  .key.operator {
+    background-color: #e8eaed; /* Different background for visibility */
+  }
+  
+  body {
+    padding: 5px; /* Reduced padding around the body */
+  }
 }

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, maximum-scale=1.0, user-scalable=no">
   <title>Mathle - Math Equation Guessing Game</title>
   <link rel="stylesheet" href="styles.css">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
@@ -23,20 +23,23 @@
   </div>
 
   <div id="keyboard">
+    <!-- Number keys -->
     <div class="keyboard-row">
-      <button class="key" data-key="1">1</button>
-      <button class="key" data-key="2">2</button>
-      <button class="key" data-key="3">3</button>
-      <button class="key" data-key="4">4</button>
-      <button class="key" data-key="5">5</button>
+      <button class="key number" data-key="1">1</button>
+      <button class="key number" data-key="2">2</button>
+      <button class="key number" data-key="3">3</button>
+      <button class="key number" data-key="4">4</button>
+      <button class="key number" data-key="5">5</button>
     </div>
     <div class="keyboard-row">
-      <button class="key" data-key="6">6</button>
-      <button class="key" data-key="7">7</button>
-      <button class="key" data-key="8">8</button>
-      <button class="key" data-key="9">9</button>
-      <button class="key" data-key="0">0</button>
+      <button class="key number" data-key="6">6</button>
+      <button class="key number" data-key="7">7</button>
+      <button class="key number" data-key="8">8</button>
+      <button class="key number" data-key="9">9</button>
+      <button class="key number" data-key="0">0</button>
     </div>
+
+    <!-- Operator keys -->
     <div class="keyboard-row">
       <button class="key operator" data-key="+">+</button>
       <button class="key operator" data-key="-">-</button>
@@ -44,6 +47,8 @@
       <button class="key operator" data-key="/">/</button>
       <button class="key operator" data-key="=">=</button>
     </div>
+
+    <!-- Special keys -->
     <div class="keyboard-row">
       <button class="key wide" id="delete-button">DELETE</button>
       <button class="key wide" id="enter-button">ENTER</button>
