@@ -179,10 +179,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Drag and drop functionality
     function handleStart(e) {
-        e.preventDefault();
         const point = getEventPoint(e);
         
-        // Find if we're clicking on a ball
+        // Visual debug for touch point
+        if (e.touches) {
+            touchIndicator.active = true;
+            touchIndicator.x = point.x;
+            touchIndicator.y = point.y;
+        }
+        
+        // Find if we're clicking/touching a ball
+        let ballFound = false;
         for (let i = 0; i < balls.length; i++) {
             if (balls[i].containsPoint(point.x, point.y)) {
                 selectedBall = balls[i];
@@ -192,7 +199,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 // Store the index of the selected ball
                 selectedBall.index = i;
+                ballFound = true;
                 break;
+            }
+        }
+        
+        // Make touching more forgiving by extending the hit area if no ball was detected
+        if (!ballFound && e.touches) {
+            // Try with a larger detection radius for touch
+            for (let i = 0; i < balls.length; i++) {
+                const dx = balls[i].x - point.x;
+                const dy = balls[i].y - point.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                
+                // Use a bigger detection area for touch (1.5x the ball radius)
+                if (distance <= balls[i].radius * 1.5) {
+                    selectedBall = balls[i];
+                    selectedBall.isDragging = true;
+                    selectedBall.velocity = 0;
+                    dragStartAngle = selectedBall.angle;
+                    selectedBall.index = i;
+                    break;
+                }
             }
         }
     }
@@ -283,9 +311,42 @@ document.addEventListener('DOMContentLoaded', () => {
     canvas.addEventListener('mouseleave', handleEnd);
     
     // Add touch event listeners for mobile
-    canvas.addEventListener('touchstart', handleStart, { passive: false });
-    canvas.addEventListener('touchmove', handleMove, { passive: false });
-    canvas.addEventListener('touchend', handleEnd, { passive: false });
+    canvas.addEventListener('touchstart', function(e) {
+        // Prevent default to avoid scrolling while interacting with the cradle
+        e.preventDefault();
+        handleStart(e);
+    }, { passive: false });
+    
+    canvas.addEventListener('touchmove', function(e) {
+        // Prevent default to avoid scrolling while dragging
+        e.preventDefault();
+        handleMove(e);
+    }, { passive: false });
+    
+    canvas.addEventListener('touchend', function(e) {
+        e.preventDefault();
+        handleEnd(e);
+    }, { passive: false });
+    
+    canvas.addEventListener('touchcancel', function(e) {
+        e.preventDefault();
+        handleEnd(e);
+    }, { passive: false });
+
+    // Debug touch indicator
+    let touchIndicator = {
+        active: false,
+        x: 0,
+        y: 0,
+        draw: function() {
+            if (this.active) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, 20, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
+                ctx.fill();
+            }
+        }
+    };
 
     // Animation loop
     function animate() {
@@ -293,6 +354,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Draw improved support structure
         drawCradleFrame();
+
+        // Draw touch debug indicator
+        touchIndicator.draw();
+
+        // Fade out touch indicator over time
+        if (touchIndicator.active) {
+            setTimeout(() => {
+                touchIndicator.active = false;
+            }, 1000);
+        }
 
         // Update and draw balls
         balls.forEach((ball, i) => {

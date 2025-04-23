@@ -131,7 +131,7 @@ body {
     text-align: center;
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
-    margin-top: -50px; /* Move the profile card up */
+    margin-top: -35px; /* Move the profile card up */
 }
 
 .profile-pic {
@@ -362,106 +362,169 @@ footer {
 
 /* Media Queries */
 @media (max-width: 768px) {
+    .navbar {
+        padding: 0.8rem 1rem; /* Slightly reduce navbar padding */
+    }
+
+    .logo-img {
+        max-height: 40px; /* Adjust logo size */
+    }
+
     .container {
-        margin-top: 80px; /* Adjusted margin to accommodate smaller navbar */
-        padding: 0 15px;
+        margin-top: 75px; /* Reduced top margin from 90px */
+        padding: 0 1rem; /* Adjust side padding */
     }
     
     .nav-links {
-        position: absolute;
-        right: 0;
-        height: calc(100vh - 50px); /* Adjusted height for smaller navbar */
-        top: 50px; /* Adjusted top position for smaller navbar */
-        background: rgba(12, 12, 24, 0.95);
+        position: fixed; /* Use fixed positioning */
+        right: -100%; /* Start off-screen */
+        top: 66px; /* Position below the adjusted navbar */
+        height: calc(100vh - 66px); /* Full height minus navbar */
+        background: rgba(12, 12, 24, 0.98); /* Darker, less transparent background */
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: space-evenly;
-        width: 50%;
-        transform: translateX(100%);
-        transition: transform 0.5s ease-in;
+        justify-content: flex-start; /* Align items to the top */
+        padding-top: 3rem; /* Add padding at the top */
+        width: 70%; /* Adjust width */
+        transform: translateX(0); /* Remove transform, control visibility with right property */
+        transition: right 0.5s ease-in-out; /* Animate the 'right' property */
         backdrop-filter: blur(10px);
+        box-shadow: -5px 0 15px rgba(0,0,0,0.2); /* Add shadow */
+        list-style: none; /* Ensure list style is none */
     }
     
     .nav-links li {
-        opacity: 0;
+        opacity: 1; /* Ensure links are visible */
+        margin: 1.5rem 0; /* Adjust spacing */
+        animation: none; /* Remove fade animation if not needed or adjust */
+    }
+
+    .nav-links a {
+        font-size: 1.1rem; /* Slightly larger font for mobile nav */
     }
     
     .burger {
-        display: block;
+        display: block; /* Show burger icon */
     }
     
     .nav-active {
-        transform: translateX(0%);
+        right: 0; /* Slide in from the right */
     }
     
     .content-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Stack grid items */
+        gap: 1.5rem; /* Adjust gap */
     }
     
     .skills-list {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr; /* Ensure skills list is single column */
     }
 
     .profile-pic {
-        width: 150px;
-        height: 150px;
+        width: 120px; /* Reduce profile pic size */
+        height: 120px;
     }
     
     .profile-card {
-        padding: 20px;
+        padding: 25px; /* Adjust padding */
+        margin-top: 1rem; /* Changed from -40px to prevent overlap */
+        max-width: 90%; /* Ensure it doesn't touch edges */
+    }
+
+    .profile-card h1 {
+        font-size: 1.8rem; /* Adjust heading size */
+    }
+
+    .title {
+        font-size: 1.1rem; /* Adjust title size */
     }
     
     h2 {
-        font-size: 1.3rem;
+        font-size: 1.4rem; /* Adjust section heading size */
     }
-    
-    .burger {
-        display: block;
+
+    .timeline-item {
+        padding-left: 20px; /* Adjust timeline padding */
     }
-    
-    .nav-links {
-        position: fixed;
-        right: -100%;
-        top: 70px;
-        flex-direction: column;
-        background: #fff;
-        width: 100%;
-        text-align: center;
-        transition: 0.3s;
-        box-shadow: 0 10px 27px rgba(0,0,0,.05);
-        padding: 20px 0;
-    }
-    
-    .nav-links.active {
-        right: 0;
-    }
-    
-    .nav-links li {
-        margin: 1.5rem 0;
+
+    .timeline-item:before {
+        left: -7px; /* Adjust dot position */
+        width: 12px;
+        height: 12px;
     }
 }
 
 @media screen and (max-width: 480px) {
     .container {
-        padding: 0.5rem;
+        padding: 0 0.8rem; /* Further reduce padding */
+        margin-top: 70px; /* Reduced top margin from 80px */
     }
     
     .profile-pic {
-        width: 120px;
-        height: 120px;
+        width: 100px; /* Further reduce profile pic size */
+        height: 100px;
+    }
+
+    .profile-card {
+        padding: 20px; /* Further reduce padding */
     }
     
-    h1 {
-        font-size: 1.5rem;
+    .profile-card h1 {
+        font-size: 1.6rem; /* Further reduce heading size */
+    }
+
+    .title {
+        font-size: 1rem; /* Further reduce title size */
     }
     
     h2 {
-        font-size: 1.2rem;
+        font-size: 1.3rem; /* Further reduce section heading size */
+    }
+
+    .about-section,
+    .research-section,
+    .skills-section,
+    .education-section {
+        padding: 20px; /* Adjust section padding */
+    }
+
+    .skills-list li {
+        font-size: 1rem; /* Adjust skill item font size */
+        padding: 8px 12px;
+    }
+
+    .interests-list li {
+        font-size: 1rem; /* Adjust interest item font size */
+        padding: 8px;
     }
     
     .timeline-item {
-        padding: 0.5rem;
+        padding-left: 15px; /* Further adjust timeline padding */
+    }
+
+    .timeline-item .date {
+        font-size: 0.85rem; /* Adjust date font size */
+    }
+
+    .timeline-item h3 {
+        font-size: 1.1rem; /* Adjust timeline heading size */
+    }
+
+    .timeline-item p {
+        font-size: 0.9rem; /* Adjust timeline text size */
+    }
+
+    .social-icon {
+        font-size: 20px; /* Adjust social icon size */
+    }
+
+    .social-links {
+        gap: 15px; /* Adjust gap */
+    }
+
+    footer p {
+        font-size: 0.9rem; /* Adjust footer text size */
     }
 }
 
