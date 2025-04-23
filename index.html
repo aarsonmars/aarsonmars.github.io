@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="theme-color" content="#0c0c18"> <!-- Sets the color of browser UI in mobile -->
@@ -40,169 +40,125 @@
     <meta name="author" content="Sagar Bhandari">
     
     <!-- Open Graph / Social Media Meta Tags -->
-    <meta property="og:title" content="Sagar Bhandari | Developer Portfolio">
+    <meta property="og:title" content="Sagar Bhandari | Transportation Engineer">
     <meta property="og:description" content="Portfolio website showcasing web development projects, games and interactive applications">
     <meta property="og:image" content="https://aarsonmars.github.io/img/sagar.png">
     <meta property="og:url" content="https://aarsonmars.github.io/">
     <meta property="og:type" content="website">
     
-    <title>Sagar Bhandari</title>
+    <title>Sagar Bhandari | Transportation Engineer</title>
     <link rel='icon' href='./img/sagar.png'>
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./about/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="logo">
+            <img src="./img/sagar.png" alt="Logo" class="logo-img">
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" class="active">Home</a></li>
+            <li><a href="./projects/index.html">Projects</a></li>
+            <li><a href="./about/contact.html">Contact</a></li>
+        </ul>
+        <div class="burger">
+            <div class="line1"></div>
+            <div class="line2"></div>
+            <div class="line3"></div>
+        </div>
+    </nav>
 
-    <style>
-      .hover-animate {
-          transition: color 0.3s ease, transform 0.3s ease;
-      }
+    <div class="container">
+        <div class="profile-section">
+            <div class="profile-card">
+                <img src="./img/sagar.jpg" alt="Profile Picture" class="profile-pic">
+                <h1>Sagar Bhandari</h1>
+                <p class="title">
+                  Graduate Research Assistant @ 
+                  <a 
+                    href="https://www.dal.ca/sites/daltrac.html" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    class="daltrac-link"
+                  >DalTRAC</a>
+                </p>
+                <div class="social-links">
+                    <a href="https://github.com/aarsonmars" target="_blank" rel="noopener noreferrer" class="social-icon">
+                      <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/aarsonmars/" target="_blank" rel="noopener noreferrer" class="social-icon">
+                      <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="./about/contact.html" class="social-icon">
+                      <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
 
-      .hover-animate:hover {
-          color: #007BFF; /* Change to your preferred color */
-          transform: scale(1.1);
-      }
-    </style>
-  </head>
+        <div class="content-grid">
+            <div class="about-section">
+                <h2><i class="fas fa-user"></i> About Me</h2>
+                <p>
+                    Civil engineering student with a passion for transportation engineering, programming, and GIS. Currently researching the application of machine learning in travel behavior analysis and electric vehicle adoption to drive sustainable transportation solutions.
+                </p>
+            </div>
 
-  <body>
-    <canvas id="bg"></canvas>
-    <header>
-      <a href="about/index.html">
-        <p id='titleName'>
-          Sagar Bhandari
-        </p>
-      </a>
-      <hr>
-    </header>
+            <div class="research-section">
+                <h2><i class="fas fa-microscope"></i> Research Interests</h2>
+                <ul class="interests-list">
+                    <li><span class="highlight">Machine Learning</span> in Transportation</li>
+                    <li>Travel <span class="highlight">Behavior Analysis</span></li>
+                    <li>Transportation <span class="highlight">Data Analytics</span></li>
+                </ul>
+            </div>
+
+            <div class="skills-section">
+                <h2><i class="fas fa-cogs"></i> Technical Skills</h2>
+                <div class="skill-category">
+                    <h3>Software & Tools</h3>
+                    <ul class="skills-list">
+                        <li><i class="fas fa-map"></i> QGIS, ArcGIS, SNAP</li>
+                        <li><i class="fas fa-tools"></i> AutoCAD, Sketchup</li>
+                        <li><i class="fas fa-file-alt"></i> MS Office (Word, Excel, PowerPoint, Project)</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>Programming</h3>
+                    <ul class="skills-list">
+                        <li><i class="fab fa-python"></i> Python</li>
+                        <li><i class="fab fa-html5"></i> HTML, CSS, JS</li>
+                        <li><i class="fab fa-r-project"></i> R, SQL (Basic)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="education-section">
+                <h2><i class="fas fa-graduation-cap"></i> Education</h2>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <span class="date">2024 - Present</span>
+                        <h3>MASc Civil Engineering</h3>
+                        <p>Dalhousie University</p>
+                    </div>
+                    <div class="timeline-item">
+                        <span class="date">2017 - 2022</span>
+                        <h3>BE Civil Engineering</h3>
+                        <p>IOE Pulchowk Campus</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     
-    <main id='mainContainer'>
-      <a id='project'
-        target="_blank"
-        href="https://github.com/aarsonmars/aarsonmars.github.io/tree/master"
-        >PROJECTS</a
-      >
-      <hr />
-     <div id='gamesAndApps'>
-        <section id='games'>
-            <div class="section-header">
-                Games
-                <hr>
-            </div>
-            <a target="_blank" href="./PianoTiles/index.html">
-              <div class='apps'>
-                <div class="app-content">
-                  <img src="./PianoTiles/img/pianoTilesSquare.png" alt="Piano Tiles icon" loading="lazy">
-                  <div class="app-info">
-                    <p>Piano Tiles</p>
-                  </div>
-                </div>
-              </div>
+    <footer>
+        <p>&copy; 2024 Sagar Bhandari. All rights reserved. 
+            <a target="_blank" href="https://github.com/aarsonmars/aarsonmars.github.io/tree/master/" class="hover-animate">
+                <i class="fab fa-github"></i> Source
             </a>
-
-            <a target="_blank" href="./Wordle/index.html">
-              <div class='apps'>
-                <div class="app-content">
-                  <img src="./Mathle/grid_small_icon.png" alt="Mathle icon" loading="lazy">
-                  <div class="app-info">
-                    <p>Wordle</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-
-            <a target="_blank" href="./Mathle/index.html">
-              <div class='apps'>
-                <div class="app-content">
-                  <img src="./Mathle/grid_small_icon.png" alt="Mathle icon" loading="lazy">
-                  <div class="app-info">
-                    <p>Mathle</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-            
-            <a target="_blank" href="./PrimeHangman/index.html">
-            <div class='apps'>
-              <div class="app-content">
-                <img src="./PianoTiles/img/17.png" alt="Piano Tiles icon" loading="lazy">
-                <div class="app-info">
-                  <p>Prime Hangman</p>
-                </div>
-              </div>
-            </div>
-            </a>
-          
-            <a target="_blank" href="./FlappyBird/index.html">
-              <div class='apps'>
-                <div class="app-content">
-                  <img src="./FlappyBird/img/final2.svg" alt="Flappy Bird icon" loading="lazy">
-                  <div class="app-info">
-                    <p>Flappy Bird</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-  
-            <a target="_blank" href="./Puzzle/index.html">
-              <div class='apps'>
-                <div class="app-content">
-                  <img src="./PianoTiles/img/happy.png" alt="Happy face" loading="lazy">
-                  <div class="app-info">
-                    <p>Words Puzzle</p>
-                  </div>
-                </div>
-              </div>
-              </a>
-
-          </section>
-
-        <section id='apps'>
-            <div class="section-header">
-                Apps
-                <hr>
-            </div>
-            <a target="_blank" href="./NewtonsCradle/index.html">
-            <div class='apps'>
-              <div class="app-content">
-                <img src="./NewtonsCradle/icons/icons8-newtons-cradle-64.png" alt="Newton's Cradle icon" loading="lazy">
-                <div class="app-info">
-                  <p>Newton's Cradle</p>
-                </div>
-              </div>
-            </div>
-            </a>
-
-            <a target="_blank" href="./overpass-explorer/index.html">
-              <div class='apps'>
-                <div class="app-content">
-                  <img src="./overpass-explorer/globe-icon.png" alt="Overpass Explorer icon" loading="lazy">
-                  <div class="app-info">
-                    <p>Overpass Explorer</p>
-                  </div>
-                </div>
-              </div>
-            </a>
-        </section>
-      </div> 
-    </main>
-
-    <footer id='source'>
-        <a
-        target="_blank"
-        href="https://github.com/aarsonmars/aarsonmars.github.io/tree/master/"
-        class="hover-animate"
-      >
-        <i>Source</i>
-      </a>
-      <span style="margin: 0 10px;">|</span>
-      <a
-        href="about/index.html"
-        class="hover-animate"
-      >
-        <i>About</i>
-      </a>
+        </p>
     </footer>
 
-    <!-- Include external JavaScript file -->
-    <script src="./main.js"></script>
- 
-  </body>
+    <script src="./about/script.js"></script>
+</body>
 </html>

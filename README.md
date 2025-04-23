@@ -2,16 +2,17 @@
 
 ![Website Screenshot](./img/website-screenshot.png)
 
-This repository contains the source code for my personal website that showcases my projects, games, and applications. The website is built with HTML, CSS, and JavaScript, offering a responsive design that works well on desktop and mobile devices.
+This repository contains the source code for my personal website that showcases my background, skills, and projects. The website is built with HTML, CSS, and JavaScript, offering a responsive design that works well on desktop and mobile devices.
 
 ## Features
 
 - Clean, minimalist design with a responsive layout
-- Interactive animated background
-- Navigation between main page and about section
-- Project showcase with categorized sections:
-  - Games (Piano Tiles, Wordle, Mathle, Prime Hangman, Flappy Bird, Words Puzzle)
-  - Apps (Newton's Cradle, Overpass Explorer)
+- Profile section with personal information and social links
+- Dedicated pages for different content:
+  - Home/About page with education, skills, and research interests
+  - Projects page with categorized applications and games
+  - Contact page with message form
+- Responsive navigation with scroll effects
 - Mobile-friendly interface with custom touch interactions
 
 ## Projects Included
@@ -36,18 +37,19 @@ This repository contains the source code for my personal website that showcases 
 
 - **Overpass Explorer**: A tool for exploring and downloading OpenStreetMap data using the Overpass API. Allows custom queries, geographic filtering, and visualization of various map features like buildings, roads, and points of interest.
 
-
-
 ## Structure
 
-- `/` - Main website files and configuration
-  - `index.html` - Homepage with project showcase
-  - `style.css` - Main stylesheet
+- `/` - Main website files (Homepage/About content)
+  - `index.html` - Homepage with About content
   - `main.js` - Core JavaScript functionality
-  - `sitemap.xml` - Site structure for search engines
-  - `robots.txt` - Instructions for web crawlers
   - `404.html` - Custom error page
-- `/about` - About page with personal information
+- `/about` - Styles and scripts for the main site
+  - `style.css` - Main stylesheet
+  - `script.js` - Interactive elements and animations
+  - `contact.html` - Contact form
+  - `contact.js` - Form submission handling
+- `/projects` - Projects showcase page
+  - `index.html` - Projects gallery
 - `/img` - Images used across the website
 - Individual project directories:
   - `/FlappyBird` - Space-themed Flappy Bird clone
@@ -55,7 +57,6 @@ This repository contains the source code for my personal website that showcases 
   - `/NewtonsCradle` - Physics simulation app
   - `/overpass-explorer` - OpenStreetMap data exploration tool
   - `/PianoTiles` - Rhythm-based tile tapping game
-  - `/PrimeFactorization` - Prime factorization tool
   - `/PrimeHangman` - Prime number-focused hangman game
   - `/Puzzle` - Words puzzle game
   - `/Wordle` - Word guessing game
@@ -65,6 +66,7 @@ This repository contains the source code for my personal website that showcases 
 - HTML5
 - CSS3
 - JavaScript (Vanilla)
+- FontAwesome for icons
 - Canvas API for animations and games
 
 

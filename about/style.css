@@ -39,6 +39,27 @@ body {
     background: rgba(12, 12, 24, 0.9);
     backdrop-filter: blur(10px);
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: padding 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.navbar.scrolled {
+    padding: 0.6rem 1rem;
+    background: rgba(12, 12, 24, 0.95);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.navbar.scrolled .logo-img {
+    max-height: 40px;
+}
+
+@media (max-width: 768px) {
+    .navbar.scrolled {
+        padding: 0.5rem 1rem;
+    }
+    
+    .navbar.scrolled .logo-img {
+        max-height: 35px;
+    }
 }
 
 .logo {
@@ -455,6 +476,96 @@ footer {
     }
 }
 
+/* Projects Section Styles */
+.projects-section {
+    background: var(--card-bg-color);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    transition: transform var(--transition-speed);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    margin-top:1rem;
+}
+
+.section-category {
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-weight: 600;
+    position: relative;
+}
+
+.section-header hr {
+    border: none;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary-color), transparent);
+    margin-top: 5px;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.project-card {
+    display: block;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    height: 100%;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.app-content {
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+
+.app-content img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.app-info p {
+    font-size: 1rem;
+    margin: 0;
+    font-weight: 500;
+}
+
+/* Media queries for responsive project grid */
+@media (max-width: 768px) {
+    .project-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 1rem;
+    }
+    
+    .app-content img {
+        width: 60px;
+        height: 60px;
+    }
+}
+
 @media screen and (max-width: 480px) {
     .container {
         padding: 0 0.8rem; /* Further reduce padding */
@@ -549,4 +660,128 @@ footer {
 
 .toggle .line3 {
     transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* Add this to your existing CSS file */
+.mt-4 {
+    margin-top: 20px;
+}
+
+/* Contact section styles */
+.contact-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 25px;
+    background: var(--card-bg-color);
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.8s ease-in;
+}
+
+.contact-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #e6e6e6;
+    font-size: 1.1rem;
+    letter-spacing: 0.5px;
+}
+
+.form-group input, 
+.form-group textarea {
+    width: 100%;
+    padding: 12px 15px;
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.form-group input:focus, 
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
+}
+
+.form-group textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.form-group button {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(74, 158, 255, 0.3);
+}
+
+.form-group button:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
+}
+
+.form-group button:active {
+    transform: translateY(1px);
+}
+
+.success-message, 
+.error-message {
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+    text-align: center;
+    display: none;
+    font-weight: 500;
+    animation: fadeIn 0.5s ease;
+}
+
+.success-message {
+    background-color: rgba(40, 167, 69, 0.2);
+    border: 1px solid rgba(40, 167, 69, 0.4);
+    color: #a3f5b4;
+}
+
+.error-message {
+    background-color: rgba(220, 53, 69, 0.2);
+    border: 1px solid rgba(220, 53, 69, 0.4);
+    color: #ffb3bd;
+}
+
+/* Daltrac link styles */
+.daltrac-link {
+    color: var(--accent-color);
+    text-decoration: none;
+    text-underline-offset: 2px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.daltrac-link:hover,
+.daltrac-link:focus {
+    color: var(--primary-color);
+    text-decoration: none;
 }

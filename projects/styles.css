@@ -1,0 +1,120 @@
+:root {
+    --card-radius: 12px;
+    --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    --card-bg: rgba(20, 20, 40, 0.7);
+    --card-hover-bg: rgba(30, 30, 50, 0.8);
+    --card-border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+#gamesAndApps {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+#games, #apps {
+    width: 100%;
+}
+
+.section-header {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding-left: 10px;
+    border-left: 4px solid var(--primary-color);
+}
+
+.section-header hr {
+    display: none; /* Remove divider line for cleaner look */
+}
+
+/* App grid style like Play Store */
+section {
+    margin-bottom: 30px;
+}
+
+section > a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.apps-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.apps {
+    background: var(--card-bg);
+    border-radius: var(--card-radius);
+    overflow: hidden;
+    box-shadow: var(--card-shadow);
+    border: var(--card-border);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.apps:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background: var(--card-hover-bg);
+}
+
+.app-content {
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.app-content img {
+    width: 100%;
+    height: 100px; /* Smaller icon size */
+    object-fit: contain; /* Maintain aspect ratio */
+    background: rgba(0, 0, 0, 0.1);
+    border: none;
+    padding: 10px; /* Add padding to prevent icon from touching edges */
+    margin: 0;
+}
+
+.app-info {
+    padding: 12px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.app-info p {
+    font-size: 1rem;
+    font-weight: 500;
+    margin: 0;
+    color: var(--text-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .apps-grid {
+        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    }
+    
+    .app-content img {
+        height: 90px;
+    }
+}
+
+@media (max-width: 480px) {
+    .apps-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .app-content img {
+        height: 80px;
+    }
+}
