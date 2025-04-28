@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Perfect Circle</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Perfect Circle</h1>
+            <p>Draw a circle with your finger or mouse to see how perfect it is!</p>
+        </header>
+        
+        <div class="canvas-container">
+            <canvas id="drawCanvas"></canvas>
+        </div>
+        
+        <div class="stats-container">
+            <div id="stats" aria-live="polite"></div>
+            <div class="score-display">
+                <div id="score">0%</div>
+                <div>Perfectness</div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button id="clearBtn" class="btn">Clear Canvas</button>
+            <button id="toggleBtn" class="btn">Toggle Fit Circle</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
