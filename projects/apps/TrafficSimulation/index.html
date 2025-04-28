@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traffic Signal Analysis Tool</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Include p5.js library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.js"></script>
+    <!-- Include Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <h1>Traffic Signal Analysis Tool</h1>
+
+    <div id="app-container">
+        <!-- Tab navigation - reordered to put configuration first -->
+        <div class="tab-container" role="tablist">
+            <button class="tab-button active" data-tab="configuration"
+                    role="tab" aria-selected="true" aria-controls="configuration-tab">
+              Configuration
+            </button>
+            <button class="tab-button" data-tab="simulation"
+                    role="tab" aria-selected="false" aria-controls="simulation-tab">
+              Simulation
+            </button>
+            <button class="tab-button" data-tab="results"
+                    role="tab" aria-selected="false" aria-controls="results-tab">
+              Results
+            </button>
+        </div>
+
+        <!-- Tab content -->
+        <div class="tab-content">
+            <!-- Configuration tab - now first and active -->
+            <div id="configuration-tab" class="tab-pane active">
+                <div class="config-container">
+                    <div class="config-section">
+                        <h2>Traffic Volumes</h2>
+                        <p class="help-text">Enter traffic volumes in vehicles per hour (vph) for each approach.</p>
+                        
+                        <div class="config-grid">
+                            <div class="config-item">
+                                <label for="volume-north">North Volume:</label>
+                                <input type="number" id="volume-north" min="0" max="1200" value="300" />
+                                <span>vph</span>
+                            </div>
+                            <div class="config-item">
+                                <label for="volume-south">South Volume:</label>
+                                <input type="number" id="volume-south" min="0" max="1200" value="300" />
+                                <span>vph</span>
+                            </div>
+                            <div class="config-item">
+                                <label for="volume-east">East Volume:</label>
+                                <input type="number" id="volume-east" min="0" max="1200" value="300" />
+                                <span>vph</span>
+                            </div>
+                            <div class="config-item">
+                                <label for="volume-west">West Volume:</label>
+                                <input type="number" id="volume-west" min="0" max="1200" value="300" />
+                                <span>vph</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h2>Signal Timing</h2>
+                        <p class="help-text">Configure signal timing parameters (in seconds).</p>
+                        
+                        <div class="config-grid">
+                            <div class="config-item">
+                                <label for="min-green-ns">N/S Min Green:</label>
+                                <input type="number" id="min-green-ns" min="5" max="120" value="30" />
+                                <span>sec</span>
+                            </div>
+                            <div class="config-item">
+                                <label for="min-green-ew">E/W Min Green:</label>
+                                <input type="number" id="min-green-ew" min="5" max="120" value="30" />
+                                <span>sec</span>
+                            </div>
+                            <div class="config-item">
+                                <label for="yellow-time">Yellow Time:</label>
+                                <input type="number" id="yellow-time" min="2" max="10" value="3" />
+                                <span>sec</span>
+                            </div>
+                            <div class="config-item">
+                                <label for="all-red-time">All Red Time:</label>
+                                <input type="number" id="all-red-time" min="0" max="10" value="2" />
+                                <span>sec</span>
+                            </div>
+                        </div>
+                        
+                        <div class="timing-mode">
+                            <label>Signal Control Mode:</label>
+                            <select id="timing-mode">
+                                <option value="pretimed">Pre-timed</option>
+                                <option value="actuated">Semi-Actuated</option>
+                                <option value="adaptive">Adaptive</option>
+                            </select>
+                            <div class="mode-description">
+                                <span id="mode-description-text">Pre-timed: Phases change automatically after fixed time intervals.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="config-section">
+                        <h2>Vehicle Mix</h2>
+                        <p class="help-text">Adjust the percentage of different vehicle types.</p>
+                        
+                        <div class="config-grid">
+                            <div class="config-item">
+                                <label for="percent-cars">Cars:</label>
+                                <input type="number" id="percent-cars" min="0" max="100" value="65" />
+                                <span>%</span>
+                            </div>
+                            <div class="config-item">
+                                <label for="percent-trucks">Trucks:</label>
+                                <input type="number" id="percent-trucks" min="0" max="100" value="15" />
+                                <span>%</span>
+                            </div>
+                            <div class="config-item">
+                                <label for="percent-sport">Sports Cars:</label>
+                                <input type="number" id="percent-sport" min="0" max="100" value="10" />
+                                <span>%</span>
+                            </div>
+                            <div class="config-item">
+                                <label for="percent-bus">Buses:</label>
+                                <input type="number" id="percent-bus" min="0" max="100" value="8" />
+                                <span>%</span>
+                            </div>
+                            <div class="config-item">
+                                <label for="percent-emergency">Emergency:</label>
+                                <input type="number" id="percent-emergency" min="0" max="100" value="2" />
+                                <span>%</span>
+                            </div>
+                        </div>
+                        <div id="vehicle-mix-error" class="error-message"></div>
+                    </div>
+
+                    <div class="config-actions">
+                        <button id="apply-config-btn" class="primary-button">Apply Settings & Start Simulation</button>
+                        <button id="default-config-btn">Reset to Defaults</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Simulation tab - reorganized for better placement of analytics -->
+            <div id="simulation-tab" class="tab-pane">
+                <div id="game-container">
+                    <div id="canvas-container">
+                        <!-- p5.js canvas will be inserted here -->
+                    </div>
+                    <div id="controls">
+                        <!-- Status panel with key information -->
+                        <div id="info">
+                            <p>Phase: <span id="current-phase">N/S Green</span></p>
+                            <p>Delay: <span id="score">0</span></p>
+                            <p>Vehicles: <span id="vehicles-passed">0</span></p>
+                            <p>Status: <span id="status">Running</span></p>
+                        </div>
+                        
+                        <!-- Simulation settings immediately after info -->
+                        <div class="simulation-controls">
+                            <h3>Simulation Settings</h3>
+                            <div class="slider-container">
+                                <label for="speed-slider">Simulation Speed:</label>
+                                <input type="range" id="speed-slider" min="0.5" max="3" step="0.1" value="1" aria-label="Simulation speed slider">
+                                <span id="speed-value">1x</span>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label for="simulation-duration">Run for:</label>
+                                <div class="input-with-button">
+                                    <input type="number" id="simulation-duration" min="1" max="60" value="5" />
+                                    <span>minutes</span>
+                                    <button id="run-simulation-btn" aria-label="Run simulation for specified duration">Run</button>
+                                </div>
+                                <div id="simulation-progress" class="progress-bar">
+                                    <div class="progress-fill"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="control-group">
+                                <label>Environment Effects:</label>
+                                <div class="environment-controls">
+                                    <div class="tooltip-container">
+                                        <div>
+                                            <input type="checkbox" id="day-night-toggle">
+                                            <label for="day-night-toggle">Day/Night Cycle</label>
+                                        </div>
+                                        <span class="tooltip">Affects visibility and driver behavior</span>
+                                    </div>
+                                    <div class="tooltip-container">
+                                        <div>
+                                            <select id="weather-select">
+                                                <option value="clear" selected>Clear</option>
+                                                <option value="rain">Rain</option>
+                                                <option value="snow">Snow</option>
+                                            </select>
+                                        </div>
+                                        <span class="tooltip">Affects speed and following distance</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div class="action-buttons">
+                            <button id="switch-phase-btn" aria-label="Request phase switch">Request Phase Switch</button>
+                            <button id="pause-btn" aria-label="Pause or resume simulation">Pause</button>
+                            <button id="reset-btn" aria-label="Reset simulation">Reset</button>
+                        </div>
+
+                        <!-- Analytics section only -->
+                        <div class="data-analytics">
+                            <div id="analytics">
+                                <h3>Traffic Analytics</h3>
+                                <div class="analytics-row">
+                                    <div>
+                                        <p>N/S Traffic: <span id="ns-traffic">0</span></p>
+                                        <p>E/W Traffic: <span id="ew-traffic">0</span></p>
+                                        <p>Avg Wait: <span id="avg-wait">0s</span></p>
+                                    </div>
+                                    <div>
+                                        <canvas id="traffic-chart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results tab - unchanged -->
+            <div id="results-tab" class="tab-pane">
+                <div class="results-container">
+                    <div class="results-header">
+                        <h2>Simulation Results</h2>
+                        <div class="results-actions">
+                            <button id="export-results-btn">Export Results</button>
+                            <button id="clear-results-btn">Clear Results</button>
+                        </div>
+                    </div>
+                    
+                    <div class="results-summary">
+                        <div class="summary-card">
+                            <h3>Total Vehicles</h3>
+                            <div class="big-number" id="result-total-vehicles">0</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Average Delay</h3>
+                            <div class="big-number" id="result-avg-delay">0.0s</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Level of Service</h3>
+                            <div class="big-number" id="result-los">A</div>
+                        </div>
+                        <div class="summary-card">
+                            <h3>Max Queue</h3>
+                            <div class="big-number" id="result-max-queue">0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="results-charts">
+                        <div class="chart-container">
+                            <h3>Delay by Approach</h3>
+                            <canvas id="delay-chart"></canvas>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Queue by Approach</h3>
+                            <canvas id="queue-chart"></canvas>
+                        </div>
+                    </div>
+                    
+                    <div class="results-details">
+                        <h3>Detailed Metrics</h3>
+                        <table id="metrics-table">
+                            <thead>
+                                <tr>
+                                    <th>Approach</th>
+                                    <th>Volume (vph)</th>
+                                    <th>Avg Delay (sec)</th>
+                                    <th>Max Queue</th>
+                                    <th>Level of Service</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>North</td>
+                                    <td id="north-volume">0</td>
+                                    <td id="north-delay">0.0</td>
+                                    <td id="north-queue">0</td>
+                                    <td id="north-los">A</td>
+                                </tr>
+                                <tr>
+                                    <td>South</td>
+                                    <td id="south-volume">0</td>
+                                    <td id="south-delay">0.0</td>
+                                    <td id="south-queue">0</td>
+                                    <td id="south-los">A</td>
+                                </tr>
+                                <tr>
+                                    <td>East</td>
+                                    <td id="east-volume">0</td>
+                                    <td id="east-delay">0.0</td>
+                                    <td id="east-queue">0</td>
+                                    <td id="east-los">A</td>
+                                </tr>
+                                <tr>
+                                    <td>West</td>
+                                    <td id="west-volume">0</td>
+                                    <td id="west-delay">0.0</td>
+                                    <td id="west-queue">0</td>
+                                    <td id="west-los">A</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Initialize charts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                // Set up tab navigation
+                const tabButtons = document.querySelectorAll('.tab-button');
+                const tabPanes = document.querySelectorAll('.tab-pane');
+                
+                tabButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        const tabName = button.getAttribute('data-tab');
+                        
+                        // Deactivate all tabs
+                        tabButtons.forEach(btn => btn.classList.remove('active'));
+                        tabPanes.forEach(pane => pane.classList.remove('active'));
+                        
+                        // Activate selected tab
+                        button.classList.add('active');
+                        document.getElementById(`${tabName}-tab`).classList.add('active');
+                    });
+                });
+                
+                // Add mode description update
+                const timingModeSelect = document.getElementById('timing-mode');
+                const modeDescription = document.getElementById('mode-description-text');
+                
+                timingModeSelect.addEventListener('change', function() {
+                    switch(this.value) {
+                        case 'pretimed':
+                            modeDescription.textContent = 'Pre-timed: Phases change automatically after fixed time intervals.';
+                            break;
+                        case 'actuated':
+                            modeDescription.textContent = 'Semi-Actuated: Phases can be extended based on traffic demand.';
+                            break;
+                        case 'adaptive':
+                            modeDescription.textContent = 'Adaptive: System automatically adjusts timing based on traffic conditions.';
+                            break;
+                    }
+                });
+                
+                // Modify apply button to switch to simulation tab
+                document.getElementById('apply-config-btn').addEventListener('click', function() {
+                    applyConfiguration();
+                    // Switch to simulation tab after applying config
+                    document.querySelector('[data-tab="simulation"]').click();
+                });
+                
+                // Traffic chart
+                const ctx = document.getElementById('traffic-chart').getContext('2d');
+                if (ctx) {
+                    window.trafficChart = new Chart(ctx, {
+                        type: 'doughnut',
+                        data: {
+                            labels: ['N/S', 'E/W'],
+                            datasets: [{
+                                data: [0, 0],
+                                backgroundColor: [
+                                    'rgba(75, 192, 192, 0.6)',
+                                    'rgba(153, 102, 255, 0.6)'
+                                ]
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            maintainAspectRatio: false,
+                            plugins: {
+                                legend: {
+                                    position: 'bottom',
+                                    labels: {
+                                        color: '#333'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                // Initialize results charts
+                initializeResultsCharts();
+                
+                // Validate vehicle mix
+                const vehicleMixInputs = ['percent-cars', 'percent-trucks', 'percent-sport', 'percent-bus', 'percent-emergency'];
+                vehicleMixInputs.forEach(id => {
+                    document.getElementById(id).addEventListener('change', validateVehicleMix);
+                });
+                
+                // Apply config button
+                document.getElementById('apply-config-btn').addEventListener('click', applyConfiguration);
+                document.getElementById('default-config-btn').addEventListener('click', resetToDefaultConfig);
+                document.getElementById('run-simulation-btn').addEventListener('click', runSimulationForDuration);
+                document.getElementById('export-results-btn').addEventListener('click', exportResults);
+                document.getElementById('clear-results-btn').addEventListener('click', clearResults);
+                
+            } catch (e) {
+                console.error("Error in initialization:", e);
+            }
+        });
+        
+        function initializeResultsCharts() {
+            // Delay by approach chart
+            const delayCtx = document.getElementById('delay-chart').getContext('2d');
+            window.delayChart = new Chart(delayCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['North', 'South', 'East', 'West'],
+                    datasets: [{
+                        label: 'Average Delay (seconds)',
+                        data: [0, 0, 0, 0],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)',
+                            'rgba(153, 102, 255, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Delay (seconds)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Queue by approach chart
+            const queueCtx = document.getElementById('queue-chart').getContext('2d');
+            window.queueChart = new Chart(queueCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['North', 'South', 'East', 'West'],
+                    datasets: [{
+                        label: 'Maximum Queue Length',
+                        data: [0, 0, 0, 0],
+                        backgroundColor: [
+                            'rgba(255, 159, 64, 0.6)',
+                            'rgba(255, 159, 64, 0.6)',
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(255, 99, 132, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Queue Length (vehicles)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function validateVehicleMix() {
+            const cars = parseInt(document.getElementById('percent-cars').value) || 0;
+            const trucks = parseInt(document.getElementById('percent-trucks').value) || 0;
+            const sport = parseInt(document.getElementById('percent-sport').value) || 0;
+            const bus = parseInt(document.getElementById('percent-bus').value) || 0;
+            const emergency = parseInt(document.getElementById('percent-emergency').value) || 0;
+            
+            const total = cars + trucks + sport + bus + emergency;
+            const errorElement = document.getElementById('vehicle-mix-error');
+            
+            if (total !== 100) {
+                errorElement.textContent = `Vehicle mix must total 100% (currently ${total}%)`;
+                document.getElementById('apply-config-btn').disabled = true;
+            } else {
+                errorElement.textContent = '';
+                document.getElementById('apply-config-btn').disabled = false;
+            }
+        }
+        
+        function applyConfiguration() {
+            // This function will be defined in script.js
+            if (typeof window.applyConfigFromUI === 'function') {
+                window.applyConfigFromUI();
+            } else {
+                console.error("applyConfigFromUI function not found");
+            }
+        }
+        
+        function resetToDefaultConfig() {
+            // This function will be defined in script.js
+            if (typeof window.resetToDefaultConfig === 'function') {
+                window.resetToDefaultConfig();
+            } else {
+                console.error("resetToDefaultConfig function not found");
+            }
+        }
+        
+        function runSimulationForDuration() {
+            // This function will be defined in script.js
+            if (typeof window.runSimulationForDuration === 'function') {
+                window.runSimulationForDuration();
+            } else {
+                console.error("runSimulationForDuration function not found");
+            }
+        }
+        
+        function exportResults() {
+            // Generate and download results as CSV
+            const rows = [
+                ['Approach', 'Volume (vph)', 'Avg Delay (sec)', 'Max Queue', 'Level of Service'],
+                ['North', document.getElementById('north-volume').textContent, document.getElementById('north-delay').textContent, document.getElementById('north-queue').textContent, document.getElementById('north-los').textContent],
+                ['South', document.getElementById('south-volume').textContent, document.getElementById('south-delay').textContent, document.getElementById('south-queue').textContent, document.getElementById('south-los').textContent],
+                ['East', document.getElementById('east-volume').textContent, document.getElementById('east-delay').textContent, document.getElementById('east-queue').textContent, document.getElementById('east-los').textContent],
+                ['West', document.getElementById('west-volume').textContent, document.getElementById('west-delay').textContent, document.getElementById('west-queue').textContent, document.getElementById('west-los').textContent],
+                ['Overall', '', document.getElementById('result-avg-delay').textContent, document.getElementById('result-max-queue').textContent, document.getElementById('result-los').textContent]
+            ];
+            
+            let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "traffic_simulation_results.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        function clearResults() {
+            // Reset all result displays
+            document.getElementById('result-total-vehicles').textContent = '0';
+            document.getElementById('result-avg-delay').textContent = '0.0s';
+            document.getElementById('result-los').textContent = 'A';
+            document.getElementById('result-max-queue').textContent = '0';
+            
+            const approachIds = ['north', 'south', 'east', 'west'];
+            const metrics = ['volume', 'delay', 'queue', 'los'];
+            
+            approachIds.forEach(approach => {
+                metrics.forEach(metric => {
+                    const el = document.getElementById(`${approach}-${metric}`);
+                    if (el) el.textContent = metric === 'los' ? 'A' : '0';
+                });
+            });
+            
+            // Reset charts
+            window.delayChart.data.datasets[0].data = [0, 0, 0, 0];
+            window.delayChart.update();
+            
+            window.queueChart.data.datasets[0].data = [0, 0, 0, 0];
+            window.queueChart.update();
+        }
+    </script>
+
+    <!-- Load script.js after DOM is ready -->
+    <script src="script.js"></script>
+</body>
+</html>
