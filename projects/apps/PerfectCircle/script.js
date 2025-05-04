@@ -112,30 +112,49 @@ function stopDrawing() {
     isDrawing = false;
 
     if (points.length > 10) {
-        // detect straight line by endpoint/length ratio
         if (isStraightLine(points)) {
             statsDiv.innerHTML = "Not a circle";
             scoreDiv.textContent = "0%";
             return;
         }
-        // check if shape is closed (endpoints close enough)
+        // check if shape is closed by endpoints proximity
         const first = points[0], last = points[points.length - 1];
         const dx = last.x - first.x, dy = last.y - first.y;
         const dist = Math.hypot(dx, dy);
-        // bounding-box diagonal
         let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
         for (const p of points) {
             minX = Math.min(minX, p.x); minY = Math.min(minY, p.y);
             maxX = Math.max(maxX, p.x); maxY = Math.max(maxY, p.y);
         }
         const diag = Math.hypot(maxX - minX, maxY - minY);
-        // require endpoints within 25% of diagonal
         if (dist > diag * 0.25) {
             statsDiv.innerHTML = "Shape not closed";
             scoreDiv.textContent = "0%";
             return;
         }
-        // fit circle
+        // check aspect ratio of bounding box
+        const width = maxX - minX;
+        const height = maxY - minY;
+        const aspectRatio = Math.max(width, height) / Math.min(width, height);
+        if (aspectRatio > 1.5) { // reject if too elongated
+            statsDiv.innerHTML = "Not a circle";
+            scoreDiv.textContent = "0%";
+            return;
+        }
+        // compute polygon area and reject if too small
+        let area = 0;
+        for (let i = 0; i < points.length; i++) {
+            const p1 = points[i], p2 = points[(i + 1) % points.length];
+            area += p1.x * p2.y - p2.x * p1.y;
+        }
+        area = Math.abs(area) / 2;
+        const bboxArea = width * height;
+        if (bboxArea > 0 && area / bboxArea < 0.1) {
+            statsDiv.innerHTML = "Not a circle";
+            scoreDiv.textContent = "0%";
+            return;
+        }
+        // now safe to fit circle
         const { center, radius, error, perfectness } = fitCircle(points);
         displayStats(center, radius, error, perfectness);
         if (showFitCircle) {
