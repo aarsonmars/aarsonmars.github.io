@@ -49,7 +49,7 @@
     
     <title>Sagar Bhandari | Transportation Engineer</title>
     <link rel='icon' href='./img/sagar.png'>
-    <link rel="stylesheet" href="./about/style.css">
+    <link rel="stylesheet" href="home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
@@ -59,7 +59,7 @@
         </div>
         <ul class="nav-links">
             <li><a href="#" class="active">Home</a></li>
-            <li><a href="./projects/index.html">Projects</a></li>
+            <li><a href="#projects">Projects</a></li>
             <li><a href="./about/contact.html">Contact</a></li>
         </ul>
         <div class="burger">
@@ -70,86 +70,135 @@
     </nav>
 
     <div class="container">
-        <div class="profile-section">
-            <div class="profile-card">
-                <img src="./img/sagar.jpg" alt="Profile Picture" class="profile-pic">
-                <h1>Sagar Bhandari</h1>
-                <p class="title">
-                  Graduate Research Assistant @ 
-                  <a 
-                    href="https://www.dal.ca/sites/daltrac.html" 
-                    target="_blank" 
-                    rel="noopener noreferrer"
-                    class="daltrac-link"
-                  >DalTRAC</a>
-                </p>
-                <div class="social-links">
-                    <a href="https://github.com/aarsonmars" target="_blank" rel="noopener noreferrer" class="social-icon">
-                      <i class="fab fa-github"></i>
-                    </a>
-                    <a href="https://www.linkedin.com/in/aarsonmars/" target="_blank" rel="noopener noreferrer" class="social-icon">
-                      <i class="fab fa-linkedin"></i>
-                    </a>
-                    <a href="./about/contact.html" class="social-icon">
-                      <i class="fas fa-envelope"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="content-grid">
-            <div class="about-section">
-                <h2><i class="fas fa-user"></i> About Me</h2>
-                <p>
-                    Civil engineering student with a passion for transportation engineering, programming, and GIS. Currently researching the application of machine learning in travel behavior analysis and electric vehicle adoption to drive sustainable transportation solutions.
-                </p>
-            </div>
-
-            <div class="research-section">
-                <h2><i class="fas fa-microscope"></i> Research Interests</h2>
-                <ul class="interests-list">
-                    <li><span class="highlight">Machine Learning</span> in Transportation</li>
-                    <li>Travel <span class="highlight">Behavior Analysis</span></li>
-                    <li>Transportation <span class="highlight">Data Analytics</span></li>
-                </ul>
-            </div>
-
-            <div class="skills-section">
-                <h2><i class="fas fa-cogs"></i> Technical Skills</h2>
-                <div class="skill-category">
-                    <h3>Software & Tools</h3>
-                    <ul class="skills-list">
-                        <li><i class="fas fa-map"></i> QGIS, ArcGIS, SNAP</li>
-                        <li><i class="fas fa-tools"></i> AutoCAD, Sketchup</li>
-                        <li><i class="fas fa-file-alt"></i> MS Office (Word, Excel, PowerPoint, Project)</li>
-                    </ul>
-                </div>
-                <div class="skill-category">
-                    <h3>Programming</h3>
-                    <ul class="skills-list">
-                        <li><i class="fab fa-python"></i> Python</li>
-                        <li><i class="fab fa-html5"></i> HTML, CSS, JS</li>
-                        <li><i class="fab fa-r-project"></i> R, SQL (Basic)</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="education-section">
-                <h2><i class="fas fa-graduation-cap"></i> Education</h2>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <span class="date">2024 - Present</span>
-                        <h3>MASc Civil Engineering</h3>
-                        <p>Dalhousie University</p>
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1 class="hero-title">Sagar Bhandari</h1>
+                    <p class="hero-subtitle">Civil Engineer | AI/ML Enthusiast</p>
+                    <p class="hero-description">
+                        I'm a Civil Engineering graduate student specializing in transportation systems, 
+                        machine learning applications, and sustainable mobility solutions. Currently researching 
+                        travel behavior analysis and electric vehicle adoption at DalTRAC.
+                    </p>
+                    <div class="hero-buttons">
+                        <a href="#projects" class="btn btn-primary">View My Work</a>
+                        <a href="./about/contact.html" class="btn btn-outline">Get In Touch</a>
                     </div>
-                    <div class="timeline-item">
-                        <span class="date">2017 - 2022</span>
-                        <h3>BE Civil Engineering</h3>
-                        <p>IOE Pulchowk Campus</p>
+                </div>
+                <div class="hero-image">
+                    <img src="./img/sagar.jpg" alt="Sagar Bhandari" class="profile-image">
+                    <div class="social-links">
+                        <a href="https://github.com/aarsonmars" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/aarsonmars/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                            <i class="fab fa-linkedin"></i>
+                        </a>
+                        <a href="./about/contact.html" aria-label="Email">
+                            <i class="fas fa-envelope"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- Featured Projects Section -->
+        <section id="projects" class="featured-projects-section">
+            <h2><i class="fas fa-star"></i> Featured Projects</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>Overpass Explorer</h3>
+                    <p>Interactive tool for exploring OpenStreetMap data with advanced query building and visualization capabilities.</p>
+                    <a href="./projects/apps/overpass-explorer/index.html" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-atom"></i>
+                    </div>
+                    <h3>Newton's Cradle</h3>
+                    <p>Physics simulation of Newton's cradle with realistic collision sounds and interactive controls.</p>
+                    <a href="./projects/apps/NewtonsCradle/index.html" class="project-link">View Project <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="project-card">
+                    <div class="project-icon">
+                        <i class="fas fa-folder-open"></i>
+                    </div>
+                    <h3>View All Projects</h3>
+                    <p>Explore my complete portfolio of web applications, games, and development projects.</p>
+                    <a href="./projects/index.html" class="project-link">View All Projects <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Background & Expertise Section -->
+        <section id="expertise" class="expertise-section">
+            <h2><i class="fas fa-user-graduate"></i> Background & Expertise</h2>
+            <div class="expertise-grid">
+                <div class="expertise-card">
+                    <div class="expertise-icon">
+                        <i class="fas fa-microscope"></i>
+                    </div>
+                    <h3>Research Interests</h3>
+                    <ul class="expertise-list">
+                        <li>Machine Learning in Transportation</li>
+                        <li>Travel Behavior Analysis</li>
+                        <li>Transportation Data Analytics</li>
+                        <li>Electric Vehicle Adoption</li>
+                    </ul>
+                </div>
+                
+                <div class="expertise-card">
+                    <div class="expertise-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>Technical Skills</h3>
+                    <div class="skill-groups">
+                        <div class="skill-group">
+                            <h4>Programming</h4>
+                            <span class="skill-tags">Python • R • JavaScript • SQL</span>
+                        </div>
+                        <div class="skill-group">
+                            <h4>GIS & Engineering Tools</h4>
+                            <span class="skill-tags">QGIS • ArcGIS • AutoCAD • SNAP</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Education Section -->
+        <section id="education" class="education-section">
+            <h2><i class="fas fa-graduation-cap"></i> Education</h2>
+            <div class="education-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2024 - Present</span>
+                        <h3>Master of Applied Science (MASc)</h3>
+                        <h4>Civil Engineering</h4>
+                        <p>Dalhousie University, Halifax, NS</p>
+                        <span class="focus">Focus: AI/ML in Transportation Systems, Activity-Based Travel Scheduling, Business Establishment Dynamics, and Electric Vehicle Adoption</span>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <span class="timeline-year">2017 - 2022</span>
+                        <h3>Bachelor of Engineering (BE)</h3>
+                        <h4>Civil Engineering</h4>
+                        <p>Institute of Engineering (IOE), Pulchowk Campus, Nepal</p>
+                        <span class="focus">Specialization: Transportation Engineering and GIS</span>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
     
     <footer>
@@ -160,6 +209,6 @@
         </p>
     </footer>
 
-    <script src="./about/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
