@@ -1,120 +1,144 @@
 :root {
-    --card-radius: 12px;
-    --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    --card-bg: rgba(20, 20, 40, 0.7);
-    --card-hover-bg: rgba(30, 30, 50, 0.8);
-    --card-border: 1px solid rgba(255, 255, 255, 0.1);
+    --primary-color: #4a9eff;
+    --secondary-color: #3a7dd0;
+    --background-color: #0c0c18;
+    --card-bg-color: rgba(30, 30, 50, 0.7);
+    --text-color: #ffffff;
+    --accent-color: #61dafb;
+    --transition-speed: 0.3s;
 }
 
-#gamesAndApps {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    margin-top: 1rem;
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    overflow-x: hidden;
 }
 
-#games, #apps {
-    width: 100%;
+#starfield {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    display: block; /* Prevents default inline spacing */
 }
 
-.section-header {
-    font-size: 1.5rem;
+.container {
+    padding-top: 80px;
+}
+
+.hero-section {
+    position: relative; /* Make this the positioning context for the canvas */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 1rem;
+    background: transparent;
+    min-height: 300px; /* Ensure it has some height */
+    overflow: hidden; /* Keep stars inside */
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    text-shadow: 0 0 15px rgba(74, 158, 255, 0.5);
+}
+
+.hero-subtitle {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.projects-section {
+    padding: 2rem 1rem;
+}
+
+.filter-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+}
+
+.filter-btn {
+    background: transparent;
+    border: 1px solid var(--primary-color);
     color: var(--primary-color);
-    margin-bottom: 1.5rem;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    padding-left: 10px;
-    border-left: 4px solid var(--primary-color);
+    padding: 0.5rem 1.5rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all var(--transition-speed);
 }
 
-.section-header hr {
-    display: none; /* Remove divider line for cleaner look */
+.filter-btn:hover,
+.filter-btn.active {
+    background: var(--primary-color);
+    color: white;
 }
 
-/* App grid style like Play Store */
-section {
-    margin-bottom: 30px;
-}
-
-section > a {
-    text-decoration: none;
-    color: inherit;
-}
-
-.apps-grid {
+.projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 16px;
-    margin-bottom: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Smaller cards */
+    gap: 1.5rem; /* Reduced gap */
 }
 
-.apps {
-    background: var(--card-bg);
-    border-radius: var(--card-radius);
+.project-card {
+    background: var(--card-bg-color);
+    border-radius: 12px; /* Slightly smaller radius */
     overflow: hidden;
-    box-shadow: var(--card-shadow);
-    border: var(--card-border);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    height: 100%;
+    text-decoration: none;
+    color: var(--text-color);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed), border-color var(--transition-speed);
     display: flex;
     flex-direction: column;
 }
 
-.apps:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
-    background: var(--card-hover-bg);
+.project-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 0 20px rgba(74, 158, 255, 0.4), 0 8px 25px rgba(0, 0, 0, 0.4); /* Enhanced glow */
+    border-color: rgba(74, 158, 255, 0.5);
 }
 
-.app-content {
-    padding: 0;
+.card-content {
+    padding: 1rem 1.25rem; /* Reduced vertical padding */
     display: flex;
     flex-direction: column;
-    height: 100%;
-}
-
-.app-content img {
-    width: 100%;
-    height: 100px; /* Smaller icon size */
-    object-fit: contain; /* Maintain aspect ratio */
-    background: rgba(0, 0, 0, 0.1);
-    border: none;
-    padding: 10px; /* Add padding to prevent icon from touching edges */
-    margin: 0;
-}
-
-.app-info {
-    padding: 12px;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
+    align-items: center;
+    text-align: center;
     flex-grow: 1;
 }
 
-.app-info p {
-    font-size: 1rem;
-    font-weight: 500;
-    margin: 0;
-    color: var(--text-color);
+.card-content img {
+    width: 70px;
+    height: 70px;
+    object-fit: contain;
+    margin-bottom: 0.75rem; /* Reduced margin */
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px;
 }
 
-/* Responsive adjustments */
+.card-info h3 {
+    font-size: 1.15rem; /* Adjusted font size */
+    margin-bottom: 0.5rem;
+}
+
+.card-info p {
+    font-size: 0.85rem; /* Adjusted font size */
+    color: rgba(255, 255, 255, 0.7);
+    flex-grow: 1;
+}
+
 @media (max-width: 768px) {
-    .apps-grid {
-        grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    .hero-title {
+        font-size: 2.5rem;
     }
-    
-    .app-content img {
-        height: 90px;
-    }
-}
-
-@media (max-width: 480px) {
-    .apps-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-    
-    .app-content img {
-        height: 80px;
+    .projects-grid {
+        grid-template-columns: 1fr;
     }
 }

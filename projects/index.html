@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <canvas id="starfield"></canvas>
     <nav class="navbar">
         <div class="logo">
             <img src="../img/sagar.png" alt="Logo" class="logo-img">
@@ -31,152 +32,127 @@
     </nav>
 
     <div class="container">
-        <div class="profile-section">
-            <div class="profile-card">
-                <h1>My Projects</h1>
-                <p class="title">Interactive applications and games showcasing my skills in web development and programming.</p>
+        <div class="hero-section">
+            <div class="hero-text">
+                <h1 class="hero-title">My Projects</h1>
+                <p class="hero-subtitle">A collection of my web applications and games, showcasing my passion for development and creative problem-solving.</p>
             </div>
         </div>
 
         <div class="projects-section">
-            <div id='gamesAndApps'>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="apps">Apps</button>
+                <button class="filter-btn" data-filter="games">Games</button>
+            </div>
+
+            <div class="projects-grid">
                 
-                <section id='apps'>
-                    <div class="section-header">
-                        Apps
-                        <hr>
+                <a target="_blank" href="./apps/overpass-explorer/index.html" class="project-card" data-category="apps">
+                    <div class="card-content">
+                        <img src="./apps/overpass-explorer/globe-icon.png" alt="Overpass Explorer icon" loading="lazy">
+                        <div class="card-info">
+                            <h3>Overpass Explorer</h3>
+                            <p>Web app for exploring OpenStreetMap data.</p>
+                        </div>
                     </div>
-                    <div class="apps-grid">
+                </a>
 
-                        <a target="_blank" href="./apps/overpass-explorer/index.html">
-                            <div class='apps'>
-                              <div class="app-content">
-                                <img src="./apps/overpass-explorer/globe-icon.png" alt="Overpass Explorer icon" loading="lazy">
-                                <div class="app-info">
-                                  <p>Overpass Explorer</p>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-
-                          <a target="_blank" href="./apps/TrafficSimulation/">
-                            <div class='apps'>
-                              <div class="app-content">
-                                <img src="./apps/TrafficSimulation/traffic-light-icon.png" alt="Overpass Explorer icon" loading="lazy">
-                                <div class="app-info">
-                                  <p>Traffic Signal Simulation</p>
-                                </div>
-                              </div>
-                            </div>
-                          </a>
-
-                            <a target="_blank" href="./apps/PerfectCircle/index.html">
-                            <div class='apps'>
-                              <div class="app-content">
-                              <img src="./apps/PerfectCircle/forward-restore-icon.png" alt="Perfect Circle icon" loading="lazy">
-                              <div class="app-info">
-                                <p>Perfect Circle</p>
-                              </div>
-                              </div>
-                            </div>
-                            </a>
-
-                        <a target="_blank" href="./apps/NewtonsCradle/index.html">
-                          <div class='apps'>
-                            <div class="app-content">
-                              <img src="./apps/NewtonsCradle/icons/icons8-newtons-cradle-64.png" alt="Newton's Cradle icon" loading="lazy">
-                              <div class="app-info">
-                                <p>Newton's Cradle</p>
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-            
+                <a target="_blank" href="./apps/TrafficSimulation/" class="project-card" data-category="apps">
+                    <div class="card-content">
+                        <img src="./apps/TrafficSimulation/traffic-light-icon.png" alt="Traffic Simulation icon" loading="lazy">
+                        <div class="card-info">
+                            <h3>Traffic Simulation</h3>
+                            <p>A fun traffic light simulation.</p>
+                        </div>
                     </div>
-                </section>                
+                </a>
+
+                <a target="_blank" href="./apps/PerfectCircle/index.html" class="project-card" data-category="apps">
+                    <div class="card-content">
+                        <img src="./apps/PerfectCircle/forward-restore-icon.png" alt="Perfect Circle icon" loading="lazy">
+                        <div class="card-info">
+                            <h3>Perfect Circle</h3>
+                            <p>Test your skill at drawing a perfect circle.</p>
+                        </div>
+                    </div>
+                </a>
+
+                <a target="_blank" href="./apps/NewtonsCradle/index.html" class="project-card" data-category="apps">
+                    <div class="card-content">
+                        <img src="./apps/NewtonsCradle/icons/icons8-newtons-cradle-64.png" alt="Newton's Cradle icon" loading="lazy">
+                        <div class="card-info">
+                            <h3>Newton's Cradle</h3>
+                            <p>An interactive physics simulation.</p>
+                        </div>
+                    </div>
+                </a>
+    
+                <a target="_blank" href="./games/PianoTiles/index.html" class="project-card" data-category="games">
+                    <div class="card-content">
+                        <img src="./games/PianoTiles/img/pianoTilesSquare.png" alt="Piano Tiles icon" loading="lazy">
+                        <div class="card-info">
+                            <h3>Piano Tiles</h3>
+                            <p>A musical skill game.</p>
+                        </div>
+                    </div>
+                </a>
+    
+                <a target="_blank" href="./games/Wordle/index.html" class="project-card" data-category="games">
+                    <div class="card-content">
+                        <img src="./games/Mathle/grid_small_icon.png" alt="Wordle icon" loading="lazy"> 
+                        <div class="card-info">
+                            <h3>Wordle</h3>
+                            <p>A classic word puzzle game.</p>
+                        </div>
+                    </div>
+                </a>
+    
+                <a target="_blank" href="./games/Mathle/index.html" class="project-card" data-category="games">
+                    <div class="card-content">
+                        <img src="./games/Mathle/grid_small_icon.png" alt="Mathle icon" loading="lazy">
+                        <div class="card-info">
+                            <h3>Mathle</h3>
+                            <p>A math-based puzzle challenge.</p>
+                        </div>
+                    </div>
+                </a>
                 
-                
-                <section id='games'>
-                    <div class="section-header">
-                        Games
-                        <hr>
+                <a target="_blank" href="./games/PrimeHangman/index.html" class="project-card" data-category="games">
+                    <div class="card-content">
+                        <img src="./games/PianoTiles/img/17.png" alt="Prime Hangman icon" loading="lazy"> 
+                        <div class="card-info">
+                            <h3>Prime Hangman</h3>
+                            <p>A hangman game with a prime number twist.</p>
+                        </div>
                     </div>
-                    <div class="apps-grid">
-                        <a target="_blank" href="./games/PianoTiles/index.html">
-                          <div class='apps'>
-                            <div class="app-content">
-                              <img src="./games/PianoTiles/img/pianoTilesSquare.png" alt="Piano Tiles icon" loading="lazy">
-                              <div class="app-info">
-                                <p>Piano Tiles</p>
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-            
-                        <a target="_blank" href="./games/Wordle/index.html">
-                          <div class='apps'>
-                            <div class="app-content">
-                              <img src="./games/Mathle/grid_small_icon.png" alt="Wordle icon" loading="lazy"> 
-                              <div class="app-info">
-                                <p>Wordle</p>
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-            
-                        <a target="_blank" href="./games/Mathle/index.html">
-                          <div class='apps'>
-                            <div class="app-content">
-                              <img src="./games/Mathle/grid_small_icon.png" alt="Mathle icon" loading="lazy">
-                              <div class="app-info">
-                                <p>Mathle</p>
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                        
-                        <a target="_blank" href="./games/PrimeHangman/index.html">
-                          <div class='apps'>
-                            <div class="app-content">
-                              <img src="./games/PianoTiles/img/17.png" alt="Prime Hangman icon" loading="lazy"> 
-                              <div class="app-info">
-                                <p>Prime Hangman</p>
-                              </div>
-                            </div>
-                          </div>
-                        </a>
-                      
-                        <a target="_blank" href="./games/FlappyBird/index.html">
-                          <div class='apps'>
-                            <div class="app-content">
-                              <img src="./games/FlappyBird/img/final2.svg" alt="Flappy Bird icon" loading="lazy">
-                              <div class="app-info">
-                                <p>Flappy Bird</p>
-                              </div>
-                            </div>
-                          </div>
-                        </a>
+                </a>
               
-                        <a target="_blank" href="./games/Puzzle/index.html">
-                          <div class='apps'>
-                            <div class="app-content">
-                              <img src="./games/PianoTiles/img/happy.png" alt="Words Puzzle icon" loading="lazy"> 
-                              <div class="app-info">
-                                <p>Words Puzzle</p>
-                              </div>
-                            </div>
-                          </div>
-                        </a>
+                <a target="_blank" href="./games/FlappyBird/index.html" class="project-card" data-category="games">
+                    <div class="card-content">
+                        <img src="./games/FlappyBird/img/final2.svg" alt="Flappy Bird icon" loading="lazy">
+                        <div class="card-info">
+                            <h3>Flappy Bird</h3>
+                            <p>A clone of the classic mobile game.</p>
+                        </div>
                     </div>
-                </section>
-            
-
-              </div> 
+                </a>
+      
+                <a target="_blank" href="./games/Puzzle/index.html" class="project-card" data-category="games">
+                    <div class="card-content">
+                        <img src="./games/PianoTiles/img/happy.png" alt="Words Puzzle icon" loading="lazy"> 
+                        <div class="card-info">
+                            <h3>Words Puzzle</h3>
+                            <p>A challenging word puzzle game.</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
         </div>
     </div>
     
     <footer>
-        <p>&copy; 2024 Sagar Bhandari. All rights reserved. 
+        <p>&copy; 2025 Sagar Bhandari. All rights reserved. 
             <a target="_blank" href="https://github.com/aarsonmars/aarsonmars.github.io/tree/master/" class="hover-animate">
                 <i class="fab fa-github"></i> Source
             </a>
@@ -184,5 +160,6 @@
     </footer>
 
     <script src="../about/script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
