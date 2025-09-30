@@ -1,6 +1,84 @@
 // Data selection interface handling
 import { updateQueryEditor } from './query-builder.js';
 
+function updateSubcategoryState(subcategoryElement) {
+    if (!subcategoryElement) return;
+    const headerCheckbox = subcategoryElement.querySelector('.subcategory-checkbox');
+    if (!headerCheckbox) return;
+    const optionCheckboxes = subcategoryElement.querySelectorAll('.option input[type="checkbox"]');
+    if (optionCheckboxes.length === 0) {
+        headerCheckbox.checked = false;
+        headerCheckbox.indeterminate = false;
+        return;
+    }
+    const checkedCount = Array.from(optionCheckboxes).filter(cb => cb.checked).length;
+    headerCheckbox.checked = checkedCount === optionCheckboxes.length;
+    headerCheckbox.indeterminate = checkedCount > 0 && checkedCount < optionCheckboxes.length;
+}
+
+function updateCategoryState(categoryElement) {
+    if (!categoryElement) return;
+    const categoryCheckbox = categoryElement.querySelector('.category-checkbox');
+    if (!categoryCheckbox) return;
+    const optionCheckboxes = categoryElement.querySelectorAll('.option input[type="checkbox"]');
+    if (optionCheckboxes.length === 0) {
+        categoryCheckbox.checked = false;
+        categoryCheckbox.indeterminate = false;
+        return;
+    }
+    const checkedCount = Array.from(optionCheckboxes).filter(cb => cb.checked).length;
+    categoryCheckbox.checked = checkedCount === optionCheckboxes.length;
+    categoryCheckbox.indeterminate = checkedCount > 0 && checkedCount < optionCheckboxes.length;
+}
+
+function updateHierarchyStatesFromOption(optionCheckbox) {
+    if (!optionCheckbox) return;
+    const subcategory = optionCheckbox.closest('.subcategory-group');
+    if (subcategory) {
+        updateSubcategoryState(subcategory);
+    }
+    const category = optionCheckbox.closest('.category');
+    if (category) {
+        updateCategoryState(category);
+    }
+}
+
+function handleCategoryCheckboxChange(event) {
+    const category = event.target.closest('.category');
+    if (!category) return;
+    const isChecked = event.target.checked;
+    category.querySelectorAll('.subcategory-checkbox').forEach(cb => {
+        cb.checked = isChecked;
+        cb.indeterminate = false;
+    });
+    category.querySelectorAll('.option input[type="checkbox"]').forEach(cb => {
+        cb.checked = isChecked;
+    });
+    category.querySelectorAll('.subcategory-group').forEach(updateSubcategoryState);
+    updateCategoryState(category);
+    updateQueryEditor();
+}
+
+function handleSubcategoryCheckboxChange(event) {
+    const subcategory = event.target.closest('.subcategory-group');
+    if (!subcategory) return;
+    const isChecked = event.target.checked;
+    subcategory.querySelectorAll('.option input[type="checkbox"]').forEach(cb => {
+        cb.checked = isChecked;
+    });
+    updateSubcategoryState(subcategory);
+    const category = event.target.closest('.category');
+    if (category) {
+        updateCategoryState(category);
+    }
+    updateQueryEditor();
+}
+
+function onOptionCheckboxChange(event) {
+    updateHierarchyStatesFromOption(event.target);
+    updateQueryEditor();
+}
+
 // Module level variables
 let categoriesData = null;
 
@@ -40,148 +118,124 @@ async function generateCategoriesHTML() {
         const categoryDiv = document.createElement('div');
         categoryDiv.className = 'category';
         categoryDiv.id = `category-${category.id}`;
-        
-        // Create header
+
         const headerDiv = document.createElement('div');
         headerDiv.className = 'category-header';
-        headerDiv.textContent = category.name;
-        
-        // Create content container
+
+    const categoryCheckbox = document.createElement('input');
+    categoryCheckbox.type = 'checkbox';
+    categoryCheckbox.className = 'category-checkbox';
+    categoryCheckbox.id = `category-checkbox-${category.id}`;
+    categoryCheckbox.setAttribute('aria-label', `Select all ${category.name}`);
+    headerDiv.appendChild(categoryCheckbox);
+
+    const categoryLabel = document.createElement('span');
+    categoryLabel.className = 'category-name';
+    categoryLabel.textContent = category.name;
+    categoryLabel.setAttribute('role', 'button');
+    categoryLabel.tabIndex = 0;
+    categoryLabel.setAttribute('aria-expanded', 'true');
+    headerDiv.appendChild(categoryLabel);
+
+        const expandIcon = document.createElement('span');
+        expandIcon.className = 'expand-icon';
+        expandIcon.textContent = '▼';
+        headerDiv.appendChild(expandIcon);
+
+        categoryCheckbox.addEventListener('change', handleCategoryCheckboxChange);
+
         const contentDiv = document.createElement('div');
         contentDiv.className = 'category-content';
-        
-        // Create options
+
         if (category.options && category.options.length > 0) {
-            category.options.forEach(option => {
-                // Check if this option has subcategories
-                if (option.subcategories) {
-                    // This is a parent option with subcategories
-                    const subCategoryDiv = document.createElement('div');
-                    subCategoryDiv.className = 'subcategory-group';
-                    
-                    // Create subcategory header
-                    const subHeaderDiv = document.createElement('div');
-                    subHeaderDiv.className = 'subcategory-header';
-                    subHeaderDiv.innerHTML = '<span class="expand-icon">▶</span> ' + option.label;
-                    subCategoryDiv.appendChild(subHeaderDiv);
-                    
-                    // Create container for subcategory options
-                    const subOptionsDiv = document.createElement('div');
-                    subOptionsDiv.className = 'subcategory-options';
-                    
-                    // Add subcategory options
-                    option.subcategories.forEach(subOption => {
-                        const optionDiv = createCheckboxOption(subOption.id, subOption.label, !!subOption.default);
-                        
-                        // Store the OSM tag in a data attribute for query building
-                        if (subOption.tag) {
-                            optionDiv.querySelector('input').dataset.osmTag = subOption.tag;
-                        }
-                        
-                        subOptionsDiv.appendChild(optionDiv);
-                    });
-                    
-                    // Add a "Select All" checkbox for this subcategory group
-                    const selectAllDiv = document.createElement('div');
-                    selectAllDiv.className = 'select-all-option';
-                    
-                    const selectAllCheckbox = document.createElement('input');
-                    selectAllCheckbox.type = 'checkbox';
-                    selectAllCheckbox.id = `select-all-${option.id}`;
-                    
-                    const selectAllLabel = document.createElement('label');
-                    selectAllLabel.htmlFor = `select-all-${option.id}`;
-                    selectAllLabel.textContent = 'Select All';
-                    
-                    selectAllDiv.appendChild(selectAllCheckbox);
-                    selectAllDiv.appendChild(selectAllLabel);
-                    
-                    // Add event listener to "Select All" checkbox
-                    selectAllCheckbox.addEventListener('change', function() {
-                        const checkboxes = subOptionsDiv.querySelectorAll('input[type="checkbox"]');
-                        checkboxes.forEach(checkbox => {
-                            checkbox.checked = this.checked;
+            const subcategoryGroups = category.options.filter(option => Array.isArray(option.subcategories) && option.subcategories.length > 0);
+            const directOptions = category.options.filter(option => !option.subcategories || option.subcategories.length === 0);
+            const shouldFlattenSingleGroup = subcategoryGroups.length === 1 && directOptions.length === 0;
+
+            if (shouldFlattenSingleGroup) {
+                categoryDiv.classList.add('single-subcategory');
+                const [singleGroup] = subcategoryGroups;
+                const subOptionsDiv = document.createElement('div');
+                subOptionsDiv.className = 'subcategory-options single-group';
+
+                singleGroup.subcategories.forEach(subOption => {
+                    const optionDiv = createCheckboxOption(subOption.id, subOption.label, !!subOption.default);
+                    if (subOption.tag) {
+                        optionDiv.querySelector('input').dataset.osmTag = subOption.tag;
+                    }
+                    subOptionsDiv.appendChild(optionDiv);
+                });
+
+                contentDiv.appendChild(subOptionsDiv);
+            } else {
+                category.options.forEach(option => {
+                    if (option.subcategories && option.subcategories.length > 0) {
+                        const subCategoryDiv = document.createElement('div');
+                        subCategoryDiv.className = 'subcategory-group';
+
+                        const subHeaderDiv = document.createElement('div');
+                        subHeaderDiv.className = 'subcategory-header';
+
+                        const subCheckbox = document.createElement('input');
+                        subCheckbox.type = 'checkbox';
+                        subCheckbox.className = 'subcategory-checkbox';
+                        subCheckbox.id = `subcategory-checkbox-${option.id}`;
+                        subCheckbox.setAttribute('aria-label', `Select all ${option.label}`);
+                        subHeaderDiv.appendChild(subCheckbox);
+
+                        const subLabel = document.createElement('span');
+                        subLabel.className = 'subcategory-name';
+                        subLabel.textContent = option.label;
+                        subLabel.setAttribute('role', 'button');
+                        subLabel.tabIndex = 0;
+                        subLabel.setAttribute('aria-expanded', 'true');
+                        subHeaderDiv.appendChild(subLabel);
+
+                        const subExpandIcon = document.createElement('span');
+                        subExpandIcon.className = 'expand-icon';
+                        subExpandIcon.textContent = '▼';
+                        subHeaderDiv.appendChild(subExpandIcon);
+
+                        subCheckbox.addEventListener('change', handleSubcategoryCheckboxChange);
+
+                        const subOptionsDiv = document.createElement('div');
+                        subOptionsDiv.className = 'subcategory-options';
+
+                        option.subcategories.forEach(subOption => {
+                            const optionDiv = createCheckboxOption(subOption.id, subOption.label, !!subOption.default);
+                            if (subOption.tag) {
+                                optionDiv.querySelector('input').dataset.osmTag = subOption.tag;
+                            }
+                            subOptionsDiv.appendChild(optionDiv);
                         });
-                        updateQueryEditor();
-                    });
-                    
-                    // Add click event to subcategory header to toggle collapse
-                    subHeaderDiv.addEventListener('click', function(e) {
-                        // Don't propagate to parent category's click handler
-                        e.stopPropagation();
-                        subCategoryDiv.classList.toggle('collapsed');
-                        // Toggle the expand/collapse icon
-                        const icon = this.querySelector('.expand-icon');
-                        if (icon) {
-                            icon.textContent = subCategoryDiv.classList.contains('collapsed') ? '▶' : '▼';
+
+                        subCategoryDiv.appendChild(subHeaderDiv);
+                        subCategoryDiv.appendChild(subOptionsDiv);
+                        contentDiv.appendChild(subCategoryDiv);
+
+                        setSubcategoryExpandedState(subCategoryDiv, false);
+                    } else {
+                        const optionDiv = createCheckboxOption(option.id, option.label, !!option.default);
+                        if (option.tag) {
+                            optionDiv.querySelector('input').dataset.osmTag = option.tag;
                         }
-                    });
-                    
-                    // Assemble the subcategory group
-                    subCategoryDiv.appendChild(selectAllDiv);
-                    subCategoryDiv.appendChild(subOptionsDiv);
-                    contentDiv.appendChild(subCategoryDiv);
-                    
-                    // Default state - collapse subcategories
-                    subCategoryDiv.classList.add('collapsed');
-                } else {
-                    // This is a standard option without subcategories
-                    const optionDiv = createCheckboxOption(option.id, option.label, !!option.default);
-                    contentDiv.appendChild(optionDiv);
-                }
-            });
+                        contentDiv.appendChild(optionDiv);
+                    }
+                });
+            }
         }
-        
-        // Assemble the category
+
         categoryDiv.appendChild(headerDiv);
         categoryDiv.appendChild(contentDiv);
-        
-        // Collapse all categories except the first one
-        if (index > 0) {
-            categoryDiv.classList.add('collapsed');
-        }
-        
+
+        setCategoryExpandedState(categoryDiv, index === 0);
+
         categoriesContainer.appendChild(categoryDiv);
     });
-    
-    // Add CSS for subcategories
-    const styleElement = document.createElement('style');
-    styleElement.textContent = `
-        .subcategory-group {
-            margin-left: 15px;
-            border-left: 1px solid #ddd;
-            padding-left: 10px;
-            margin-bottom: 15px;
-        }
-        .subcategory-header {
-            font-weight: 600;
-            cursor: pointer;
-            padding: 5px 0;
-            color: #333;
-        }
-        .subcategory-header .expand-icon {
-            margin-right: 5px;
-            font-size: 12px;
-            color: #666;
-        }
-        .subcategory-options {
-            margin-left: 10px;
-        }
-        .subcategory-group.collapsed .subcategory-options {
-            display: none;
-        }
-        .select-all-option {
-            margin-bottom: 5px;
-            font-style: italic;
-        }
-        .select-all-option label {
-            color: #666;
-        }
-    `;
-    document.head.appendChild(styleElement);
-    
-    // Setup event listeners for the new checkboxes
+
     setupDataOptionListeners();
+    categoriesContainer.querySelectorAll('.subcategory-group').forEach(updateSubcategoryState);
+    categoriesContainer.querySelectorAll('.category').forEach(updateCategoryState);
 }
 
 // Helper function to create a checkbox option
@@ -204,27 +258,99 @@ function createCheckboxOption(id, label, isChecked = false) {
     return optionDiv;
 }
 
+function setCategoryExpandedState(categoryElement, expanded) {
+    if (!categoryElement) return;
+    categoryElement.classList.toggle('collapsed', !expanded);
+    const header = categoryElement.querySelector('.category-header');
+    if (header) {
+        const icon = header.querySelector('.expand-icon');
+        if (icon) {
+            icon.textContent = expanded ? '▼' : '▶';
+        }
+        const toggleButton = header.querySelector('.category-name');
+        if (toggleButton) {
+            toggleButton.setAttribute('aria-expanded', expanded.toString());
+        }
+    }
+}
+
+function setSubcategoryExpandedState(subcategoryElement, expanded) {
+    if (!subcategoryElement) return;
+    subcategoryElement.classList.toggle('collapsed', !expanded);
+    const header = subcategoryElement.querySelector('.subcategory-header');
+    if (header) {
+        const icon = header.querySelector('.expand-icon');
+        if (icon) {
+            icon.textContent = expanded ? '▼' : '▶';
+        }
+        const toggleButton = header.querySelector('.subcategory-name');
+        if (toggleButton) {
+            toggleButton.setAttribute('aria-expanded', expanded.toString());
+        }
+    }
+}
+
 // Setup category headers for collapsible sections
 export function setupCategoryCollapsing() {
-    // Add click event listener to each category header
     document.querySelectorAll('.category-header').forEach(header => {
-        header.addEventListener('click', () => {
-            // Toggle the collapsed class on the parent category
+        if (header.dataset.collapseAttached === 'true') {
+            return;
+        }
+        header.dataset.collapseAttached = 'true';
+        header.addEventListener('click', event => {
+            if (event.target.closest('input')) {
+                return;
+            }
             const category = header.parentElement;
-            category.classList.toggle('collapsed');
+            const shouldExpand = category.classList.contains('collapsed');
+            setCategoryExpandedState(category, shouldExpand);
         });
+
+        const toggleButton = header.querySelector('.category-name');
+        if (toggleButton && toggleButton.dataset.keyAttached !== 'true') {
+            toggleButton.dataset.keyAttached = 'true';
+            toggleButton.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    header.click();
+                }
+            });
+        }
+    });
+
+    document.querySelectorAll('.subcategory-header').forEach(header => {
+        if (header.dataset.collapseAttached === 'true') {
+            return;
+        }
+        header.dataset.collapseAttached = 'true';
+        header.addEventListener('click', event => {
+            if (event.target.closest('input')) {
+                return;
+            }
+            const subcategory = header.parentElement;
+            const shouldExpand = subcategory.classList.contains('collapsed');
+            setSubcategoryExpandedState(subcategory, shouldExpand);
+        });
+
+        const toggleButton = header.querySelector('.subcategory-name');
+        if (toggleButton && toggleButton.dataset.keyAttached !== 'true') {
+            toggleButton.dataset.keyAttached = 'true';
+            toggleButton.addEventListener('keydown', event => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    header.click();
+                }
+            });
+        }
     });
 }
 
 // Setup search functionality for data options
 export function setupDataSearch() {
     const searchInput = document.getElementById('data-option-search');
-    const expandAllBtn = document.getElementById('expand-all');
-    const collapseAllBtn = document.getElementById('collapse-all');
-    const selectNoneBtn = document.getElementById('select-none');
     
-    if (!searchInput || !expandAllBtn || !collapseAllBtn || !selectNoneBtn) {
-        console.warn('Some data selection UI elements were not found');
+    if (!searchInput) {
+        console.warn('Data option search input was not found');
         return;
     }
     
@@ -249,7 +375,7 @@ export function setupDataSearch() {
             subcategories.forEach(subcategory => {
                 subcategory.classList.remove('no-matches');
                 // Re-collapse subcategories
-                subcategory.classList.add('collapsed');
+                setSubcategoryExpandedState(subcategory, false);
             });
             return;
         }
@@ -283,9 +409,10 @@ export function setupDataSearch() {
             if (hasMatches) {
                 subcategory.classList.remove('no-matches');
                 // Auto-expand subcategories with matches
-                subcategory.classList.remove('collapsed');
+                setSubcategoryExpandedState(subcategory, true);
             } else {
                 subcategory.classList.add('no-matches');
+                setSubcategoryExpandedState(subcategory, false);
             }
         });
         
@@ -311,40 +438,13 @@ export function setupDataSearch() {
             if (hasMatches) {
                 category.classList.remove('no-matches');
                 // Auto-expand categories with matches
-                category.classList.remove('collapsed');
+                setCategoryExpandedState(category, true);
             } else {
                 category.classList.add('no-matches');
             }
         });
     });
     
-    // Expand all categories
-    expandAllBtn.addEventListener('click', function() {
-        document.querySelectorAll('.data-categories .category, .data-categories .subcategory-group').forEach(item => {
-            item.classList.remove('collapsed');
-        });
-    });
-    
-    // Collapse all categories
-    collapseAllBtn.addEventListener('click', function() {
-        document.querySelectorAll('.data-categories .category, .data-categories .subcategory-group').forEach(item => {
-            item.classList.add('collapsed');
-        });
-    });
-    
-    // Clear all selections
-    selectNoneBtn.addEventListener('click', function() {
-        document.querySelectorAll('.data-categories input[type="checkbox"]').forEach(checkbox => {
-            checkbox.checked = false;
-        });
-        
-        // Update the query
-        const queryEditor = document.getElementById('query-editor');
-        if (queryEditor) {
-            queryEditor.dataset.customEdited = 'false';
-        }
-        updateQueryEditor();
-    });
 }
 
 // Setup event listeners for data options
@@ -357,10 +457,8 @@ export function setupDataOptionListeners() {
     } else {
         // Add event listeners to existing checkboxes
         checkboxes.forEach(checkbox => {
-            // Remove existing listener to avoid duplicates
-            checkbox.removeEventListener('change', updateQueryEditor);
-            // Add new listener
-            checkbox.addEventListener('change', updateQueryEditor);
+            checkbox.removeEventListener('change', onOptionCheckboxChange);
+            checkbox.addEventListener('change', onOptionCheckboxChange);
         });
     }
 }

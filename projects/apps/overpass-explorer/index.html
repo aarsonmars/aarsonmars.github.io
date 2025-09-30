@@ -15,115 +15,123 @@
         </header>
         
         <div class="main-content">
-            <div class="sidebar">
-                <div class="section">
-                    <h2>Select Area</h2>
-                    <div class="area-selection">
-                        <div class="button-group">
-                            <button id="draw-area">Draw on Map</button>
-                            <button id="use-visible">Use Visible Area</button>
-                        </div>
-                        <input type="text" id="coordinates" placeholder="lat,lon,lat,lon (S,W,N,E)">
-                    </div>
-                </div>
-                
-                <div class="section">
-                    <h2>Data Selection</h2>
-                    <div class="data-selection-search">
-                        <input type="text" id="data-option-search" placeholder="Search options...">
-                        <button id="expand-all">Expand All</button>
-                        <button id="collapse-all">Collapse All</button>
-                    </div>
-                    <div class="data-quick-select">
-                        <!-- <button id="select-common">Common Features</button> -->
-                        <button id="select-none">Clear All</button>
-                    </div>
-                    <div class="data-categories">
-                        <!-- Example Category: Roads & Highways -->
-                        <div class="category">
-                            <div class="category-header">
-                                <input type="checkbox" class="category-checkbox" id="roads-highways-checkbox">
-                                <label for="roads-highways-checkbox" class="category-name">Roads & Highways</label>
-                                <span class="expand-icon">▼</span>
+            <aside class="sidebar">
+                <div class="sidebar-scrollable">
+                    <div class="section">
+                        <h2>Select Area</h2>
+                        <div class="area-selection">
+                            <div class="button-group">
+                                <button id="draw-area">Draw on Map</button>
+                                <button id="use-visible">Use Visible Area</button>
+                                <button id="clear-selection" class="secondary" disabled>Clear Selection</button>
                             </div>
-                            <div class="subcategories">
-                                <!-- Subcategory: Highway Types -->
-                                <div class="subcategory">
-                                    <div class="subcategory-header">
-                                        <input type="checkbox" class="subcategory-checkbox" id="highway-types-checkbox">
-                                        <label for="highway-types-checkbox" class="subcategory-name">Highway Types</label>
-                                        <span class="expand-icon">▼</span>
-                                    </div>
-                                    <div class="subcategory-options">
-                                        <div><input type="checkbox" id="motorway"> <label for="motorway">Motorway</label></div>
-                                        <div><input type="checkbox" id="trunk"> <label for="trunk">Trunk</label></div>
-                                        <div><input type="checkbox" id="primary"> <label for="primary">Primary</label></div>
-                                        <!-- ...other highway types... -->
-                                    </div>
-                                </div>
-                                <!-- Add more subcategories here -->
-                            </div>
+                            <input type="text" id="coordinates" placeholder="lat,lon,lat,lon (S,W,N,E)">
                         </div>
-                        <!-- Add more categories here -->
                     </div>
                     
-                    <div class="custom-query">
-                        <h3>Custom Overpass Query</h3>
-                        <textarea id="query-editor" rows="6"></textarea>
+                    <div class="section">
+                        <h2>Data Selection</h2>
+                        <div class="data-selection-search">
+                            <input type="text" id="data-option-search" placeholder="Search options...">
+                        </div>
+                        <div class="data-categories">
+                            <div class="category">
+                                <div class="category-header">
+                                    <input type="checkbox" class="category-checkbox" id="roads-highways-checkbox">
+                                    <label for="roads-highways-checkbox" class="category-name">Roads & Highways</label>
+                                    <span class="expand-icon">▼</span>
+                                </div>
+                                <div class="subcategories">
+                                    <div class="subcategory">
+                                        <div class="subcategory-header">
+                                            <input type="checkbox" class="subcategory-checkbox" id="highway-types-checkbox">
+                                            <label for="highway-types-checkbox" class="subcategory-name">Highway Types</label>
+                                            <span class="expand-icon">▼</span>
+                                        </div>
+                                        <div class="subcategory-options">
+                                            <div><input type="checkbox" id="motorway"> <label for="motorway">Motorway</label></div>
+                                            <div><input type="checkbox" id="trunk"> <label for="trunk">Trunk</label></div>
+                                            <div><input type="checkbox" id="primary"> <label for="primary">Primary</label></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="custom-query">
+                            <h3>Custom Overpass Query</h3>
+                            <textarea id="query-editor" rows="6"></textarea>
+                        </div>
                     </div>
                 </div>
-                
                 <div class="section static-button-container">
                     <button id="fetch-data" class="primary-btn static-button">Fetch Data</button>
                 </div>
-            </div>
+            </aside>
             
-            <div class="map-container">
-                <div id="map"></div>
-            </div>
-        </div>
-        
-        <div class="data-display">
-            <h2>Results</h2>
-            <div class="data-info">
-                <span id="data-count">0</span> elements retrieved
-            </div>
-            
-            <div class="view-tabs">
-                <button id="json-view-tab" class="view-tab active">JSON View</button>
-                <button id="table-view-tab" class="view-tab">Table View</button>
-            </div>
-            
-            <div id="json-view" class="view-content active">
-                <div class="data-preview">
-                    <pre id="data-preview-content"></pre>
+            <section class="map-container panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Map View</h2>
+                        <p class="panel-subtitle">Draw or search for a boundary to explore OpenStreetMap data.</p>
+                    </div>
+                    <div class="map-status">
+                        <span class="label">Current selection</span>
+                        <span id="area-summary" role="status" aria-live="polite">No area selected</span>
+                    </div>
                 </div>
-            </div>
-            
-            <div id="table-view" class="view-content">
-                <div class="table-container">
-                    <table id="data-table">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Type</th>
-                                <th>Tags</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Table rows will be added dynamically -->
-                        </tbody>
-                    </table>
+                <div class="map-frame">
+                    <div id="map"></div>
                 </div>
-            </div>
-            
-            <div class="download-options">
-                <h3>Download Data</h3>
-                <button data-format="osm">OSM XML</button>
-                <button data-format="geojson">GeoJSON</button>
-                <button data-format="csv">CSV</button>
-                <button data-format="json">JSON</button>
-            </div>
+            </section>
+
+            <section class="data-display panel">
+                <div class="panel-header">
+                    <div>
+                        <h2>Results</h2>
+                        <p class="panel-subtitle">Switch between JSON, table, and downloads without leaving the map.</p>
+                    </div>
+                    <div class="data-info">
+                        <span id="data-count">0</span> elements retrieved
+                    </div>
+                </div>
+                
+                <div class="view-tabs">
+                    <button id="json-view-tab" class="view-tab">JSON View</button>
+                    <button id="table-view-tab" class="view-tab active">Table View</button>
+                </div>
+                
+                <div id="json-view" class="view-content">
+                    <div class="data-preview">
+                        <pre id="data-preview-content"></pre>
+                    </div>
+                </div>
+                
+                <div id="table-view" class="view-content active">
+                    <div class="table-container">
+                        <table id="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Type</th>
+                                    <th>Tags</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Table rows will be added dynamically -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="download-options">
+                    <h3>Download Data</h3>
+                    <button data-format="csv">CSV</button>
+                    <button data-format="geojson">GeoJSON</button>
+                    <button data-format="osm">OSM XML</button>
+                    <button data-format="json">JSON</button>
+                </div>
+            </section>
         </div>
     </div>
 

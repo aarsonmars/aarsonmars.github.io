@@ -4,7 +4,6 @@ import { getSelectedOsmTags } from './data-selection.js';
 // Map option IDs to Overpass query filters
 const optionToQueryMap = {
     // Highways/roads
-    'highway_all': '["highway"]',
     'highway_motorway': '["highway"="motorway"]',
     'highway_trunk': '["highway"="trunk"]',
     'highway_primary': '["highway"="primary"]',
@@ -12,33 +11,16 @@ const optionToQueryMap = {
     'highway_residential': '["highway"="residential"]',
     
     // Public transport
-    'public_transport_all': '["public_transport"]|["railway"="station"]|["railway"="tram_stop"]|["highway"="bus_stop"]|["aeroway"="aerodrome"]|["amenity"="ferry_terminal"]',
-    
-    // Buildings
-    'building_all': '["building"]',
-    
-    // Shops
-    'shop_all': '["shop"]',
-    
-    // Amenities
-    'amenity_all': '["amenity"]',
-    
     // Leisure features
-    'leisure_all': '["leisure"]',
     'leisure_park': '["leisure"="park"]',
     
     // Natural features
-    'natural_all': '["natural"]',
     'natural_water': '["natural"="water"]',
     
     // Boundaries
     'boundary_administrative': '["boundary"="administrative"]',
     
     // Land use
-    'landuse_all': '["landuse"]',
-    
-    // Tourism
-    'tourism_all': '["tourism"]',
     'historic': '["historic"]'
 };
 

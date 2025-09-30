@@ -5,6 +5,35 @@ import { updateQueryEditor } from './query-builder.js';
 let map;
 let drawnItems;
 
+function renderAreaSummary(area) {
+    const summaryElement = document.getElementById('area-summary');
+    if (!summaryElement) {
+        return;
+    }
+
+    const clearButton = document.getElementById('clear-selection');
+
+    if (!area) {
+        summaryElement.textContent = 'No area selected';
+        summaryElement.classList.remove('has-selection');
+        summaryElement.removeAttribute('title');
+        if (clearButton) {
+            clearButton.disabled = true;
+        }
+        return;
+    }
+
+    const short = (value) => value.toFixed(3);
+    const precise = `${area.south.toFixed(6)},${area.west.toFixed(6)},${area.north.toFixed(6)},${area.east.toFixed(6)}`;
+
+    summaryElement.textContent = `${short(area.south)}, ${short(area.west)} → ${short(area.north)}, ${short(area.east)}`;
+    summaryElement.classList.add('has-selection');
+    summaryElement.title = precise;
+    if (clearButton) {
+        clearButton.disabled = false;
+    }
+}
+
 // Initialize Leaflet map
 export function initializeMap() {
     // Create the map centered on Halifax, Canada
@@ -40,6 +69,7 @@ export function initializeMap() {
     });
     
     map.addControl(drawControl);
+    renderAreaSummary(window.selectedArea);
     
     // Handle the draw:created event
     map.on('draw:created', function(event) {
@@ -62,6 +92,7 @@ export function initializeMap() {
             
             // Update the query editor with the new area
             updateQueryEditor();
+            renderAreaSummary(window.selectedArea);
         } else if (layer instanceof L.Polygon) {
             const bounds = layer.getBounds();
             window.selectedArea = {
@@ -76,13 +107,17 @@ export function initializeMap() {
             
             // Update the query editor with the new area
             updateQueryEditor();
+            renderAreaSummary(window.selectedArea);
         }
     });
 }
 
 // Draw a rectangle on the map for the selected area
 export function drawRectangleForSelectedArea() {
-    if (!window.selectedArea) return;
+    if (!window.selectedArea) {
+        renderAreaSummary(null);
+        return;
+    }
     
     drawnItems.clearLayers();
     L.rectangle([
@@ -92,6 +127,8 @@ export function drawRectangleForSelectedArea() {
         color: '#3388ff',
         weight: 2
     }).addTo(drawnItems);
+
+    renderAreaSummary(window.selectedArea);
 }
 
 // Enable drawing mode for rectangles
@@ -133,49 +170,67 @@ export function displayDataOnMap(data) {
                 map.removeLayer(layer);
             }
         });
-        
-        // Create GeoJSON from the Overpass data
-        const geoJsonData = window.overpassToGeoJSON(data);
-        
-        // Limit features to a reasonable number to prevent browser freeze
-        const MAX_FEATURES = 1000;
-        if (geoJsonData.features.length > MAX_FEATURES) {
-            console.warn(`Too many features (${geoJsonData.features.length}), limiting to ${MAX_FEATURES} to prevent browser freeze`);
-            geoJsonData.features = geoJsonData.features.slice(0, MAX_FEATURES);
+
+        if (typeof window.overpassToGeoJSON !== 'function') {
+            console.error('overpassToGeoJSON is not available on window');
+            return;
         }
-        
-        // Add GeoJSON to the map with optimized settings
-        L.geoJSON(geoJsonData, {
-            style: function (feature) {
-                return { color: '#ff7800', weight: 1.5, opacity: 0.8 }; // Less heavy style
-            },
-            pointToLayer: function (feature, latlng) {
-                return L.circleMarker(latlng, {
-                    radius: 4, // Smaller radius
-                    fillColor: '#ff7800',
-                    color: '#000',
-                    weight: 1,
-                    opacity: 0.7,
-                    fillOpacity: 0.6
-                });
-            },
-            onEachFeature: function (feature, layer) {
-                // Only add popup on click instead of binding immediately
-                layer.on('click', function() {
-                    if (feature.properties) {
-                        let popupContent = '<div class="popup-content">';
-                        popupContent += `<h4>${feature.properties.id}</h4>`;
-                        
-                        for (const key in feature.properties.tags) {
-                            popupContent += `<strong>${key}:</strong> ${feature.properties.tags[key]}<br>`;
-                        }
-                        
-                        popupContent += '</div>';
-                        layer.bindPopup(popupContent).openPopup();
+
+        window.overpassToGeoJSON(data)
+            .then(geoJsonData => {
+                if (!geoJsonData || !Array.isArray(geoJsonData.features)) {
+                    console.warn('No features returned from Overpass conversion');
+                    return;
+                }
+
+                // Limit features to a reasonable number to prevent browser freeze
+                const MAX_FEATURES = 1000;
+                if (geoJsonData.features.length > MAX_FEATURES) {
+                    console.warn(`Too many features (${geoJsonData.features.length}), limiting to ${MAX_FEATURES} to prevent browser freeze`);
+                    geoJsonData.features = geoJsonData.features.slice(0, MAX_FEATURES);
+                }
+
+                if (geoJsonData.features.length === 0) {
+                    console.info('No features to display on the map');
+                    return;
+                }
+
+                // Add GeoJSON to the map with optimized settings
+                L.geoJSON(geoJsonData, {
+                    style: function (feature) {
+                        return { color: '#ff7800', weight: 1.5, opacity: 0.8 }; // Less heavy style
+                    },
+                    pointToLayer: function (feature, latlng) {
+                        return L.circleMarker(latlng, {
+                            radius: 4, // Smaller radius
+                            fillColor: '#ff7800',
+                            color: '#000',
+                            weight: 1,
+                            opacity: 0.7,
+                            fillOpacity: 0.6
+                        });
+                    },
+                    onEachFeature: function (feature, layer) {
+                        // Only add popup on click instead of binding immediately
+                        layer.on('click', function() {
+                            if (feature.properties) {
+                                let popupContent = '<div class="popup-content">';
+                                popupContent += `<h4>${feature.properties.id}</h4>`;
+
+                                for (const key in feature.properties.tags) {
+                                    popupContent += `<strong>${key}:</strong> ${feature.properties.tags[key]}<br>`;
+                                }
+
+                                popupContent += '</div>';
+                                layer.bindPopup(popupContent).openPopup();
+                            }
+                        });
                     }
-                });
-            }
-        }).addTo(map);
+                }).addTo(map);
+            })
+            .catch(error => {
+                console.error('Error converting Overpass data to GeoJSON:', error);
+            });
     });
 }
 
@@ -193,4 +248,20 @@ export function getMap() {
 // Get the drawn items layer (for other modules that might need it)
 export function getDrawnItems() {
     return drawnItems;
+}
+
+export function clearSelection() {
+    if (drawnItems) {
+        drawnItems.clearLayers();
+    }
+
+    window.selectedArea = null;
+
+    const coordinatesInput = document.getElementById('coordinates');
+    if (coordinatesInput) {
+        coordinatesInput.value = '';
+    }
+
+    renderAreaSummary(null);
+    updateQueryEditor();
 }

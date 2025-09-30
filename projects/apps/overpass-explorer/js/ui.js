@@ -1,5 +1,5 @@
 // UI setup and general event handling
-import { enableDrawing, useVisibleArea, drawRectangleForSelectedArea, zoomToBounds, addMarker, displayDataOnMap } from './map.js';
+import { enableDrawing, useVisibleArea, drawRectangleForSelectedArea, zoomToBounds, addMarker, displayDataOnMap, clearSelection } from './map.js';
 import { updateQueryEditor, init as initQueryBuilder } from './query-builder.js';
 import { init as initDataSelection } from './data-selection.js';
 import { init as initExport } from './export.js';
@@ -21,6 +21,13 @@ export function setupEventListeners() {
     document.getElementById('use-visible').addEventListener('click', () => {
         useVisibleArea();
     });
+
+    const clearSelectionButton = document.getElementById('clear-selection');
+    if (clearSelectionButton) {
+        clearSelectionButton.addEventListener('click', () => {
+            clearSelection();
+        });
+    }
     
     // Add search by location name functionality
     setupLocationSearch();
@@ -58,6 +65,9 @@ export function setupEventListeners() {
     initDataSelection();
     initExport();
     initDataDisplay();
+
+    // Initialize default table view state
+    displayDataInTable(window.currentData);
 }
 
 // Setup location search functionality
@@ -79,39 +89,6 @@ function setupLocationSearch() {
     // Insert before the coordinates input
     const areaSelection = document.querySelector('.area-selection');
     areaSelection.insertBefore(searchContainer, document.getElementById('coordinates'));
-    
-    // Add style for the search container and make sidebar scrollable
-    const style = document.createElement('style');
-    style.textContent = `
-        .search-container {
-            display: flex;
-            margin-bottom: 10px;
-        }
-        #location-search {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px 0 0 4px;
-        }
-        #location-search-btn {
-            padding: 8px 12px;
-            background-color: #3498db;
-            color: white;
-            border: 1px solid #3498db;
-            border-radius: 0 4px 4px 0;
-            cursor: pointer;
-        }
-        #location-search-btn:hover {
-            background-color: #2980b9;
-        }
-        /* Make sidebar scrollable */
-        .sidebar {
-            max-height: 500px;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-    `;
-    document.head.appendChild(style);
     
     // Search button click event
     searchButton.addEventListener('click', () => {
@@ -201,7 +178,6 @@ function searchByLocationName() {
 
 // Fetch Overpass API data
 async function fetchOverpassData() {
-    const dataDisplay = document.querySelector('.data-display');
     const dataPreview = document.getElementById('data-preview-content');
     
     // Check if an area is selected
@@ -224,7 +200,6 @@ async function fetchOverpassData() {
 
     // Show loading state
     dataPreview.textContent = 'Loading data...';
-    dataDisplay.style.display = 'block';
 
     // Create a timeout for the request
     const timeoutId = setTimeout(() => {
@@ -254,8 +229,9 @@ async function fetchOverpassData() {
         const data = await response.json();
         window.currentData = data;
 
-        // Display the data
-        displayDataInJsonView(data);
+    // Display the data
+    displayDataInJsonView(data);
+    displayDataInTable(data);
 
         // Add data to the map
         displayDataOnMap(data);

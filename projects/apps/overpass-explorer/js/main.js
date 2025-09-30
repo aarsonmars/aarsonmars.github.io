@@ -33,5 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Map container (#map) is missing.');
         return;
     }
-    mapContainer.style.height = '500px'; // Ensure the map has a height
+    mapContainer.style.height = '100%';
+    mapContainer.style.minHeight = '520px';
 });

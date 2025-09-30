@@ -7,17 +7,35 @@ export function displayDataInTable(data) {
     
     // Clear existing table content
     tableBody.innerHTML = '';
-    
-    // Reset headers (keep only the basic columns)
-    tableHead.innerHTML = `
-        <th>ID</th>
-        <th>Type</th>
-    `;
+    tableHead.innerHTML = '';
+
+    const idHeader = document.createElement('th');
+    idHeader.textContent = 'ID';
+    tableHead.appendChild(idHeader);
+
+    const typeHeader = document.createElement('th');
+    typeHeader.textContent = 'Type';
+    tableHead.appendChild(typeHeader);
+
+    if (!data || !data.elements || data.elements.length === 0) {
+    const tagsHeader = document.createElement('th');
+    tagsHeader.textContent = 'Tags';
+    tableHead.appendChild(tagsHeader);
+
+    const emptyRow = document.createElement('tr');
+    const emptyCell = document.createElement('td');
+    emptyCell.colSpan = tableHead.children.length;
+        emptyCell.className = 'empty-state';
+        emptyCell.textContent = 'No results yet. Fetch data to populate the table.';
+        emptyRow.appendChild(emptyCell);
+        tableBody.appendChild(emptyRow);
+        return;
+    }
     
     // Show loading message
     const loadingRow = document.createElement('tr');
     const loadingCell = document.createElement('td');
-    loadingCell.colSpan = 3;
+    loadingCell.colSpan = tableHead.children.length || 3;
     loadingCell.textContent = 'Analyzing data and building table...';
     loadingRow.appendChild(loadingCell);
     tableBody.appendChild(loadingRow);

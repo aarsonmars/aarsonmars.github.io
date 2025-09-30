@@ -1145,6 +1145,10 @@ function setupDataSearch() {
     const collapseAllBtn = document.getElementById('collapse-all');
     const selectNoneBtn = document.getElementById('select-none');
     
+    if (!searchInput) {
+        return;
+    }
+
     // Search functionality
     searchInput.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
@@ -1195,37 +1199,43 @@ function setupDataSearch() {
     });
     
     // Expand all categories
-    expandAllBtn.addEventListener('click', function() {
-        document.querySelectorAll('.data-categories .category').forEach(category => {
-            category.classList.remove('collapsed');
+    if (expandAllBtn) {
+        expandAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('.category').forEach(category => {
+                category.classList.remove('collapsed');
+                const icon = category.querySelector('.expand-icon');
+                if (icon) icon.textContent = '▼';
+            });
+            document.querySelectorAll('.subcategory').forEach(subcategory => {
+                subcategory.classList.remove('collapsed');
+                const icon = subcategory.querySelector('.expand-icon');
+                if (icon) icon.textContent = '▼';
+            });
         });
-    });
+    }
     
-    // Collapse all categories
-    collapseAllBtn.addEventListener('click', function() {
-        document.querySelectorAll('.data-categories .category').forEach(category => {
-            category.classList.add('collapsed');
+    if (collapseAllBtn) {
+        collapseAllBtn.addEventListener('click', () => {
+            document.querySelectorAll('.category').forEach(category => {
+                category.classList.add('collapsed');
+                const icon = category.querySelector('.expand-icon');
+                if (icon) icon.textContent = '▶';
+            });
+            document.querySelectorAll('.subcategory').forEach(subcategory => {
+                subcategory.classList.add('collapsed');
+                const icon = subcategory.querySelector('.expand-icon');
+                if (icon) icon.textContent = '▶';
+            });
         });
-    });
-    
-    // Clear all selections
-    selectNoneBtn.addEventListener('click', function() {
-        document.querySelectorAll('.data-categories input[type="checkbox"]').forEach(checkbox => {
-            checkbox.checked = false;
-        });
-        
-        // Update the query
-        const queryEditor = document.getElementById('query-editor');
-        if (queryEditor) {
-            queryEditor.dataset.customEdited = 'false';
-        }
-        updateQueryEditor();
-    });
-}
+    }
 
-// Setup category headers for collapsible sections
-function setupCategoryCollapsing() {
-    // Add click event listener to each category header
+    if (selectNoneBtn) {
+        selectNoneBtn.addEventListener('click', () => {
+            document.querySelectorAll('.data-categories input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+        });
+    }
     document.querySelectorAll('.category-header').forEach(header => {
         header.addEventListener('click', () => {
             // Toggle the collapsed class on the parent category

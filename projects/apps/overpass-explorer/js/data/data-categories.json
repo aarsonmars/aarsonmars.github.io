@@ -3,7 +3,6 @@
     "id": "highways",
     "name": "Roads & Highways",
     "options": [
-      { "id": "highway_all", "label": "All Highways/Roads" },
       { 
         "id": "highway_subcategories",
         "label": "Highway Types",
@@ -26,7 +25,6 @@
     "id": "public_transport",
     "name": "Public Transport",
     "options": [
-      { "id": "public_transport_all", "label": "All Public Transport" },
       {
         "id": "public_transport_subcategories",
         "label": "Transport Types",
@@ -46,7 +44,6 @@
     "id": "buildings",
     "name": "Buildings",
     "options": [
-      { "id": "building_all", "label": "All Buildings" },
       {
         "id": "building_subcategories",
         "label": "Building Types",
@@ -67,7 +64,6 @@
     "id": "amenities",
     "name": "Amenities",
     "options": [
-      { "id": "amenity_all", "label": "All Amenities" },
       {
         "id": "amenity_food",
         "label": "Food & Drink",
@@ -124,7 +120,6 @@
     "id": "shops",
     "name": "Shops & Retail",
     "options": [
-      { "id": "shop_all", "label": "All Shops" },
       {
         "id": "shop_food",
         "label": "Food Shops",
@@ -159,7 +154,6 @@
     "id": "natural",
     "name": "Natural Features",
     "options": [
-      { "id": "natural_all", "label": "All Natural Features" },
       {
         "id": "natural_water",
         "label": "Water Features",
@@ -189,7 +183,6 @@
     "id": "leisure_recreation",
     "name": "Leisure & Recreation",
     "options": [
-      { "id": "leisure_all", "label": "All Leisure Areas" },
       {
         "id": "leisure_parks",
         "label": "Parks & Green Spaces",
@@ -218,7 +211,6 @@
     "id": "landuse",
     "name": "Land Use",
     "options": [
-      { "id": "landuse_all", "label": "All Land Use Areas" },
       {
         "id": "landuse_urban",
         "label": "Urban Land Use",
@@ -246,7 +238,6 @@
     "id": "tourism",
     "name": "Tourism & Culture",
     "options": [
-      { "id": "tourism_all", "label": "All Tourism Features" },
       {
         "id": "tourism_accommodation",
         "label": "Accommodation",
