@@ -50,31 +50,55 @@
     <meta property="og:type" content="website">
     
     <title>Sagar Bhandari | Transportation Engineer</title>
+        <link rel="canonical" href="https://aarsonmars.github.io/" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Sagar Bhandari | Transportation Engineer" />
+        <meta name="twitter:description" content="Portfolio website showcasing web development projects, games and interactive applications" />
+        <meta name="twitter:image" content="https://aarsonmars.github.io/img/sagar.png" />
+        <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+        <link rel="preconnect" href="https://unpkg.com" crossorigin>
     <link rel='icon' href='./img/sagar.png'>
     <link rel="stylesheet" href="home.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+        <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "Person",
+            "name": "Sagar Bhandari",
+            "image": "https://aarsonmars.github.io/img/sagar.png",
+            "jobTitle": "Transportation Engineer",
+            "url": "https://aarsonmars.github.io/",
+            "sameAs": [
+                "https://github.com/aarsonmars",
+                "https://www.linkedin.com/in/aarsonmars/"
+            ]
+        }
+        </script>
 </head>
 <body>
+        <a href="#home" class="skip-link">Skip to main content</a>
     <nav class="navbar">
         <div class="logo">
             <img src="./img/sagar.png" alt="Logo" class="logo-img">
         </div>
         <ul class="nav-links">
-            <li><a href="#" class="active">Home</a></li>
+            <!-- Use hash links so we can highlight based on scroll position -->
+            <li><a href="#home" class="active" aria-current="page">Home</a></li>
             <li><a href="#projects">Projects</a></li>
-            <li><a href="./about/contact.html">Contact</a></li>
+            <li><a href="#contact">Contact</a></li>
         </ul>
-        <div class="burger">
+        <div class="burger" aria-label="Menu" aria-expanded="false" role="button">
             <div class="line1"></div>
             <div class="line2"></div>
             <div class="line3"></div>
         </div>
     </nav>
 
+    <main id="main-content">
     <div class="container">
         <!-- Hero Section -->
-        <section class="hero-section" data-aos="fade-in">
+        <section id="home" class="hero-section" data-aos="fade-in">
             <div class="hero-content">
                 <div class="hero-text" data-aos="fade-right" data-aos-delay="200">
                     <h1 class="hero-title">Sagar Bhandari</h1>
@@ -90,7 +114,7 @@
                     </div>
                 </div>
                 <div class="hero-image" data-aos="fade-left" data-aos-delay="400">
-                    <img src="./img/sagar.jpg" alt="Sagar Bhandari" class="profile-image">
+                    <img src="./img/sagar.jpg" alt="Sagar Bhandari" class="profile-image" width="300" height="300" decoding="async" fetchpriority="high">
                     <div class="social-links">
                         <a href="https://github.com/aarsonmars" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
                             <i class="fab fa-github"></i>
@@ -112,51 +136,41 @@
             <h2><i class="fas fa-star"></i> Featured Projects</h2>
             <div class="projects-grid">
                 <!-- Desktop (Web) Featured: Overpass Explorer & Traffic Simulation -->
-                <div class="project-card desktop-only" data-aos="fade-up" data-aos-delay="100">
-                    <div class="project-icon">
-                        <i class="fas fa-globe"></i>
-                    </div>
+                <a class="project-card desktop-only" href="./projects/apps/overpass-explorer/index.html" data-aos="fade-up" data-aos-delay="100" aria-label="Open Overpass Explorer project">
+                    <div class="project-icon"><i class="fas fa-globe"></i></div>
                     <h3>Overpass Explorer</h3>
                     <p>Explore OpenStreetMap with powerful query builder, category presets & instant map visualization.</p>
-                    <a href="./projects/apps/overpass-explorer/index.html" class="project-link" aria-label="Open Overpass Explorer project">View Project <i class="fas fa-arrow-right"></i></a>
-                </div>
+                    <span class="project-cta">View Project <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
 
-                <div class="project-card desktop-only" data-aos="fade-up" data-aos-delay="200">
-                    <div class="project-icon">
-                        <i class="fas fa-traffic-light"></i>
-                    </div>
+                <a class="project-card desktop-only" href="./projects/apps/TrafficSimulation/index.html" data-aos="fade-up" data-aos-delay="200" aria-label="Open Traffic Simulation project">
+                    <div class="project-icon"><i class="fas fa-traffic-light"></i></div>
                     <h3>Traffic Simulation</h3>
                     <p>Microscopic traffic signal simulation demonstrating queue dynamics and timing strategies.</p>
-                    <a href="./projects/apps/TrafficSimulation/index.html" class="project-link" aria-label="Open Traffic Simulation project">View Project <i class="fas fa-arrow-right"></i></a>
-                </div>
+                    <span class="project-cta">View Project <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
 
                 <!-- Mobile Featured: Piano Tiles & Wordle -->
-                <div class="project-card mobile-only" data-aos="fade-up" data-aos-delay="100">
-                    <div class="project-icon">
-                        <i class="fas fa-music"></i>
-                    </div>
+                <a class="project-card mobile-only" href="./projects/games/PianoTiles/index.html" data-aos="fade-up" data-aos-delay="100" aria-label="Open Piano Tiles game">
+                    <div class="project-icon"><i class="fas fa-music"></i></div>
                     <h3>Piano Tiles</h3>
                     <p>Fast-paced rhythm game: tap the dark tiles in time while the speed ramps up.</p>
-                    <a href="./projects/games/PianoTiles/index.html" class="project-link" aria-label="Open Piano Tiles game">Play Game <i class="fas fa-arrow-right"></i></a>
-                </div>
+                    <span class="project-cta">Play Game <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
 
-                <div class="project-card mobile-only" data-aos="fade-up" data-aos-delay="200">
-                    <div class="project-icon">
-                        <i class="fas fa-font"></i>
-                    </div>
+                <a class="project-card mobile-only" href="./projects/games/Wordle/index.html" data-aos="fade-up" data-aos-delay="200" aria-label="Open Wordle game">
+                    <div class="project-icon"><i class="fas fa-font"></i></div>
                     <h3>Wordle</h3>
                     <p>Classic word deduction game with daily challenge & celebration effects.</p>
-                    <a href="./projects/games/Wordle/index.html" class="project-link" aria-label="Open Wordle game">Play Game <i class="fas fa-arrow-right"></i></a>
-                </div>
+                    <span class="project-cta">Play Game <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
 
-                <div class="project-card" data-aos="fade-up" data-aos-delay="300">
-                    <div class="project-icon">
-                        <i class="fas fa-folder-open"></i>
-                    </div>
+                <a class="project-card" href="./projects/index.html" data-aos="fade-up" data-aos-delay="300" aria-label="Browse all projects">
+                    <div class="project-icon"><i class="fas fa-folder-open"></i></div>
                     <h3>View All Projects</h3>
                     <p>Explore my complete portfolio of web applications, games, and development projects.</p>
-                    <a href="./projects/index.html" class="project-link">View All Projects <i class="fas fa-arrow-right"></i></a>
-                </div>
+                    <span class="project-cta">Browse Portfolio <i class="fas fa-arrow-right" aria-hidden="true"></i></span>
+                </a>
             </div>
         </section>
 
@@ -244,6 +258,9 @@
             </form>
         </div>
     </section>
+
+    </section>
+    </main>
 
     <footer>
         <p>&copy; 2024 Sagar Bhandari. All rights reserved. 
