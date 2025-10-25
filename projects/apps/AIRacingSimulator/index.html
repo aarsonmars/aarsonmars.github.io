@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Racing Simulator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="page-header">
+            <div class="title-wrap">
+                <h1>AI Racing Simulator</h1>
+            </div>
+            <div class="header-controls">
+                <button id="trainingToggle" title="Start AI Training">🧠</button>
+                <button id="runModelBtn" class="secondary" title="Run Best Model">🏆</button>
+                <button id="viewToggle" title="Toggle View">👁️</button>
+                <button id="settingsBtn" title="Settings">⚙️</button>
+                <button id="resetBtn" title="Reset Car">🔄</button>
+                <button id="saveModelBtn" class="ghost" title="Download Best Model">💾</button>
+                <button id="infoBtn" title="How to Use">ℹ️</button>
+            </div>
+        </header>
+        
+        <main class="main-content">
+            <div class="game-container">
+                <canvas id="gameCanvas"></canvas>
+            </div>
+            
+            <div class="sidebar">
+                <div class="track-selector">
+                    <h3>Track Selection</h3>
+                    <select id="trackSelector">
+                        <option value="oval">Oval Circuit (Beginner)</option>
+                        <option value="beginner">Beginner Track (Easy)</option>
+                        <option value="intermediate">Intermediate Circuit (Medium)</option>
+                        <option value="advanced">Advanced Circuit (Hard)</option>
+                        <option value="expert">Expert Circuit (Expert)</option>
+                    </select>
+                    <div class="track-buttons">
+                        <button id="changeTrackBtn" class="track-change-btn">Change Track</button>
+                        <button id="resetTrackBtn" class="track-reset-btn">Reset Default</button>
+                    </div>
+                </div>
+                
+                <div class="stats-panel">
+                    <h3>Stats</h3>
+                    <p>Mode: <span id="modeLabel">Manual</span></p>
+                    <p>Speed: <span id="speed">0</span> km/h</p>
+                    <p>Lap Time: <span id="lapTime">0.00</span>s</p>
+                    <p>Record: <span id="bestTime">--</span></p>
+                    <p>Generation: <span id="generation">--</span></p>
+                    <p>Alive: <span id="aliveCount">--</span>/<span id="population">--</span></p>
+                    <p>Best Fitness: <span id="bestFitness">--</span></p>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Success Modal -->
+    <div id="successModal" class="modal">
+        <div class="modal-content success-modal">
+            <div class="modal-header">
+                <span class="success-icon">🎉</span>
+                <h2>Track Mastered!</h2>
+            </div>
+            <div class="modal-body">
+                <div class="success-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Generation</span>
+                        <span class="stat-value" id="modalGeneration">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Laps Completed</span>
+                        <span class="stat-value" id="modalLaps">--</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Best Fitness</span>
+                        <span class="stat-value" id="modalFitness">--</span>
+                    </div>
+                </div>
+                <p class="success-message">Your AI has successfully mastered this track! The best model has been saved automatically.</p>
+                <div class="modal-actions">
+                    <button id="testModelBtn" class="modal-btn primary">Test Model</button>
+                    <button id="saveModalBtn" class="modal-btn secondary">Download Model</button>
+                    <button id="closeModalBtn" class="modal-btn">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content settings-modal">
+            <div class="modal-header">
+                <span class="settings-icon">⚙️</span>
+                <h2>Training Settings</h2>
+                <button class="close-btn" id="closeSettingsBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-section">
+                    <h3>Training Parameters</h3>
+                    <div class="setting-item">
+                        <label for="populationSize">Population Size</label>
+                        <input type="number" id="populationSize" min="5" max="200" step="5">
+                        <span class="setting-hint">More cars = better learning but slower (5-200)</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="mutationRate">Mutation Rate</label>
+                        <input type="number" id="mutationRate" min="0.01" max="0.5" step="0.01">
+                        <span class="setting-hint">How much genes change (0.05-0.20 recommended)</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="frameLimit">Frame Limit</label>
+                        <input type="number" id="frameLimit" min="300" max="5000" step="100">
+                        <span class="setting-hint">Max frames per generation (300-5000)</span>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Visualization</h3>
+                    <div class="setting-item">
+                        <label for="renderInterval">Render Interval</label>
+                        <input type="number" id="renderInterval" min="1" max="100" step="1">
+                        <span class="setting-hint">Render every Nth generation (1-100, higher = faster)</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="simulationSpeed">Simulation Speed</label>
+                        <input type="range" id="simulationSpeed" min="1" max="20" step="1">
+                        <span class="setting-hint">Steps per update: <span id="speedValue">10</span> (1-20)</span>
+                    </div>
+                </div>
+                
+                <div class="settings-section">
+                    <h3>Auto-Stop</h3>
+                    <div class="setting-item">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="autoStopEnabled">
+                            <span>Enable Auto-Stop</span>
+                        </label>
+                        <span class="setting-hint">Stop training when track is mastered</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="autoStopLaps">Required Laps</label>
+                        <input type="number" id="autoStopLaps" min="1" max="20" step="1">
+                        <span class="setting-hint">Laps needed to consider track mastered (1-20)</span>
+                    </div>
+                    <div class="setting-item">
+                        <label for="autoStopCars">Required Cars</label>
+                        <input type="number" id="autoStopCars" min="1" max="50" step="1">
+                        <span class="setting-hint">Cars that must complete laps (1-50)</span>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button id="saveSettingsBtn" class="modal-btn primary">Apply Settings</button>
+                    <button id="resetSettingsBtn" class="modal-btn secondary">Reset to Default</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Info Modal -->
+    <div id="infoModal" class="modal">
+        <div class="modal-content info-modal">
+            <div class="modal-header">
+                <span class="info-icon">ℹ️</span>
+                <h2>AI Racing Simulator</h2>
+                <button class="close-btn" id="closeInfoBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="info-section">
+                    <h3>🎮 Manual Controls</h3>
+                    <p><strong>Arrow Keys:</strong> Drive the car manually</p>
+                    <p><strong>↑:</strong> Accelerate</p>
+                    <p><strong>↓:</strong> Brake/Reverse</p>
+                    <p><strong>←/→:</strong> Steer left/right</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3>🧠 AI Training</h3>
+                    <p><strong>Start Training:</strong> Click the brain icon (🧠) to let AI cars learn</p>
+                    <p><strong>How it Works:</strong> Uses genetic algorithm with neural networks. Cars evolve over generations to find the optimal racing strategy.</p>
+                    <p><strong>Auto-Stop:</strong> Training automatically stops when multiple cars master the track (configurable in settings)</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3>🏆 Running Models</h3>
+                    <p><strong>Test Best Model:</strong> Click trophy icon (🏆) to watch the best AI drive</p>
+                    <p><strong>Save Model:</strong> Download trained models with the save icon (💾)</p>
+                    <p><strong>Track Selection:</strong> Train different models on 5 difficulty levels</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3>⚙️ Settings</h3>
+                    <p><strong>Population Size:</strong> More cars = better learning but slower</p>
+                    <p><strong>Mutation Rate:</strong> Controls genetic variation (0.05-0.20 recommended)</p>
+                    <p><strong>Simulation Speed:</strong> Adjust visual pacing during training</p>
+                    <p><strong>Render Interval:</strong> Skip generations for faster training</p>
+                </div>
+                
+                <div class="info-section">
+                    <h3>👁️ View Toggle</h3>
+                    <p><strong>Toggle View:</strong> Show/hide sensor rays and slow down training for detailed observation</p>
+                </div>
+                
+                <div class="modal-actions">
+                    <button id="closeInfoModalBtn" class="modal-btn primary">Got it!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Model Selector Modal -->
+    <div id="modelSelectorModal" class="modal">
+        <div class="modal-content model-selector-modal">
+            <div class="modal-header">
+                <span class="model-icon">🏆</span>
+                <h2>Select Model to Run</h2>
+                <button class="close-btn" id="closeModelSelectorBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="model-options">
+                    <div class="model-option" id="runCurrentModelBtn">
+                        <div class="model-info">
+                            <span class="model-icon-large">🧠</span>
+                            <div>
+                                <h3>Current Best Model</h3>
+                                <p>Run the currently trained model</p>
+                                <p class="model-meta" id="currentModelMeta">No model trained yet</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="model-divider">OR</div>
+                    
+                    <div class="model-option upload-option">
+                        <div class="model-info">
+                            <span class="model-icon-large">📁</span>
+                            <div>
+                                <h3>Load Saved Model</h3>
+                                <p>Upload a previously saved model file</p>
+                            </div>
+                        </div>
+                        <input type="file" id="modelFileInput" accept=".json" style="display: none;">
+                        <button id="uploadModelBtn" class="modal-btn secondary">Choose File</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/config.js"></script>
+    <script src="js/track.js"></script>
+    <script src="js/sensors.js"></script>
+    <script src="js/neuralNetwork.js"></script>
+    <script src="js/car.js"></script>
+    <script src="js/controls.js"></script>
+    <script src="js/trainingManager.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
