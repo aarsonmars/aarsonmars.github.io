@@ -220,9 +220,9 @@ class Track {
             this.canvas.width / 2, this.canvas.height / 2, Math.max(this.canvas.width, this.canvas.height) / 2
         );
         gradient.addColorStop(0, '#4a7c2e');
-        gradient.addColorStop(0.5, '#3d6b26');
-        gradient.addColorStop(0.8, '#2d5016');
-        gradient.addColorStop(1, '#1e3a0f');
+        gradient.addColorStop(0.5, '#2e8303ff');
+        gradient.addColorStop(0.8, '#368403ff');
+        gradient.addColorStop(1, '#256303ff');
 
         this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -507,7 +507,7 @@ class Track {
         // Draw dark bitumen kerb with subtle gradient
         const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
         gradient.addColorStop(0, '#1a1a1a');
-        gradient.addColorStop(0.5, '#100f0fff');
+        gradient.addColorStop(0.5, '#1f0a0aff');
         gradient.addColorStop(1, '#1c1b1bff');
         
         this.ctx.strokeStyle = gradient;
