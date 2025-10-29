@@ -331,14 +331,14 @@ function loadModelFromFile(file) {
             const data = JSON.parse(e.target.result);
             
             // Validate the model data
-            if (!data.brain || !data.brain.levels) {
-                throw new Error('Invalid model file format');
+            if (!data.brain || !data.brain.layers || !data.brain.layerSizes) {
+                throw new Error('Invalid model file format - missing brain structure');
             }
             
             // Load the brain into training manager
             const loaded = trainingManager.importBrain(data);
             if (!loaded) {
-                throw new Error('Failed to load model');
+                throw new Error('Failed to load model into training manager');
             }
             
             // Show success message

@@ -517,19 +517,27 @@ class TrainingManager {
     importBrain(data) {
         try {
             // Validate data structure
-            if (!data || !data.brain || !data.brain.levels) {
-                console.error('Invalid brain data structure');
+            if (!data || !data.brain) {
+                console.error('Invalid brain data structure - missing data or data.brain');
                 return false;
             }
             
-            // Create a new neural network and deserialize the brain
-            const brain = new NeuralNetwork(this.networkTopology);
-            if (typeof brain.deserialize !== 'function') {
-                console.error('NeuralNetwork.deserialize not available');
+            // Log what we're trying to import for debugging
+            console.log('Importing brain with metadata:', {
+                trackName: data.metadata?.trackName,
+                generation: data.metadata?.generation,
+                fitness: data.metadata?.bestFitness,
+                hasLayers: !!data.brain.layers,
+                hasLayerSizes: !!data.brain.layerSizes
+            });
+            
+            // Use the static deserialize method to create the brain
+            const brain = NeuralNetwork.deserialize(data.brain);
+            
+            if (!brain) {
+                console.error('Failed to deserialize brain - NeuralNetwork.deserialize returned null/undefined');
                 return false;
             }
-            
-            brain.deserialize(data.brain);
             
             // Set as the best brain
             this.bestBrain = brain;
@@ -540,10 +548,11 @@ class TrainingManager {
                 trackName: data.metadata?.trackName || 'unknown'
             };
             
-            console.log('Brain imported successfully:', this.bestMetadata);
+            console.log('✅ Brain imported successfully:', this.bestMetadata);
             return true;
         } catch (error) {
-            console.error('Failed to import brain:', error);
+            console.error('❌ Failed to import brain:', error);
+            console.error('Error details:', error.message, error.stack);
             return false;
         }
     }

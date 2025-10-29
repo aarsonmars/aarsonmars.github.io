@@ -3,7 +3,7 @@ window.AIRacingConfig = Object.freeze({
         fastForwardSteps: 3,  // Default simulation steps per update (lower = more natural)
         renderInterval: 2     // Only render every 2nd generation for visual feedback
     },
-    defaultTrack: 'expert', // Default track to load on startup
+    defaultTrack: 'oval', // Default track to load on startup
     tracks: {
         // Track 1: Simple Oval - Perfect for beginners
         oval: {
