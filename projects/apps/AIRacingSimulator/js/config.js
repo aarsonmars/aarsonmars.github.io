@@ -72,8 +72,8 @@ window.AIRacingConfig = Object.freeze({
                 { x: 0.05, y: 0.050 },
                 { x: 0.95, y: 0.05 },
                 { x: 0.97, y: 0.95 },
-                { x: 0.85, y: 0.95 },
-                { x: 0.93, y: 0.30 },
+                { x: 0.80, y: 0.95 },
+                { x: 0.85, y: 0.4 },
                 { x: 0.75, y: 0.35 },
                 { x: 0.60, y: 0.5 },
                 { x: 0.5, y: 0.85 },
@@ -142,7 +142,7 @@ window.AIRacingConfig = Object.freeze({
     training: {
         populationSize: 20,        // Good balance - enough diversity
         hiddenLayers: [16, 12],    // Network needs to be complex enough to learn
-        mutationRate: 0.12,        // Lower mutation rate for better learning
+        mutationRate: 0.5,        // Lower mutation rate for better learning
         mutationAmount: 0.3,       // Slightly higher mutation amount
         frameLimit: 2800,          // Give cars more time to learn
         idleFrameLimit: 90,        // Be patient with idle cars

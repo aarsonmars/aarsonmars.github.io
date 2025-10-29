@@ -214,28 +214,47 @@ class Track {
     }
     
     drawGrassBackground() {
-        // Create a more realistic grass background with slight variations
+        // Create a more realistic grass background with texture
         const gradient = this.ctx.createRadialGradient(
             this.canvas.width / 2, this.canvas.height / 2, 0,
             this.canvas.width / 2, this.canvas.height / 2, Math.max(this.canvas.width, this.canvas.height) / 2
         );
-        gradient.addColorStop(0, '#2d5016');
-        gradient.addColorStop(0.7, '#1e3a0f');
-        gradient.addColorStop(1, '#0f1f08');
+        gradient.addColorStop(0, '#4a7c2e');
+        gradient.addColorStop(0.5, '#3d6b26');
+        gradient.addColorStop(0.8, '#2d5016');
+        gradient.addColorStop(1, '#1e3a0f');
 
         this.ctx.fillStyle = gradient;
         this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-        // Add some grass texture dots
-        this.ctx.fillStyle = 'rgba(45, 80, 22, 0.3)';
-        for (let i = 0; i < 200; i++) {
-            const x = Math.random() * this.canvas.width;
-            const y = Math.random() * this.canvas.height;
-            const size = Math.random() * 2 + 1;
+        // Add subtle grass texture (static, no animation)
+        this.ctx.save();
+        // Use a seeded pattern to avoid blinking
+        const seed = 12345; // Fixed seed for consistent pattern
+        const random = (s) => {
+            const x = Math.sin(s) * 10000;
+            return x - Math.floor(x);
+        };
+        
+        for (let i = 0; i < 500; i++) {
+            const x = random(seed + i * 2) * this.canvas.width;
+            const y = random(seed + i * 3) * this.canvas.height;
+            const size = random(seed + i * 5) * 1.5 + 0.5;
+            const shade = Math.floor(random(seed + i * 7) * 3);
+            
+            if (shade === 0) {
+                this.ctx.fillStyle = 'rgba(58, 100, 38, 0.3)';
+            } else if (shade === 1) {
+                this.ctx.fillStyle = 'rgba(42, 80, 28, 0.25)';
+            } else {
+                this.ctx.fillStyle = 'rgba(35, 65, 22, 0.35)';
+            }
+            
             this.ctx.beginPath();
             this.ctx.arc(x, y, size, 0, Math.PI * 2);
             this.ctx.fill();
         }
+        this.ctx.restore();
     }
 
     drawTrackShadow() {
@@ -273,17 +292,21 @@ class Track {
     }
 
     drawTrackAsphalt() {
-        // Draw realistic asphalt with slight texture
+        // Draw realistic asphalt with professional appearance
+        
+        // Base asphalt layer with darker, more realistic color
         const asphaltGradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
-        asphaltGradient.addColorStop(0, '#2a2a2a');
-        asphaltGradient.addColorStop(0.5, '#1a1a1a');
-        asphaltGradient.addColorStop(1, '#2a2a2a');
+        asphaltGradient.addColorStop(0, '#252525');
+        asphaltGradient.addColorStop(0.3, '#1a1a1a');
+        asphaltGradient.addColorStop(0.5, '#151515');
+        asphaltGradient.addColorStop(0.7, '#1a1a1a');
+        asphaltGradient.addColorStop(1, '#252525');
 
         this.ctx.strokeStyle = asphaltGradient;
         this.ctx.lineWidth = this.trackWidth * 2;
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
-        this.ctx.setLineDash([]); // Ensure no dash pattern
+        this.ctx.setLineDash([]);
 
         this.ctx.beginPath();
         this.ctx.moveTo(this.trackPoints[0].x, this.trackPoints[0].y);
@@ -304,9 +327,10 @@ class Track {
         this.ctx.closePath();
         this.ctx.stroke();
 
-        // Add subtle asphalt texture without dashed lines
-        this.ctx.strokeStyle = 'rgba(20, 20, 20, 0.2)';
-        this.ctx.lineWidth = this.trackWidth * 2 - 2;
+        // Add asphalt grain texture overlay
+        this.ctx.save();
+        this.ctx.strokeStyle = 'rgba(30, 30, 30, 0.3)';
+        this.ctx.lineWidth = this.trackWidth * 2 - 1;
 
         this.ctx.beginPath();
         this.ctx.moveTo(this.trackPoints[0].x, this.trackPoints[0].y);
@@ -326,6 +350,33 @@ class Track {
 
         this.ctx.closePath();
         this.ctx.stroke();
+        this.ctx.restore();
+
+        // Add subtle wear/aging marks for realism
+        this.ctx.save();
+        this.ctx.globalAlpha = 0.15;
+        this.ctx.strokeStyle = '#0a0a0a';
+        this.ctx.lineWidth = this.trackWidth * 2 - 3;
+
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.trackPoints[0].x, this.trackPoints[0].y);
+
+        for (let i = 0; i < this.trackPoints.length; i++) {
+            const current = this.trackPoints[i];
+            const next = this.trackPoints[(i + 1) % this.trackPoints.length];
+            const nextNext = this.trackPoints[(i + 2) % this.trackPoints.length];
+
+            const cpX = next.x;
+            const cpY = next.y;
+            const endX = (next.x + nextNext.x) / 2;
+            const endY = (next.y + nextNext.y) / 2;
+
+            this.ctx.quadraticCurveTo(cpX, cpY, endX, endY);
+        }
+
+        this.ctx.closePath();
+        this.ctx.stroke();
+        this.ctx.restore();
     }
 
     drawLaneMarkings() {
@@ -411,11 +462,12 @@ class Track {
         const runOffWidth = this.trackWidth * 2 + this.runoffExtra;
         const curbWidth = this.trackWidth * 2 + this.curbExtra;
 
-        // Draw gravel run-off area (more realistic than plain brown)
+        // Draw gravel run-off area with more realistic texture
         const gravelGradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
-        gravelGradient.addColorStop(0, '#8B7355');
-        gravelGradient.addColorStop(0.5, '#6B5B47');
-        gravelGradient.addColorStop(1, '#8B7355');
+        gravelGradient.addColorStop(0, '#a89070');
+        gravelGradient.addColorStop(0.3, '#8B7355');
+        gravelGradient.addColorStop(0.6, '#756347');
+        gravelGradient.addColorStop(1, '#a89070');
 
         this.ctx.strokeStyle = gravelGradient;
         this.ctx.lineWidth = runOffWidth;
@@ -441,11 +493,24 @@ class Track {
         this.ctx.closePath();
         this.ctx.stroke();
 
-        // Draw concrete curbing (more realistic than red/white stripes)
-        this.ctx.strokeStyle = '#cccccc';
+        // Draw racing kerbs (red and white stripes) - Formula 1 style
+        this.drawRacingKerbs(curbWidth);
+    }
+
+    drawRacingKerbs(curbWidth) {
+        // Natural bitumen/asphalt style kerb - darker than track
+        this.ctx.save();
         this.ctx.lineWidth = curbWidth;
         this.ctx.lineCap = 'round';
         this.ctx.lineJoin = 'round';
+
+        // Draw dark bitumen kerb with subtle gradient
+        const gradient = this.ctx.createLinearGradient(0, 0, this.canvas.width, this.canvas.height);
+        gradient.addColorStop(0, '#1a1a1a');
+        gradient.addColorStop(0.5, '#100f0fff');
+        gradient.addColorStop(1, '#1c1b1bff');
+        
+        this.ctx.strokeStyle = gradient;
 
         this.ctx.beginPath();
         this.ctx.moveTo(this.trackPoints[0].x, this.trackPoints[0].y);
@@ -466,7 +531,7 @@ class Track {
         this.ctx.closePath();
         this.ctx.stroke();
 
-        // Add curbing texture/shadow
+        // Add slight texture to kerb for realism
         this.ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
         this.ctx.lineWidth = curbWidth - 2;
 
@@ -488,6 +553,7 @@ class Track {
 
         this.ctx.closePath();
         this.ctx.stroke();
+        this.ctx.restore();
     }
 
     drawTireMarks() {
@@ -530,23 +596,48 @@ class Track {
         const dx = nextPoint.x - startPoint.x;
         const dy = nextPoint.y - startPoint.y;
         const angle = Math.atan2(dy, dx);
-        const stripWidth = this.trackWidth * 0.8;
-        const span = this.trackWidth * 1.6;
-        const segmentHeight = span / 8;
+        const stripWidth = this.trackWidth * 0.9;
+        const span = this.trackWidth * 1.8;
+        const numSquares = 10;
 
         this.ctx.save();
         this.ctx.translate(startPoint.x, startPoint.y);
         this.ctx.rotate(angle);
 
-        // Draw more realistic start line with alternating black and white
-        for (let i = -4; i < 4; i++) {
-            this.ctx.fillStyle = (i + 4) % 2 === 0 ? '#ffffff' : '#000000';
-            this.ctx.fillRect(-stripWidth / 2, i * segmentHeight, stripWidth, segmentHeight);
+        // Draw classic checkered flag pattern (2 rows x N columns)
+        const squareSize = span / numSquares;
+        
+        for (let row = 0; row < 2; row++) {
+            for (let col = 0; col < numSquares; col++) {
+                // Alternating pattern
+                const isBlack = (row + col) % 2 === 0;
+                this.ctx.fillStyle = isBlack ? '#000000' : '#ffffff';
+                
+                this.ctx.fillRect(
+                    -stripWidth / 2,
+                    -span/2 + col * squareSize,
+                    stripWidth / 2,
+                    squareSize
+                );
+                
+                this.ctx.fillStyle = !isBlack ? '#000000' : '#ffffff';
+                this.ctx.fillRect(
+                    0,
+                    -span/2 + col * squareSize,
+                    stripWidth / 2,
+                    squareSize
+                );
+            }
         }
 
-        // Add start line shadow for depth
-        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
-        this.ctx.fillRect(-stripWidth / 2 + 2, -span/2 + 2, stripWidth, span);
+        // Add red border for emphasis
+        this.ctx.strokeStyle = '#ff0000';
+        this.ctx.lineWidth = 4;
+        this.ctx.strokeRect(-stripWidth / 2, -span/2, stripWidth, span);
+
+        // Add subtle 3D shadow effect
+        this.ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        this.ctx.fillRect(-stripWidth / 2 + 3, -span/2 + 3, stripWidth, span);
 
         this.ctx.restore();
     }

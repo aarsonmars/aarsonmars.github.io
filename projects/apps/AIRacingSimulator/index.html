@@ -16,9 +16,8 @@
                 <button id="trainingToggle" title="Start AI Training">🧠</button>
                 <button id="runModelBtn" class="secondary" title="Run Best Model">🏆</button>
                 <button id="viewToggle" title="Toggle View">👁️</button>
+                <button id="toggleNetworkViz" title="Toggle Neural Network Visualization">🧠👁️</button>
                 <button id="settingsBtn" title="Settings">⚙️</button>
-                <button id="resetBtn" title="Reset Car">🔄</button>
-                <button id="saveModelBtn" class="ghost" title="Download Best Model">💾</button>
                 <button id="infoBtn" title="How to Use">ℹ️</button>
             </div>
         </header>
@@ -30,29 +29,56 @@
             
             <div class="sidebar">
                 <div class="track-selector">
-                    <h3>Track Selection</h3>
-                    <select id="trackSelector">
-                        <option value="oval">Oval Circuit (Beginner)</option>
-                        <option value="beginner">Beginner Track (Easy)</option>
-                        <option value="intermediate">Intermediate Circuit (Medium)</option>
-                        <option value="advanced">Advanced Circuit (Hard)</option>
-                        <option value="expert">Expert Circuit (Expert)</option>
-                    </select>
-                    <div class="track-buttons">
-                        <button id="changeTrackBtn" class="track-change-btn">Change Track</button>
-                        <button id="resetTrackBtn" class="track-reset-btn">Reset Default</button>
+                    <div class="panel-header collapsible" data-target="trackContent">
+                        <h3>Track Selection</h3>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="panel-content" id="trackContent">
+                        <select id="trackSelector">
+                            <option value="oval">Oval Circuit (Beginner)</option>
+                            <option value="beginner">Beginner Track (Easy)</option>
+                            <option value="intermediate">Intermediate Circuit (Medium)</option>
+                            <option value="advanced">Advanced Circuit (Hard)</option>
+                            <option value="expert">Expert Circuit (Expert)</option>
+                        </select>
+                        <div class="track-buttons">
+                            <button id="changeTrackBtn" class="track-change-btn">Change Track</button>
+                            <button id="resetTrackBtn" class="track-reset-btn">Reset Default</button>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="stats-panel">
-                    <h3>Stats</h3>
-                    <p>Mode: <span id="modeLabel">Manual</span></p>
-                    <p>Speed: <span id="speed">0</span> km/h</p>
-                    <p>Lap Time: <span id="lapTime">0.00</span>s</p>
-                    <p>Record: <span id="bestTime">--</span></p>
-                    <p>Generation: <span id="generation">--</span></p>
-                    <p>Alive: <span id="aliveCount">--</span>/<span id="population">--</span></p>
-                    <p>Best Fitness: <span id="bestFitness">--</span></p>
+                    <div class="panel-header collapsible" data-target="statsContent">
+                        <h3>Stats</h3>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="panel-content" id="statsContent">
+                        <p>Mode: <span id="modeLabel">Manual</span></p>
+                        <p>Speed: <span id="speed">0</span> km/h</p>
+                        <p>Lap Time: <span id="lapTime">0.00</span>s</p>
+                        <p>Record: <span id="bestTime">--</span></p>
+                        <p>Generation: <span id="generation">--</span></p>
+                        <p>Alive: <span id="aliveCount">--</span>/<span id="population">--</span></p>
+                        <p>Best Fitness: <span id="bestFitness">--</span></p>
+                    </div>
+                </div>
+                
+                <div class="network-visualizer-panel">
+                    <div class="panel-header collapsible" data-target="networkContent">
+                        <h3>🧠 Neural Network</h3>
+                        <span class="collapse-icon">▼</span>
+                    </div>
+                    <div class="panel-content" id="networkContent">
+                        <div class="network-viz-container" id="networkVizContainer">
+                            <canvas id="networkCanvas"></canvas>
+                            <div class="network-viz-hint" id="networkVizHint">
+                                <p>Click 🧠👁️ button in header, then:</p>
+                                <p>• Start <strong>AI Training</strong> (🧠) to see the leader's brain</p>
+                                <p>• Run <strong>Best Model</strong> (🏆) to see autopilot brain</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -205,6 +231,21 @@
                     <p><strong>Toggle View:</strong> Show/hide sensor rays and slow down training for detailed observation</p>
                 </div>
                 
+                <div class="info-section">
+                    <h3>🧠 Neural Network Visualization</h3>
+                    <p><strong>View the AI Brain:</strong> Click the 🧠👁️ button in the header to see how the AI thinks in real-time</p>
+                    <p><strong>What You'll See:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 8px;">
+                        <li>Input neurons showing sensor readings and speed</li>
+                        <li>Hidden layers processing the information</li>
+                        <li>Output neurons controlling steering and throttle</li>
+                        <li>Connection weights (green = positive, red = negative)</li>
+                        <li>Live activation values as the AI makes decisions</li>
+                    </ul>
+                    <p><strong>During Training:</strong> Shows the leader car's brain</p>
+                    <p><strong>During Autopilot:</strong> Shows the running model's brain</p>
+                </div>
+                
                 <div class="modal-actions">
                     <button id="closeInfoModalBtn" class="modal-btn primary">Got it!</button>
                 </div>
@@ -255,6 +296,7 @@
     <script src="js/track.js"></script>
     <script src="js/sensors.js"></script>
     <script src="js/neuralNetwork.js"></script>
+    <script src="js/networkVisualizer.js"></script>
     <script src="js/car.js"></script>
     <script src="js/controls.js"></script>
     <script src="js/trainingManager.js"></script>

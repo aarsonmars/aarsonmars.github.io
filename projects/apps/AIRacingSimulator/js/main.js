@@ -38,6 +38,10 @@ const playerStartX = startPos.x + Math.cos(startPos.angle) * playerStartOffset;
 const playerStartY = startPos.y + Math.sin(startPos.angle) * playerStartOffset;
 const playerCar = new Car(playerStartX, playerStartY, startPos.angle);
 const controls = new Controls();
+
+// Initialize Network Visualizer
+const networkVisualizer = new NetworkVisualizer('networkCanvas');
+
 const globalConfig = window.AIRacingConfig || {};
 const trainingConfig = globalConfig.training || {};
 const mergedSensorConfig = Object.assign({}, globalConfig.sensors || {}, trainingConfig.sensorConfig || {});
@@ -65,7 +69,6 @@ window.onTrainingMastered = function(metadata) {
     console.log('Training auto-stopped! Model has mastered the track.');
     trainingMode = false;
     trainingToggle.textContent = 'Start AI Training';
-    resetBtn.disabled = false;
     modeDisplay.textContent = 'Manual';
     
     // Show custom success modal
@@ -192,16 +195,17 @@ const generationDisplay = document.getElementById('generation');
 const aliveDisplay = document.getElementById('aliveCount');
 const populationDisplay = document.getElementById('population');
 const bestFitnessDisplay = document.getElementById('bestFitness');
-const resetBtn = document.getElementById('resetBtn');
 const viewToggle = document.getElementById('viewToggle');
 const trainingToggle = document.getElementById('trainingToggle');
 const runModelBtn = document.getElementById('runModelBtn');
-const saveModelBtn = document.getElementById('saveModelBtn');
 const trackSelector = document.getElementById('trackSelector');
 const changeTrackBtn = document.getElementById('changeTrackBtn');
 const resetTrackBtn = document.getElementById('resetTrackBtn');
 const settingsBtn = document.getElementById('settingsBtn');
 const infoBtn = document.getElementById('infoBtn');
+const toggleNetworkVizBtn = document.getElementById('toggleNetworkViz');
+const networkVizContainer = document.getElementById('networkVizContainer');
+const networkVizHint = document.getElementById('networkVizHint');
 
 // Modal elements
 const successModal = document.getElementById('successModal');
@@ -449,7 +453,6 @@ function startTraining() {
     trainingManager.start(trainingManager.bestBrain);
     trainingManager.setSpeedMultiplier(showDebugView ? 1 : TRAINING_BATCH_SIZE);
     trainingToggle.textContent = 'Stop AI Training';
-    resetBtn.disabled = true;
     modeDisplay.textContent = 'Training';
     
     // Run training in controlled loop for natural pacing
@@ -471,22 +474,10 @@ function stopTraining() {
     
     trainingManager.stop();
     trainingToggle.textContent = 'Start AI Training';
-    resetBtn.disabled = false;
     stopBestModelRun(false);
     resetPlayerCar();
     modeDisplay.textContent = 'Manual';
 }
-
-// Reset button handler
-resetBtn.addEventListener('click', () => {
-    if (trainingMode) {
-        stopTraining();
-    } else if (bestModelMode) {
-        restartBestModelRun();
-    } else {
-        resetPlayerCar();
-    }
-});
 
 // View toggle handler
 viewToggle.addEventListener('click', () => {
@@ -509,10 +500,6 @@ runModelBtn.addEventListener('click', () => {
     } else {
         showModelSelector();
     }
-});
-
-saveModelBtn.addEventListener('click', () => {
-    downloadBestModel();
 });
 
 // Track change handler
@@ -574,6 +561,19 @@ settingsBtn.addEventListener('click', () => {
 // Info button handler
 infoBtn.addEventListener('click', () => {
     infoModal.classList.add('show');
+});
+
+// Network Visualizer toggle handler
+toggleNetworkVizBtn.addEventListener('click', () => {
+    const isEnabled = networkVisualizer.toggle();
+    toggleNetworkVizBtn.classList.toggle('active', isEnabled);
+    networkVizContainer.classList.toggle('active', isEnabled);
+    
+    if (isEnabled) {
+        flashButtonMessage(toggleNetworkVizBtn, '👁️ Enabled', 800);
+    } else {
+        flashButtonMessage(toggleNetworkVizBtn, '👁️ Disabled', 800);
+    }
 });
 
 // Model selector handlers
@@ -716,13 +716,84 @@ function gameLoop() {
     if (trainingMode) {
         updateTraining();
         renderTrainingMode();
+        updateNetworkVisualization();
     } else {
         updateManualCar();
         renderManualMode();
+        updateNetworkVisualization();
     }
 
     updateUI();
     animationId = requestAnimationFrame(gameLoop);
+}
+
+function updateNetworkVisualization() {
+    if (!networkVisualizer.enabled) return;
+    
+    let carToVisualize = null;
+    let brain = null;
+    let inputs = [];
+    let outputs = [];
+    
+    if (trainingMode) {
+        // Show the leader car's brain during training
+        const leader = trainingManager.getLeader();
+        if (leader && leader.brain) {
+            carToVisualize = leader;
+            brain = leader.brain;
+            
+            // Get sensor readings (normalized 0-1, where 0=far, 1=close)
+            if (leader.sensor && leader.sensor.readings) {
+                inputs = leader.sensor.readings.map(reading => 
+                    reading ? reading.normalized : 0
+                );
+            }
+            
+            // Add speed as input (normalized 0-1)
+            const speedNormalized = Math.min(1, Math.abs(leader.speed) / 5);
+            inputs.push(speedNormalized);
+            
+            // Get outputs from brain
+            if (inputs.length > 0) {
+                outputs = brain.feedForward(inputs);
+            }
+        }
+    } else if (bestModelMode && playerCar.isAutonomous && playerCar.brain) {
+        // Show the player's autonomous brain
+        carToVisualize = playerCar;
+        brain = playerCar.brain;
+        
+        // Get sensor readings
+        if (playerCar.sensor && playerCar.sensor.readings) {
+            inputs = playerCar.sensor.readings.map(reading => 
+                reading ? reading.normalized : 0
+            );
+        }
+        
+        // Add speed as input
+        const speedNormalized = Math.min(1, Math.abs(playerCar.speed) / 5);
+        inputs.push(speedNormalized);
+        
+        // Get outputs
+        if (inputs.length > 0) {
+            outputs = brain.feedForward(inputs);
+        }
+    }
+    
+    // Update the visualizer
+    if (brain && inputs.length > 0) {
+        networkVisualizer.update(brain, inputs, outputs);
+        // Hide hint when showing network
+        if (networkVizHint) {
+            networkVizHint.style.display = 'none';
+        }
+    } else {
+        // Show hint when no brain to display
+        networkVisualizer.clear();
+        if (networkVizHint) {
+            networkVizHint.style.display = 'block';
+        }
+    }
 }
 
 function updateUI() {
@@ -734,7 +805,6 @@ function updateUI() {
         ? stats.bestFitness.toFixed(0)
         : '--';
 
-    saveModelBtn.disabled = !hasBest;
     runModelBtn.disabled = trainingMode || (!hasBest && !bestModelMode);
 
     if (trainingMode) {
@@ -773,7 +843,21 @@ function updateUI() {
     }
 }
 
+// Collapsible panels functionality
+document.querySelectorAll('.panel-header.collapsible').forEach(header => {
+    header.addEventListener('click', () => {
+        const targetId = header.getAttribute('data-target');
+        const content = document.getElementById(targetId);
+        
+        if (content) {
+            header.classList.toggle('collapsed');
+            content.classList.toggle('collapsed');
+        }
+    });
+});
+
 // Start the game
 console.log('AI Racing Simulator initialized!');
 console.log('Use Arrow Keys or WASD to drive');
 gameLoop();
+
