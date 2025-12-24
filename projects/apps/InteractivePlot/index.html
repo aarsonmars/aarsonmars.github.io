@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halifax Collision Explorer | Interactive Analysis</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="src/css/styles.css">
+</head>
+<body>
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading collision data...</div>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- Stats Panel (now anchored to center) -->
+    <div class="stats-panel" id="statsPanel">
+        <div class="stat-item top">
+            <div class="value" id="statTotal">0</div>
+            <div class="label">Collisions</div>
+        </div>
+        <div class="stat-item right injury">
+            <div class="value" id="statInjury">0</div>
+            <div class="label">Injuries</div>
+        </div>
+        <div class="stat-item bottom">
+            <div class="value" id="statRate">0%</div>
+            <div class="label">Fatality Rate</div>
+        </div>
+        <div class="stat-item left fatal">
+            <div class="value" id="statFatal">0</div>
+            <div class="label">Fatalities</div>
+        </div>
+    </div>
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="logo">
+            <!-- <div class="logo-icon">🚗</div> -->
+            <div class="logo-text">Halifax <span>Collision Explorer</span></div>
+        </div>
+        <div class="story-tabs">
+            <button class="story-tab active" data-story="trends">📈 Trends</button>
+            <button class="story-tab" data-story="seasonal">🌡️ Seasonal</button>
+            <button class="story-tab" data-story="time">⏰ Time</button>
+            <button class="story-tab" data-story="safety">⚠️ Safety</button>
+        </div>
+        <div class="year-selector" id="yearSelector">
+            <button class="year-btn active" data-year="all">All</button>
+        </div>
+    </div>
+
+    <!-- Side Panel -->
+    <div class="side-panel">
+        <div class="panel-header" id="panelHeader">📈 COLLISION TRENDS</div>
+        <div class="panel-content" id="storyContent">
+            <div class="story-insight">
+                <div class="insight-icon" style="background: rgba(0, 188, 212, 0.15);">📊</div>
+                <div>
+                    <div class="insight-title">Pan the map</div>
+                    <div class="insight-value" style="font-size: 14px;">Move to explore different areas</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Controls -->
+    <div class="controls-panel">
+        <div class="control-group">
+            <span class="control-label">Radius</span>
+            <input type="range" class="radius-slider" id="radiusSlider" min="100" max="5000" value="1500" step="50">
+            <span class="radius-value" id="radiusValue">1.5 km</span>
+        </div>
+        <div class="control-group">
+            <button class="toggle-btn" id="heatBtn">🔥 Heat</button>
+            <button class="toggle-btn active" id="pointsBtn">📍 Points</button>
+        </div>
+    </div>
+
+    <div class="info-tip">Drag the map to analyze different areas</div>
+    <div class="toast" id="toast"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="src/js/app.js"></script>
+</body>
+</html>
