@@ -6,6 +6,8 @@
     --text-color: #ffffff;
     --accent-color: #61dafb;
     --transition-speed: 0.3s;
+    --apps-color: #4a9eff;
+    --games-color: #f5a623;
 }
 
 body {
@@ -19,15 +21,17 @@ body {
     top: 0;
     left: 0;
     z-index: -1;
-    display: block; /* Prevents default inline spacing */
+    display: block;
 }
 
 .container {
     padding-top: 80px;
 }
 
+/* ── Hero Section ───────────────────────────────────── */
+
 .hero-section {
-    position: relative; /* Make this the positioning context for the canvas */
+    position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -35,8 +39,8 @@ body {
     text-align: center;
     padding: 4rem 1rem;
     background: transparent;
-    min-height: 300px; /* Ensure it has some height */
-    overflow: hidden; /* Keep stars inside */
+    min-height: 300px;
+    overflow: hidden;
 }
 
 .hero-title {
@@ -53,8 +57,12 @@ body {
     color: rgba(255, 255, 255, 0.8);
 }
 
+/* ── Filter Buttons ─────────────────────────────────── */
+
 .projects-section {
     padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .filter-buttons {
@@ -71,6 +79,8 @@ body {
     padding: 0.5rem 1.5rem;
     border-radius: 20px;
     cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
     transition: all var(--transition-speed);
 }
 
@@ -78,34 +88,85 @@ body {
 .filter-btn.active {
     background: var(--primary-color);
     color: white;
+    box-shadow: 0 0 12px rgba(74, 158, 255, 0.35);
 }
+
+/* ── Projects Grid ──────────────────────────────────── */
 
 .projects-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); /* Smaller cards */
-    gap: 1.5rem; /* Reduced gap */
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
 }
 
+/* ── Project Card ───────────────────────────────────── */
+
 .project-card {
+    position: relative;
     background: var(--card-bg-color);
-    border-radius: 12px; /* Slightly smaller radius */
+    border-radius: 14px;
     overflow: hidden;
     text-decoration: none;
     color: var(--text-color);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    transition: transform var(--transition-speed), box-shadow var(--transition-speed), border-color var(--transition-speed);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     display: flex;
     flex-direction: column;
+
+    /* Smooth entrance & filter animations */
+    opacity: 0;
+    transform: translateY(24px) scale(0.97);
+    animation: cardReveal 0.5s ease forwards;
+
+    /* Hover transitions */
+    transition:
+        transform 0.35s cubic-bezier(.22,1,.36,1),
+        box-shadow 0.35s cubic-bezier(.22,1,.36,1),
+        border-color 0.35s ease,
+        opacity 0.35s ease;
 }
 
-.project-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 0 20px rgba(74, 158, 255, 0.4), 0 8px 25px rgba(0, 0, 0, 0.4); /* Enhanced glow */
-    border-color: rgba(74, 158, 255, 0.5);
+/* Category accent bar at the top of each card */
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--apps-color);
+    opacity: 0.7;
+    transition: opacity 0.3s ease, height 0.3s ease;
 }
+
+.project-card[data-category="games"]::before {
+    background: var(--games-color);
+}
+
+.project-card:hover::before {
+    height: 4px;
+    opacity: 1;
+}
+
+/* Hover glow — uses category color */
+.project-card:hover {
+    transform: translateY(-8px) scale(1.015);
+    border-color: rgba(74, 158, 255, 0.45);
+    box-shadow:
+        0 0 24px rgba(74, 158, 255, 0.3),
+        0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.project-card[data-category="games"]:hover {
+    border-color: rgba(245, 166, 35, 0.45);
+    box-shadow:
+        0 0 24px rgba(245, 166, 35, 0.25),
+        0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* ── Card Content ───────────────────────────────────── */
 
 .card-content {
-    padding: 1rem 1.25rem; /* Reduced vertical padding */
+    padding: 1.25rem 1.25rem 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -114,31 +175,222 @@ body {
 }
 
 .card-content img {
-    width: 70px;
-    height: 70px;
+    width: 68px;
+    height: 68px;
     object-fit: contain;
-    margin-bottom: 0.75rem; /* Reduced margin */
+    margin-bottom: 0.85rem;
     border-radius: 50%;
-    background: rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.25);
     padding: 8px;
+    transition: transform 0.35s ease;
+}
+
+.project-card:hover .card-content img {
+    transform: scale(1.08);
+}
+
+.card-content i {
+    transition: transform 0.35s ease;
+}
+
+.project-card:hover .card-content i {
+    transform: scale(1.08);
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-grow: 1;
 }
 
 .card-info h3 {
-    font-size: 1.15rem; /* Adjusted font size */
-    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+    margin-bottom: 0.4rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
 }
 
 .card-info p {
-    font-size: 0.85rem; /* Adjusted font size */
-    color: rgba(255, 255, 255, 0.7);
-    flex-grow: 1;
+    font-size: 0.84rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.45;
+    margin-bottom: 0.75rem;
 }
+
+/* ── Tech Tags ──────────────────────────────────────── */
+
+.tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem;
+    margin-top: auto;
+}
+
+.tech-tag {
+    font-size: 0.68rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 10px;
+    background: rgba(74, 158, 255, 0.12);
+    color: rgba(74, 158, 255, 0.9);
+    border: 1px solid rgba(74, 158, 255, 0.2);
+    letter-spacing: 0.02em;
+    white-space: nowrap;
+    transition: background 0.25s ease;
+}
+
+.project-card[data-category="games"] .tech-tag {
+    background: rgba(245, 166, 35, 0.1);
+    color: rgba(245, 166, 35, 0.9);
+    border-color: rgba(245, 166, 35, 0.2);
+}
+
+.project-card:hover .tech-tag {
+    background: rgba(74, 158, 255, 0.2);
+}
+
+.project-card[data-category="games"]:hover .tech-tag {
+    background: rgba(245, 166, 35, 0.18);
+}
+
+/* ── Entrance Animation ─────────────────────────────── */
+
+@keyframes cardReveal {
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* Stagger entrance for each card */
+.project-card:nth-child(1)  { animation-delay: 0.04s; }
+.project-card:nth-child(2)  { animation-delay: 0.10s; }
+.project-card:nth-child(3)  { animation-delay: 0.16s; }
+.project-card:nth-child(4)  { animation-delay: 0.22s; }
+.project-card:nth-child(5)  { animation-delay: 0.28s; }
+.project-card:nth-child(6)  { animation-delay: 0.34s; }
+.project-card:nth-child(7)  { animation-delay: 0.40s; }
+.project-card:nth-child(8)  { animation-delay: 0.46s; }
+.project-card:nth-child(9)  { animation-delay: 0.52s; }
+.project-card:nth-child(10) { animation-delay: 0.58s; }
+.project-card:nth-child(11) { animation-delay: 0.64s; }
+.project-card:nth-child(12) { animation-delay: 0.70s; }
+.project-card:nth-child(13) { animation-delay: 0.76s; }
+
+/* Filter transition helper classes (applied by JS) */
+.project-card.hiding {
+    opacity: 0;
+    transform: translateY(12px) scale(0.95);
+    pointer-events: none;
+}
+
+.project-card.hidden {
+    display: none !important;
+}
+
+.project-card.showing {
+    opacity: 0;
+    transform: translateY(12px) scale(0.95);
+    pointer-events: auto;
+}
+
+/* ── Responsive ─────────────────────────────────────── */
 
 @media (max-width: 768px) {
     .hero-title {
         font-size: 2.5rem;
     }
     .projects-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+    .card-content {
+        padding: 1rem 0.85rem 0.75rem;
+    }
+    .card-content img {
+        width: 52px;
+        height: 52px;
+    }
+    .card-info h3 {
+        font-size: 0.95rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .projects-grid {
         grid-template-columns: 1fr;
     }
+}
+
+/* ── Custom Cursor ──────────────────────────────────── */
+
+.cursor-dot {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    background: var(--primary-color);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease, background 0.2s ease;
+}
+
+.cursor-dot.hovering {
+    width: 12px;
+    height: 12px;
+    background: var(--accent-color);
+}
+
+.cursor-ring {
+    position: fixed;
+    width: 36px;
+    height: 36px;
+    border: 1.5px solid rgba(74, 158, 255, 0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: width 0.25s ease, height 0.25s ease, border-color 0.25s ease;
+}
+
+.cursor-ring.hovering {
+    width: 50px;
+    height: 50px;
+    border-color: rgba(97, 218, 251, 0.6);
+}
+
+/* Hide custom cursor on touch devices */
+@media (hover: none) {
+    .cursor-dot, .cursor-ring { display: none !important; }
+}
+
+/* Hide default cursor when custom cursor is active (desktop only) */
+@media (hover: hover) {
+    body {
+        cursor: none;
+    }
+    a, button, .burger, .filter-btn {
+        cursor: none;
+    }
+}
+
+/* ── Mouse Spotlight ────────────────────────────────── */
+
+.mouse-spotlight {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(74, 158, 255, 0.06) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.mouse-spotlight.visible {
+    opacity: 1;
 }

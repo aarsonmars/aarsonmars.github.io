@@ -124,7 +124,62 @@ document.addEventListener('DOMContentLoaded', () => {
         tick();
     }
 
-    // Project filtering
+    // === Custom Cursor ===
+    (function initCustomCursor() {
+        const dot = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        if (!dot || !ring) return;
+        if (!window.matchMedia('(hover: hover)').matches) return;
+
+        let mouseX = -100, mouseY = -100;
+        let ringX = -100, ringY = -100;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            dot.style.left = mouseX + 'px';
+            dot.style.top = mouseY + 'px';
+        });
+
+        function animateRing() {
+            ringX += (mouseX - ringX) * 0.15;
+            ringY += (mouseY - ringY) * 0.15;
+            ring.style.left = ringX + 'px';
+            ring.style.top = ringY + 'px';
+            requestAnimationFrame(animateRing);
+        }
+        animateRing();
+
+        const hoverTargets = document.querySelectorAll('a, button, .burger, .project-card, .filter-btn');
+        hoverTargets.forEach(el => {
+            el.addEventListener('mouseenter', () => {
+                dot.classList.add('hovering');
+                ring.classList.add('hovering');
+            });
+            el.addEventListener('mouseleave', () => {
+                dot.classList.remove('hovering');
+                ring.classList.remove('hovering');
+            });
+        });
+    })();
+
+    // === Mouse Spotlight ===
+    (function initSpotlight() {
+        const spot = document.getElementById('mouseSpotlight');
+        if (!spot) return;
+        if (!window.matchMedia('(hover: hover)').matches) return;
+
+        document.addEventListener('mousemove', (e) => {
+            spot.style.left = e.clientX + 'px';
+            spot.style.top = e.clientY + 'px';
+            if (!spot.classList.contains('visible')) spot.classList.add('visible');
+        });
+        document.addEventListener('mouseleave', () => {
+            spot.classList.remove('visible');
+        });
+    })();
+
+    // Project filtering with smooth transitions
     const filterButtons = document.querySelectorAll('.filter-btn');
     const projectCards = document.querySelectorAll('.project-card');
 
@@ -135,13 +190,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const filter = button.dataset.filter;
 
+            // Phase 1: hide non-matching cards with animation
+            const toHide = [];
+            const toShow = [];
+
             projectCards.forEach(card => {
-                if (filter === 'all' || card.dataset.category === filter) {
-                    card.style.display = 'flex';
+                const matches = filter === 'all' || card.dataset.category === filter;
+                if (matches) {
+                    toShow.push(card);
                 } else {
-                    card.style.display = 'none';
+                    toHide.push(card);
                 }
             });
+
+            // Fade out cards that should be hidden
+            toHide.forEach(card => {
+                card.classList.add('hiding');
+                card.classList.remove('showing');
+            });
+
+            // After the hide animation, actually hide them and reveal matching ones
+            setTimeout(() => {
+                toHide.forEach(card => {
+                    card.classList.add('hidden');
+                    card.classList.remove('hiding');
+                });
+
+                // Show matching cards with staggered reveal
+                toShow.forEach((card, i) => {
+                    card.classList.remove('hidden', 'hiding');
+                    card.classList.add('showing');
+                    // Stagger the reveal
+                    setTimeout(() => {
+                        card.classList.remove('showing');
+                        card.style.animation = 'none';
+                        card.offsetHeight; // force reflow
+                        card.style.animation = `cardReveal 0.4s ease ${i * 0.05}s forwards`;
+                    }, 10);
+                });
+            }, 280);
         });
     });
 });
