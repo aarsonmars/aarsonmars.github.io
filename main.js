@@ -1,6 +1,8 @@
 // Background canvas animation setup
 let canvas;
 let ctx;
+let mouse = { x: -1000, y: -1000 };
+const mouseRadius = 120;
 
 // Initialize the canvas animation when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
@@ -9,6 +11,16 @@ document.addEventListener('DOMContentLoaded', function() {
   
   // Set canvas dimensions to match window
   resizeCanvas();
+  
+  // Track mouse position for particle interaction
+  window.addEventListener('mousemove', function(e) {
+    mouse.x = e.clientX;
+    mouse.y = e.clientY;
+  });
+  window.addEventListener('mouseleave', function() {
+    mouse.x = -1000;
+    mouse.y = -1000;
+  });
   
   // Start animation
   animateBackground();
@@ -80,15 +92,46 @@ for (let i = 0; i < 50; i++) {
 }
 
 function drawParticles() {
+  // Draw connection lines between nearby particles
+  const lineDistance = 150;
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      if (dist < lineDistance) {
+        const opacity = (1 - dist / lineDistance) * 0.15;
+        ctx.beginPath();
+        ctx.moveTo(particles[i].x, particles[i].y);
+        ctx.lineTo(particles[j].x, particles[j].y);
+        ctx.strokeStyle = `rgba(74, 158, 255, ${opacity})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    }
+  }
+
   particles.forEach(particle => {
-    // Move particle
+    // Move particle upward
     particle.y -= particle.speed;
+    
+    // Mouse repulsion
+    const dx = particle.x - mouse.x;
+    const dy = particle.y - mouse.y;
+    const dist = Math.sqrt(dx * dx + dy * dy);
+    if (dist < mouseRadius) {
+      const force = (mouseRadius - dist) / mouseRadius;
+      particle.x += dx / dist * force * 3;
+      particle.y += dy / dist * force * 3;
+    }
     
     // Reset if off screen
     if (particle.y < 0) {
       particle.y = canvas.height;
       particle.x = Math.random() * canvas.width;
     }
+    if (particle.x < 0) particle.x = canvas.width;
+    if (particle.x > canvas.width) particle.x = 0;
     
     // Draw particle
     ctx.beginPath();

@@ -81,6 +81,14 @@
         </script>
 </head>
 <body>
+        <!-- Custom cursor -->
+        <div class="cursor-dot" id="cursorDot"></div>
+        <div class="cursor-ring" id="cursorRing"></div>
+        <!-- Page transition overlay -->
+        <div class="page-transition" id="pageTransition"></div>
+        <!-- Mouse spotlight -->
+        <div class="mouse-spotlight" id="mouseSpotlight"></div>
+        <div class="scroll-progress" id="scrollProgress"></div>
         <a href="#home" class="skip-link">Skip to main content</a>
     <nav class="navbar">
         <div class="logo">
@@ -109,7 +117,7 @@
                     <p class="hero-subtitle"><span id="typed-text"></span><span class="typing-cursor">|</span></p>
                     <p class="hero-description">
                         Civil engineer turning transportation data into smarter mobility solutions
-                        — using machine learning, GIS, and a lot of Python.
+                        — using Machine Learning, GIS, and a lot of Python.
                     </p>
                     <div class="hero-buttons">
                         <a href="#projects" class="btn btn-primary">View My Work</a>
@@ -205,19 +213,40 @@
                     <div class="skill-groups">
                         <div class="skill-group">
                             <h4>Languages</h4>
-                            <span class="skill-tags">Python · R · SQL · HTML/CSS/JS</span>
+                            <div class="skill-pills">
+                                <span class="pill">Python</span>
+                                <span class="pill">R</span>
+                                <span class="pill">SQL</span>
+                                <span class="pill">HTML/CSS/JS</span>
+                            </div>
                         </div>
                         <div class="skill-group">
                             <h4>Data & ML</h4>
-                            <span class="skill-tags">Pandas · Scikit-learn · Pytorch · Matplotlib</span>
+                            <div class="skill-pills">
+                                <span class="pill">Pandas</span>
+                                <span class="pill">Scikit-learn</span>
+                                <span class="pill">Pytorch</span>
+                                <span class="pill">Matplotlib</span>
+                            </div>
                         </div>
                         <div class="skill-group">
                             <h4>GIS & Mapping</h4>
-                            <span class="skill-tags">QGIS · ArcGIS · OpenStreetMap · Leaflet · GeoPandas</span>
+                            <div class="skill-pills">
+                                <span class="pill">QGIS</span>
+                                <span class="pill">ArcGIS</span>
+                                <span class="pill">OpenStreetMap</span>
+                                <span class="pill">Leaflet</span>
+                                <span class="pill">GeoPandas</span>
+                            </div>
                         </div>
                         <div class="skill-group">
                             <h4>Tools & Platforms</h4>
-                            <span class="skill-tags">AutoCAD · Sketchup · VISSIM · MS Project</span>
+                            <div class="skill-pills">
+                                <span class="pill">AutoCAD</span>
+                                <span class="pill">SketchUp</span>
+                                <span class="pill">VISSIM</span>
+                                <span class="pill">MS Project</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -259,11 +288,13 @@
             <h2><i class="fas fa-envelope"></i> Get In Touch</h2>
             <form action="https://api.web3forms.com/submit" method="POST" class="contact-form">
                 <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY_HERE">
-                <div class="form-group">
-                    <input type="text" name="name" placeholder="Your Name" required>
-                </div>
-                <div class="form-group">
-                    <input type="email" name="email" placeholder="Your Email" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <input type="text" name="name" placeholder="Your Name" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" name="email" placeholder="Your Email" required>
+                    </div>
                 </div>
                 <div class="form-group">
                     <textarea name="message" placeholder="Your Message" required></textarea>
