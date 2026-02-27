@@ -195,6 +195,20 @@ body {
     color: var(--primary-color);
     margin-bottom: 1.5rem;
     font-weight: 500;
+    min-height: 2.2em; /* prevent layout shift while typing */
+}
+
+.typing-cursor {
+    display: inline-block;
+    color: var(--primary-color);
+    font-weight: 300;
+    animation: blink 0.7s step-end infinite;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
 }
 
 .hero-description {
@@ -238,6 +252,28 @@ body {
 .btn-outline:hover {
     background-color: var(--primary-color);
     color: white;
+}
+
+.btn-resume {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-resume:hover {
+    background: linear-gradient(135deg, #059669, #047857);
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.35);
+}
+
+.btn-resume i {
+    transition: transform 0.3s ease;
+}
+
+.btn-resume:hover i {
+    transform: translateY(2px);
 }
 
 .hero-image {
@@ -406,14 +442,31 @@ h2 i {
     left: -1.5rem;
 }
 
-.skill-groups h4 {
-    font-size: 1.2rem;
+.skill-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+
+.skill-group h4 {
+    font-size: 0.85rem;
     color: var(--accent-color);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .skill-tags {
     color: rgba(255, 255, 255, 0.8);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 480px) {
+    .skill-groups {
+        gap: 1rem;
+    }
 }
 
 /* Education Timeline */

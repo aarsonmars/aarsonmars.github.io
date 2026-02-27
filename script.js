@@ -75,3 +75,57 @@ AOS.init({
     offset: 50,
 });
 
+// Typing effect for hero subtitle
+(function initTypingEffect() {
+    const roles = [
+        'Civil Engineer',
+        'GIS Analyst',
+        'AI/ML Enthusiast',
+        'Web Developer',
+        'Transportation Engineer'
+    ];
+    const typedEl = document.getElementById('typed-text');
+    if (!typedEl) return;
+
+    let roleIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    const typeSpeed = 80;
+    const deleteSpeed = 40;
+    const pauseAfterType = 2000;
+    const pauseAfterDelete = 400;
+
+    function tick() {
+        const currentRole = roles[roleIndex];
+
+        if (!isDeleting) {
+            // Typing forward
+            typedEl.textContent = currentRole.substring(0, charIndex + 1);
+            charIndex++;
+
+            if (charIndex === currentRole.length) {
+                // Finished typing — pause then start deleting
+                isDeleting = true;
+                setTimeout(tick, pauseAfterType);
+                return;
+            }
+            setTimeout(tick, typeSpeed);
+        } else {
+            // Deleting
+            typedEl.textContent = currentRole.substring(0, charIndex - 1);
+            charIndex--;
+
+            if (charIndex === 0) {
+                // Finished deleting — move to next role
+                isDeleting = false;
+                roleIndex = (roleIndex + 1) % roles.length;
+                setTimeout(tick, pauseAfterDelete);
+                return;
+            }
+            setTimeout(tick, deleteSpeed);
+        }
+    }
+
+    tick();
+})();
+
