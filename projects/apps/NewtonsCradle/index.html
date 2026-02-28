@@ -1,35 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0d1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Newton's Cradle</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='30' cy='65' r='12' fill='%23888'/><circle cx='50' cy='65' r='12' fill='%23aaa'/><circle cx='70' cy='65' r='12' fill='%23888'/><line x1='30' y1='25' x2='30' y2='53' stroke='%23999' stroke-width='2'/><line x1='50' y1='25' x2='50' y2='53' stroke='%23999' stroke-width='2'/><line x1='70' y1='25' x2='70' y2='53' stroke='%23999' stroke-width='2'/><line x1='15' y1='25' x2='85' y2='25' stroke='%23bbb' stroke-width='4'/></svg>">
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Info button and panel -->
-    <button class="info-button"><img src="./icons/icons8-info-50.png" alt="Info" /></button>
-    <div class="info-panel">
-        <button class="close-btn">&times;</button>
-        <h2>Newton's Cradle Simulation</h2>
-        <p>This interactive simulation demonstrates the conservation of momentum and energy using a Newton's cradle.</p>
-        
-        <p><strong>Drag and Drop:</strong> Grab any ball with your mouse or finger and pull it to any angle, then release to watch the physics in action!</p>
-        
-        <div class="keyboard-shortcuts">
-            <h3>Keyboard Shortcuts:</h3>
-            <p><kbd>Space</kbd> - Toggle sound</p>
-            <p><kbd>R</kbd> - Reset simulation</p>
-            <p><kbd>I</kbd> - Toggle this info panel</p>
-        </div>
-        
-        <p class="mobile-note">All features work on mobile devices - drag balls with your finger!</p>
+    <canvas id="cradleCanvas"></canvas>
+
+    <!-- Title overlay -->
+    <div class="title-overlay">
+        <h1>Newton's Cradle</h1>
+        <p>Drag a ball to begin</p>
     </div>
 
-    <!-- Control buttons -->
-    <button class="sound-toggle"><img src="./icons/icons8-sound-100.png" alt="Sound" /></button>
-    <button class="reset-button"><img src="./icons/icons8-reset-48.png" alt="Reset" /></button>
-    
-    <canvas id="cradleCanvas"></canvas>
+    <!-- Toolbar -->
+    <div class="toolbar">
+        <button class="tool-btn info-button" title="Info (I)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        </button>
+        <button class="tool-btn sound-toggle" title="Sound (Space)">
+            <svg class="icon-sound-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>
+            <svg class="icon-sound-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+        </button>
+        <button class="tool-btn reset-button" title="Reset (R)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+        </button>
+        <button class="tool-btn settings-button" title="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+    </div>
+
+    <!-- Info panel -->
+    <div class="info-panel">
+        <button class="close-btn">&times;</button>
+        <h2>Newton's Cradle</h2>
+        <p>This interactive simulation demonstrates the <strong>conservation of momentum and energy</strong> using a Newton's cradle.</p>
+        <p>Grab any ball and pull it to any angle, then release to watch the physics in action!</p>
+        <div class="keyboard-shortcuts">
+            <h3>Keyboard Shortcuts</h3>
+            <div class="shortcut-row"><kbd>Space</kbd><span>Toggle sound</span></div>
+            <div class="shortcut-row"><kbd>R</kbd><span>Reset simulation</span></div>
+            <div class="shortcut-row"><kbd>I</kbd><span>Toggle info panel</span></div>
+            <div class="shortcut-row"><kbd>S</kbd><span>Toggle settings</span></div>
+        </div>
+        <p class="mobile-note">Works on mobile — drag balls with your finger!</p>
+    </div>
+
+    <!-- Settings panel -->
+    <div class="settings-panel">
+        <button class="close-btn">&times;</button>
+        <h2>Settings</h2>
+        <div class="setting-group">
+            <label>Ball Count</label>
+            <div class="ball-count-selector">
+                <button class="ball-count-btn" data-count="3">3</button>
+                <button class="ball-count-btn active" data-count="5">5</button>
+                <button class="ball-count-btn" data-count="7">7</button>
+            </div>
+        </div>
+        <div class="setting-group">
+            <label>Gravity <span class="setting-value" id="gravityValue">1.0x</span></label>
+            <input type="range" id="gravitySlider" min="0.2" max="3" step="0.1" value="1">
+        </div>
+        <div class="setting-group">
+            <label>Ball Size <span class="setting-value" id="sizeValue">25</span></label>
+            <input type="range" id="sizeSlider" min="15" max="45" step="1" value="25">
+        </div>
+        <div class="setting-group">
+            <label>Damping <span class="setting-value" id="dampingValue">Low</span></label>
+            <input type="range" id="dampingSlider" min="0" max="2" step="1" value="0">
+        </div>
+        <div class="setting-group">
+            <label>Trails</label>
+            <div class="toggle-switch">
+                <input type="checkbox" id="trailToggle" checked>
+                <label for="trailToggle" class="toggle-label"></label>
+            </div>
+        </div>
+        <div class="setting-group">
+            <label>Presets</label>
+            <div class="preset-selector">
+                <button class="preset-btn" data-preset="classic">Classic</button>
+                <button class="preset-btn" data-preset="chaos">Chaos</button>
+                <button class="preset-btn" data-preset="slow">Slow-Mo</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

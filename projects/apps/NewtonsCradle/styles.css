@@ -1,8 +1,41 @@
+/* ============================================
+   Newton's Cradle — Styles
+   ============================================ */
+
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --bg-dark: #0d1117;
+    --bg-panel: rgba(22, 27, 34, 0.92);
+    --accent: #58a6ff;
+    --accent-glow: rgba(88, 166, 255, 0.25);
+    --text: #e6edf3;
+    --text-muted: #8b949e;
+    --border: rgba(255, 255, 255, 0.08);
+    --radius: 14px;
+    --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+body {
+    font-family: var(--font);
+    height: 100vh;
+    overflow: hidden;
+    background: var(--bg-dark);
+    color: var(--text);
+}
+
+/* Canvas */
 canvas {
+    display: block;
     width: 100vw;
     height: 100vh;
-    background: #1a1e33;  /* Updated: lighter than previous deep navy */
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 1;
@@ -13,207 +46,460 @@ canvas:active {
     cursor: grabbing;
 }
 
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    background: #1c1c1c;  /* New dark grey background */
-    position: relative; /* Added for absolute positioning of buttons */
-}
-
-/* Sound toggle button styled as circle */
-.sound-toggle {
-    position: absolute;
-    top: 6%; /* Increased from 1% */
+/* ---- Title Overlay ---- */
+.title-overlay {
+    position: fixed;
+    bottom: 40px;
     left: 50%;
     transform: translateX(-50%);
-    width: 50px;
-    height: 50px;
-    background: #3a3; /* green for sound on */
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    z-index: 5;
+    text-align: center;
+    pointer-events: none;
+    opacity: 0.7;
+    transition: opacity 0.6s ease;
 }
 
-.sound-toggle:hover {
-    transform: translateX(-50%) scale(1.1);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+.title-overlay h1 {
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text);
+    text-shadow: 0 2px 20px rgba(0,0,0,0.5);
 }
 
-.sound-toggle img {
-    width: 60%; /* Adjust size as needed */
-    height: auto;
+.title-overlay p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 4px;
 }
 
-.sound-toggle.sound-off {
-    background: red;
+.title-overlay.hidden {
+    opacity: 0;
 }
 
-.reset-button {
-    position: absolute;
-    top: 6%; /* Increased from 1% */
-    left: 65%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 50px;
-    background: #444;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-}
-
-.reset-button:hover {
-    transform: translateX(-50%) scale(1.1);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-}
-
-.reset-button img {
-    width: 60%;
-    height: auto;
-}
-
-/* Info panel styling */
-.info-button {
-    position: absolute;
-    top: 6%;
-    left: 35%;
-    transform: translateX(-50%);
-    width: 50px;
-    height: 50px;
-    background: #2b6ca3;
-    border: none;
-    border-radius: 50%;
-    cursor: pointer;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: transform 0.2s;
-}
-
-.info-button:hover {
-    transform: translateX(-50%) scale(1.1);
-}
-
-.info-panel {
-    position: absolute;
-    top: 20%;
+/* ---- Toolbar ---- */
+.toolbar {
+    position: fixed;
+    top: 20px;
     left: 50%;
     transform: translateX(-50%);
-    width: 80%;
-    max-width: 500px;
-    background: rgba(30, 34, 53, 0.9);
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
     z-index: 10;
-    font-family: Arial, sans-serif;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+    display: flex;
+    gap: 8px;
+    background: var(--bg-panel);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 6px 10px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+}
+
+.tool-btn {
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.tool-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+}
+
+.tool-btn:active {
+    transform: scale(0.92);
+}
+
+.tool-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Sound button states */
+.sound-toggle .icon-sound-on { display: none; }
+.sound-toggle .icon-sound-off { display: block; }
+.sound-toggle.sound-on .icon-sound-on { display: block; }
+.sound-toggle.sound-on .icon-sound-off { display: none; }
+.sound-toggle.sound-on {
+    color: #3fb950;
+}
+
+/* ---- Panels (shared) ---- */
+.info-panel,
+.settings-panel {
+    position: fixed;
+    top: 80px;
+    left: 50%;
+    transform: translateX(-50%) translateY(-12px);
+    width: min(420px, 90vw);
+    background: var(--bg-panel);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    z-index: 20;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.info-panel.active,
+.settings-panel.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+}
+
+.info-panel h2,
+.settings-panel h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+.info-panel p {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.info-panel strong {
+    color: var(--text);
+}
+
+.close-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 28px;
+    height: 28px;
+    background: rgba(255, 255, 255, 0.06);
+    border: none;
+    border-radius: 50%;
+    color: var(--text-muted);
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s ease;
+}
+
+.close-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--text);
+}
+
+/* Keyboard Shortcuts */
+.keyboard-shortcuts {
+    margin-top: 16px;
+}
+
+.keyboard-shortcuts h3 {
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text);
+}
+
+.shortcut-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+    font-size: 0.84rem;
+    color: var(--text-muted);
+}
+
+kbd {
+    display: inline-block;
+    min-width: 28px;
+    padding: 3px 8px;
+    font-family: var(--font);
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-align: center;
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+}
+
+.mobile-note {
+    margin-top: 14px;
+    font-style: italic;
+    color: #3fb950 !important;
+    font-size: 0.82rem !important;
+}
+
+/* ---- Settings Panel ---- */
+.setting-group {
+    margin-bottom: 18px;
+}
+
+.setting-group label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 0.88rem;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: var(--text);
+}
+
+.setting-value {
+    font-weight: 400;
+    font-size: 0.8rem;
+    color: var(--accent);
+}
+
+/* Ball count selector */
+.ball-count-selector {
+    display: flex;
+    gap: 6px;
+}
+
+.ball-count-btn {
+    flex: 1;
+    padding: 8px 0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 0.88rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.ball-count-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+}
+
+.ball-count-btn.active {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+}
+
+/* Range sliders */
+input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg-dark);
+    box-shadow: 0 0 6px var(--accent-glow);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+}
+
+input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg-dark);
+    box-shadow: 0 0 6px var(--accent-glow);
+    cursor: pointer;
+}
+
+/* Toggle switch */
+.toggle-switch {
+    display: flex;
+    align-items: center;
+}
+
+.toggle-switch input {
     display: none;
 }
 
-.info-panel.active {
-    display: block;
-}
-
-.info-panel h2 {
-    margin-top: 0;
-    border-bottom: 1px solid #4a9eff;
-    padding-bottom: 10px;
-}
-
-.info-panel .close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 20px;
+.toggle-label {
+    width: 44px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    position: relative;
     cursor: pointer;
+    transition: background 0.25s ease;
 }
 
-/* Keyboard shortcuts display */
-.keyboard-shortcuts {
-    margin-top: 15px;
+.toggle-label::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--text-muted);
+    transition: all 0.25s ease;
 }
 
-.keyboard-shortcuts kbd {
-    background: #333;
-    border-radius: 4px;
-    padding: 2px 6px;
-    margin: 0 3px;
+.toggle-switch input:checked + .toggle-label {
+    background: var(--accent);
 }
 
-/* Mobile note styling */
-.mobile-note {
-    margin-top: 15px;
-    font-style: italic;
-    color: #8effca;
+.toggle-switch input:checked + .toggle-label::after {
+    left: 23px;
+    background: #fff;
 }
 
-/* Responsive adjustments for mobile devices */
+/* Preset buttons */
+.preset-selector {
+    display: flex;
+    gap: 6px;
+}
+
+.preset-btn {
+    flex: 1;
+    padding: 8px 0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-family: var(--font);
+    font-size: 0.82rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.preset-btn:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--text);
+}
+
+.preset-btn:active {
+    transform: scale(0.95);
+    background: var(--accent);
+    color: #fff;
+}
+
+/* ---- Responsive ---- */
 @media screen and (max-width: 600px) {
-    /* Fix overlapping buttons on mobile */
-    .info-button {
-        top: 4%;
-        left: 25%;
-        width: 40px;
-        height: 40px;
+    .toolbar {
+        top: max(12px, env(safe-area-inset-top, 12px));
+        padding: 4px 8px;
+        gap: 4px;
     }
-    
-    .sound-toggle {
-        top: 4%;
-        left: 50%;
-        width: 40px;
-        height: 40px;
+
+    .tool-btn {
+        width: 36px;
+        height: 36px;
     }
-    
-    .reset-button {
-        top: 4%;
-        left: 75%;
-        width: 40px;
-        height: 40px;
+
+    .tool-btn svg {
+        width: 18px;
+        height: 18px;
     }
-    
-    /* Make button icons fit smaller buttons */
-    .info-button img,
-    .sound-toggle img,
-    .reset-button img {
-        width: 55%;
+
+    .title-overlay {
+        bottom: max(24px, env(safe-area-inset-bottom, 24px));
     }
-    
-    .info-panel {
-        width: 90%;
-        top: 15%;
+
+    .title-overlay h1 {
+        font-size: 1.1rem;
+    }
+
+    .info-panel,
+    .settings-panel {
+        top: 65px;
+        padding: 20px 18px;
+        max-height: calc(100vh - 90px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Hide keyboard shortcuts section on mobile */
+    .keyboard-shortcuts {
+        display: none;
+    }
+
+    .setting-group label {
+        font-size: 0.84rem;
+    }
+
+    .ball-count-btn,
+    .preset-btn {
+        padding: 10px 0;
+        font-size: 0.84rem;
+    }
+
+    input[type="range"] {
+        height: 8px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        width: 24px;
+        height: 24px;
     }
 }
 
-/* Smaller screens need even more adjustments */
 @media screen and (max-width: 360px) {
-    .info-button {
-        left: 20%;
+    .toolbar {
+        gap: 2px;
+        padding: 3px 6px;
     }
-    
-    .reset-button {
-        left: 80%;
+
+    .tool-btn {
+        width: 32px;
+        height: 32px;
     }
-    
-    .weight-control input[type="range"] {
-        width: 160px;
+}
+
+/* Landscape phone */
+@media screen and (max-height: 500px) {
+    .title-overlay {
+        bottom: 10px;
+    }
+
+    .title-overlay h1 {
+        font-size: 1rem;
+    }
+
+    .info-panel,
+    .settings-panel {
+        top: 55px;
+        max-height: calc(100vh - 70px);
+        padding: 16px 14px;
     }
 }
