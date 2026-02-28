@@ -1,516 +1,546 @@
-*{
+/* ===== RESET & BASE ===== */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
     user-select: none;
-    margin:0;
-    padding:0;    
-    text-align: center;
-    touch-action: pan-x pan-y;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
 }
-body{
-    background-color: rgb(169, 155, 221);
-    position: absolute;
+
+:root {
+    --neon-cyan: #00e5ff;
+    --neon-pink: #ff2d95;
+    --neon-purple: #b026ff;
+    --neon-yellow: #ffe600;
+    --neon-orange: #ff8800;
+    --bg-dark: #0a0a1a;
+    --bg-card: rgba(15, 15, 35, 0.85);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --text-primary: #e0e0ff;
+    --text-dim: #7878a0;
+    --font-display: 'Orbitron', sans-serif;
+    --font-body: 'Exo 2', sans-serif;
+}
+
+html, body {
     height: 100%;
     width: 100%;
+    overflow: hidden;
+    background: var(--bg-dark);
+    font-family: var(--font-body);
+    color: var(--text-primary);
+}
+
+body {
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    background: radial-gradient(ellipse at 30% 20%, #0d0d2b 0%, #0a0a1a 70%);
+}
+
+/* ===== GAME WRAPPER ===== */
+#game-wrapper {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    max-width: none;
+}
+
+/* ===== CANVAS ===== */
+#gameCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+    border: none;
+    box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.5);
+    background: #050515;
+    touch-action: none;
+}
+
+/* ===== HUD ===== */
+#hud {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 20;
+    pointer-events: none;
+    font-family: var(--font-display);
+}
+
+#planet-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 4px 14px 4px 8px;
+    font-size: 0.75rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+#planet-icon-hud {
+    font-size: 1rem;
+}
+
+#score-display {
+    font-size: 2.4rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow:
+        0 0 10px var(--neon-cyan),
+        0 0 30px var(--neon-cyan),
+        0 0 60px rgba(0, 229, 255, 0.3);
+    letter-spacing: 3px;
+}
+
+#best-score-display {
+    background: var(--bg-card);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    color: var(--text-dim);
+}
+
+#best-score {
+    color: var(--neon-yellow);
+}
+
+/* ===== OVERLAY SCREENS ===== */
+.overlay-screen {
+    position: absolute;
+    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Arial', sans-serif;
-}
-main{
-    position: relative;
-    width: 80%;
-    max-width: 800px;
-}
-canvas{
-    background: rgb(135, 206, 235); /* Sky blue background */
-    border: 1rem solid rgb(141, 190, 245);
-    width: calc(100% - 2rem);
-    display: block;
-    max-height: 70vh; /* Prevent canvas from being too tall on mobile */
-}
-#levelAndScore{
-    top: 1rem;
-    width: 100%;
-    position: absolute;
-    display: flex;
-    justify-content: space-between;
-    z-index: 10;
+    z-index: 30;
+    animation: fadeIn 0.3s ease;
 }
 
-#score, #gravityText{
-    font-size: 1.5rem;
-    color: rgb(42, 3, 78);
-    margin-right: 1.8rem;
-    margin-left: 1.2rem;
-    text-shadow: 1px 1px 2px white;
-}
-#gameTitle{
-    text-align: center;
-    color: rgb(0, 128, 128);
-    margin-bottom: 10px;
-    position: relative;
-    top: -15px;
-}
-
-#startScreen, #gameOverScreen {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    font-size: 1.5rem;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 20px;
-    border-radius: 10px;
-    z-index: 10;
-    width: 80%;
-    max-width: 500px;
-}
-
-/* Add a specific class for the planet selection screen to ensure it's hidden */
-.planet-selection.hidden {
+.overlay-screen.hidden {
     display: none !important;
 }
 
-#startScreen h2 {
-    margin-bottom: 15px;
-    color: #333;
+.screen-content {
+    text-align: center;
+    width: 90%;
+    max-width: 440px;
+}
+
+.glass {
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 32px 28px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+/* ===== MENU SCREEN ===== */
+.neon-title {
+    font-family: var(--font-display);
+    font-size: 2.6rem;
+    font-weight: 900;
+    letter-spacing: 6px;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 20px rgba(0, 229, 255, 0.4));
+    margin-bottom: 4px;
+}
+
+.subtitle {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 24px;
 }
 
 #planet-selector {
     display: flex;
     justify-content: center;
+    gap: 12px;
     flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 28px;
 }
 
-.planet-option {
-    cursor: pointer;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #f1f1f1;
-    width: 100px;
-    text-align: center;
-    transition: all 0.3s ease;
-    min-height: 44px; /* Apple's recommended minimum touch target size */
-    min-width: 44px;
-    touch-action: manipulation;
-}
-
-.planet-option:hover {
-    background-color: #e1e1e1;
-    transform: scale(1.05);
-}
-
-.planet-option.selected {
-    background-color: #d1d1d1;
-    border: 2px solid #333;
-    transform: scale(1.1);
-}
-
-.planet-icon {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin: 0 auto 10px auto;
-}
-
-.moon {
-    background-color: #D1D1D1;
-    box-shadow: inset -10px -10px 0 #A0A0A0;
-}
-
-.earth {
-    background-color: #4287f5;
-    box-shadow: inset -10px -10px 0 #2559a7;
-    position: relative;
-}
-
-.earth::after {
-    content: "";
-    position: absolute;
-    width: 60%;
-    height: 25%;
-    background-color: #3cb043;
-    top: 30%;
-    left: 20%;
-    border-radius: 50%;
-    transform: rotate(-20deg);
-}
-
-.jupiter {
-    background-color: #E8B247;
-    position: relative;
-    overflow: hidden;
-}
-
-.jupiter::after {
-    content: "";
-    position: absolute;
-    width: 120%;
-    height: 20%;
-    background-color: #D19C3B;
-    top: 30%;
-    left: -10%;
-    border-radius: 50%;
-}
-
-.jupiter::before {
-    content: "";
-    position: absolute;
-    width: 120%;
-    height: 15%;
-    background-color: #D19C3B;
-    top: 60%;
-    left: -10%;
-    border-radius: 50%;
-}
-
-.sun {
-    background: radial-gradient(circle, #FFA500, #FF4500);
-    box-shadow: 0 0 10px 2px #FFFF00;
-}
-
-.gravity-info {
-    font-size: 0.8rem;
-    margin-top: 5px;
-    color: #666;
-    font-weight: bold;
-    padding: 3px;
-    border-radius: 3px;
-    transition: all 0.3s ease;
-}
-
-.planet-option:hover .gravity-info {
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-.planet-option.selected .gravity-info {
-    background-color: rgba(0, 0, 0, 0.2);
-    color: #333;
-}
-
-#start-game-btn {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s;
-    min-height: 44px; /* Apple's recommended minimum touch target size */
-    min-width: 44px;
-    touch-action: manipulation;
-}
-
-#start-game-btn:hover {
-    background-color: #45a049;
-}
-
-#gameOverScreen {
-    color: red;
-}
-
-.hidden {
-    display: none;
-}
-
-/* Add a pulse animation to the start button to make it more noticeable */
-.pulse-button {
-    animation: pulse 2s infinite;
-    box-shadow: 0 0 0 rgba(76, 175, 80, 0.4);
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
-    }
-    
-    70% {
-        transform: scale(1.05);
-        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
-    }
-    
-    100% {
-        transform: scale(1);
-        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
-    }
-}
-
-@media(max-width:600px){    
-    main {
-        width: 95%;
-    }
-    
-    #score, #gravityText {
-        font-size: 1rem;
-    }
-    
-    .planet-option {
-        width: 70px;
-        padding: 5px;
-    }
-    
-    .planet-icon {
-        width: 35px;
-        height: 35px;
-    }
-}
-
-/* Add celestial-specific styles */
-.moon-environment canvas {
-    background: #1A1A2E; /* Dark blue space background for Moon */
-}
-
-.jupiter-environment canvas {
-    background: #D19C3B; /* Jupiter colored background */
-}
-
-.sun-environment canvas {
-    background: #FF8C00; /* Orange background for Sun */
-}
-
-.earth-environment canvas {
-    background: rgb(135, 206, 235); /* Default blue sky */
-}
-
-/* Add subtle animation for the Sun environment */
-@keyframes sun-glow {
-    0% { box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.5); }
-    50% { box-shadow: 0 0 20px 5px rgba(255, 165, 0, 0.7); }
-    100% { box-shadow: 0 0 10px 2px rgba(255, 165, 0, 0.5); }
-}
-
-.sun-environment canvas {
-    animation: sun-glow 3s infinite;
-}
-
-/* Mobile optimizations */
-.mobile-device {
-    touch-action: none; /* Prevent default touch actions */
-    -webkit-tap-highlight-color: transparent; /* Remove tap highlight */
-    user-select: none; /* Prevent text selection */
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-}
-
-/* Optimize planet selector for portrait mode */
-.portrait-layout {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.portrait-layout .planet-option {
-    width: 65px;
-    height: 90px;
-    padding: 5px;
-    margin-bottom: 0;
-}
-
-.portrait-layout .planet-icon {
-    width: 40px;
-    height: 40px;
-}
-
-.portrait-layout .gravity-info {
-    font-size: 0.7rem;
-}
-
-/* Tap hint styling */
-.tap-hint {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    padding: 15px 25px;
-    border-radius: 50px;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    animation: pulse-hint 1.5s infinite;
-    pointer-events: none;
-}
-
-.tap-icon {
-    font-size: 24px;
-    margin-right: 10px;
-    animation: tap-motion 1s infinite;
-}
-
-.tap-text {
-    font-size: 18px;
-    font-weight: bold;
-}
-
-.tap-hint.hidden {
-    display: none;
-}
-
-.tap-hint.fade-out {
-    opacity: 0;
-    transition: opacity 1s;
-}
-
-@keyframes pulse-hint {
-    0% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.1); }
-    100% { transform: translate(-50%, -50%) scale(1); }
-}
-
-@keyframes tap-motion {
-    0% { transform: translateY(0); }
-    50% { transform: translateY(-5px); }
-    100% { transform: translateY(0); }
-}
-
-/* Enhanced responsive design for various screen sizes */
-@media (max-width: 400px) {
-    h1#gameTitle {
-        font-size: 1.5rem;
-        margin-bottom: 5px;
-    }
-    
-    #score, #gravityText {
-        font-size: 0.8rem;
-        margin-right: 0.8rem;
-        margin-left: 0.8rem;
-    }
-    
-    #startScreen, #gameOverScreen {
-        width: 90%;
-        padding: 15px;
-    }
-    
-    #startScreen h2 {
-        font-size: 1.2rem;
-    }
-    
-    #start-game-btn {
-        padding: 8px 16px;
-    }
-    
-    .planet-option {
-        width: 60px;
-        padding: 5px;
-    }
-    
-    .planet-icon {
-        width: 30px;
-        height: 30px;
-    }
-}
-
-/* Special fixes for iPhones with notches */
-@supports (padding-top: env(safe-area-inset-top)) {
-    body {
-        padding-top: env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
-    }
-}
-
-/* Mobile-specific fixes */
-@media (max-width: 768px) {
-    canvas {
-        touch-action: none !important; /* Prevent browser handling of touch gestures */
-        width: calc(100% - 1.5rem) !important; /* Smaller border on mobile */
-        border-width: 0.75rem !important;
-        -webkit-tap-highlight-color: transparent; /* Remove tap highlight on Safari */
-    }
-    
-    #startScreen, #gameOverScreen {
-        width: 90% !important;
-        padding: 15px !important;
-    }
-    
-    /* Make gravity and score text more readable on small screens */
-    #score, #gravityText {
-        font-size: 1.2rem !important;
-        margin-right: 1rem !important;
-        margin-left: 1rem !important;
-    }
-}
-
-/* Fix iOS Safari issues with 100vh */
-@supports (-webkit-touch-callout: none) {
-    body {
-        height: -webkit-fill-available;
-    }
-    
-    html {
-        height: -webkit-fill-available;
-    }
-}
-
-/* Fix for iPhone notch */
-@supports (padding: max(0px)) {
-    body {
-        padding-top: max(0px, env(safe-area-inset-top));
-        padding-bottom: max(0px, env(safe-area-inset-bottom));
-        padding-left: max(0px, env(safe-area-inset-left));
-        padding-right: max(0px, env(safe-area-inset-right));
-    }
-}
-
-/* Ensure responsive canvas scaling */
-canvas {
-    max-height: 70vh; /* Prevent canvas from being too tall on mobile */
-}
-
-/* Optimize touch targets for mobile */
-.planet-option, #start-game-btn {
-    min-height: 44px; /* Apple's recommended minimum touch target size */
-    min-width: 44px;
-}
-
-/* Fix tap delay on iOS Safari */
-a, button, input, select, textarea, .planet-option {
-    touch-action: manipulation;
-}
-
-/* Rotate screen message styling */
-#rotate-screen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
+.planet-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    z-index: 2000;
-    color: white;
-    text-align: center;
+    gap: 4px;
+    padding: 12px 10px;
+    width: 86px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    color: var(--text-dim);
+    font-family: var(--font-body);
+    touch-action: manipulation;
 }
 
-#rotate-screen.hidden {
-    display: none;
+.planet-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    transform: translateY(-2px);
 }
 
-.rotate-message p {
-    font-size: 1.5rem;
+.planet-btn.selected {
+    background: rgba(0, 229, 255, 0.08);
+    border-color: var(--neon-cyan);
+    color: #fff;
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.15);
+    transform: translateY(-3px);
+}
+
+.planet-emoji {
+    font-size: 1.8rem;
+    line-height: 1;
+}
+
+.planet-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.planet-g {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    font-family: var(--font-display);
+}
+
+.planet-btn.selected .planet-g {
+    color: var(--neon-cyan);
+    opacity: 1;
+}
+
+/* ===== BUTTONS ===== */
+.glow-btn {
+    position: relative;
+    display: inline-block;
+    padding: 14px 48px;
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--neon-cyan), var(--neon-purple));
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow:
+        0 0 20px rgba(0, 229, 255, 0.3),
+        0 0 60px rgba(176, 38, 255, 0.15);
+    touch-action: manipulation;
+}
+
+.glow-btn:hover {
+    transform: scale(1.05);
+    box-shadow:
+        0 0 30px rgba(0, 229, 255, 0.5),
+        0 0 80px rgba(176, 38, 255, 0.25);
+}
+
+.glow-btn:active {
+    transform: scale(0.97);
+}
+
+.glow-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -60%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.15),
+        transparent
+    );
+    transform: rotate(25deg);
+    animation: btnShine 3s infinite;
+}
+
+@keyframes btnShine {
+    0% { left: -60%; }
+    30% { left: 120%; }
+    100% { left: 120%; }
+}
+
+.ghost-btn {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 10px 24px;
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    font-weight: 400;
+    letter-spacing: 2px;
+    color: var(--text-dim);
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.2s;
+    touch-action: manipulation;
+}
+
+.ghost-btn:hover {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+}
+
+.hint-text {
+    margin-top: 18px;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 1px;
+}
+
+/* ===== GAME OVER SCREEN ===== */
+.gameover-title {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 900;
+    letter-spacing: 5px;
+    color: var(--neon-pink);
+    text-shadow: 0 0 20px rgba(255, 45, 149, 0.5);
     margin-bottom: 20px;
 }
 
-#rotate-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+#final-score-container {
+    margin-bottom: 8px;
 }
 
-#rotate-button:hover {
-    background-color: #45a049;
+.final-score-label {
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+}
+
+.final-score-value {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 20px var(--neon-cyan);
+    line-height: 1;
+}
+
+.new-best {
+    font-family: var(--font-display);
+    font-size: 0.85rem;
+    letter-spacing: 3px;
+    color: var(--neon-yellow);
+    text-shadow: 0 0 10px rgba(255, 230, 0, 0.5);
+    margin-bottom: 8px;
+    animation: bestPulse 1s ease infinite;
+}
+
+.new-best.hidden {
+    display: none;
+}
+
+@keyframes bestPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.05); }
+}
+
+#final-best-container {
+    margin-bottom: 24px;
+    font-size: 0.8rem;
+    color: var(--text-dim);
+}
+
+.final-best-value {
+    color: var(--neon-yellow);
+    font-family: var(--font-display);
+}
+
+/* ===== GET READY SCREEN ===== */
+#ready-screen {
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+}
+
+.ready-text {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: 6px;
+    color: #fff;
+    text-shadow:
+        0 0 10px var(--neon-cyan),
+        0 0 40px var(--neon-cyan);
+    animation: readyPulse 1.2s ease infinite;
+}
+
+.ready-hint {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    letter-spacing: 2px;
+}
+
+@keyframes readyPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.screen-content {
+    animation: slideUp 0.4s ease;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+    .neon-title {
+        font-size: 1.8rem;
+        letter-spacing: 3px;
+    }
+
+    .subtitle {
+        font-size: 0.7rem;
+        margin-bottom: 16px;
+    }
+
+    .planet-btn {
+        width: 72px;
+        padding: 10px 6px;
+    }
+
+    .planet-emoji {
+        font-size: 1.4rem;
+    }
+
+    .glow-btn {
+        padding: 12px 36px;
+        font-size: 0.85rem;
+    }
+
+    .glass {
+        padding: 24px 18px;
+    }
+
+    #score-display {
+        font-size: 1.8rem;
+    }
+
+    .gameover-title {
+        font-size: 1.5rem;
+    }
+
+    .final-score-value {
+        font-size: 2.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .neon-title {
+        font-size: 1.4rem;
+    }
+
+    #planet-selector {
+        gap: 8px;
+    }
+
+    .planet-btn {
+        width: 64px;
+        padding: 8px 4px;
+    }
+}
+
+/* ===== LANDSCAPE PROMPT (mobile portrait) ===== */
+#rotate-prompt {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--bg-dark);
+    color: var(--text-primary);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    text-align: center;
+    font-family: var(--font-display);
+}
+
+#rotate-prompt .rotate-icon {
+    font-size: 4rem;
+    animation: rotateWiggle 2s ease-in-out infinite;
+}
+
+#rotate-prompt .rotate-msg {
+    font-size: 1rem;
+    letter-spacing: 2px;
+    color: var(--neon-cyan);
+}
+
+#rotate-prompt .rotate-sub {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    font-family: var(--font-body);
+}
+
+@keyframes rotateWiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(90deg); }
+    75% { transform: rotate(90deg); }
+}
+
+/* Show rotate prompt only on mobile-sized screens in portrait */
+@media (max-width: 900px) and (orientation: portrait) {
+    #rotate-prompt {
+        display: flex;
+    }
+    #game-wrapper {
+        display: none;
+    }
+}
+
+/* ===== iOS SAFE AREA ===== */
+@supports (padding: max(0px)) {
+    body {
+        padding: max(0px, env(safe-area-inset-top))
+                 max(0px, env(safe-area-inset-right))
+                 max(0px, env(safe-area-inset-bottom))
+                 max(0px, env(safe-area-inset-left));
+    }
+}
+
+@supports (-webkit-touch-callout: none) {
+    html, body {
+        height: -webkit-fill-available;
+    }
 }

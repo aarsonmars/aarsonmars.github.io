@@ -1,293 +1,225 @@
+/**
+ * Neon Bird — glowing, rotating bird with a particle trail.
+ */
 class Bird {
-    constructor(canvas, x, y, usePlaceholder = true) {
+    constructor(canvas, x, y) {
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
         this.x = x;
         this.y = y;
-        this.width = 60;
-        this.height = 45;
-        this.baseGravity = 0.25; // Reduced from 0.5 for better control
+        this.width = 42;
+        this.height = 32;
+
+        // Physics
+        this.baseGravity = 0.28;
         this.gravity = this.baseGravity;
         this.velocity = 0;
-        this.baseJumpStrength = -5.5; // Reduced from -8 for more nuanced control
-        this.jumpStrength = this.baseJumpStrength;
-        this.frameIndex = 0;
-        this.flapSpeed = 5;
-        this.frameCount = 0;
-        
-        // Flag to track image source preference
-        this.usePlaceholderImages = usePlaceholder;
-        
-        // Load bird image
-        this.image = new Image();
-        
-        // Use placeholder by default if available
-        if (this.usePlaceholderImages && window.placeholderImages && window.placeholderImages.bird) {
-            this.image.src = window.placeholderImages.bird;
-        } else {
-            this.image.src = './img/bird.png';
+        this.baseJump = -6;
+        this.jumpStrength = this.baseJump;
+
+        // Rotation (visual tilt based on velocity)
+        this.rotation = 0;
+
+        // Wing animation
+        this.wingPhase = 0;      // 0‥2π
+        this.wingSpeed = 0.15;
+        this.isFlapping = false;
+        this.flapTimer = 0;
+
+        // Trail particles
+        this.trail = [];
+        this.maxTrail = 18;
+
+        // Appearance
+        this.glowColor = '#00e5ff';
+        this.bodyColor = '#00e5ff';
+        this.wingColor = '#b026ff';
+        this.eyeColor = '#fff';
+
+        // Flap strength / timing
+        this.lastFlapTime = 0;
+        this.flapStrength = 1;
+    }
+
+    /* ── gravity per planet ── */
+    setGravity(factor, planetName) {
+        // Cap extreme gravity so every planet stays playable
+        const f = Math.min(factor, 2.2);
+        this.gravity = this.baseGravity * f;
+        this.jumpStrength = this.baseJump * Math.sqrt(f + 0.5);
+        if (f > 1.5) this.jumpStrength *= 1.15;
+        if (f < 0.2) this.jumpStrength *= 0.9;
+
+        // Themed glow colour
+        const themeColors = {
+            Moon:    { glow: '#b0b0d0', body: '#c8c8e8', wing: '#8888aa' },
+            Earth:   { glow: '#00e5ff', body: '#00e5ff', wing: '#b026ff' },
+            Jupiter: { glow: '#ffab40', body: '#ffab40', wing: '#ff6d00' },
+            Sun:     { glow: '#ff5252', body: '#ff8a80', wing: '#ffff00' },
+        };
+        const c = themeColors[planetName] || themeColors.Earth;
+        this.glowColor = c.glow;
+        this.bodyColor = c.body;
+        this.wingColor = c.wing;
+    }
+
+    /* ── flap ── */
+    flap() {
+        const now = Date.now();
+        const dt = now - this.lastFlapTime;
+        this.lastFlapTime = now;
+
+        // Rapid clicks slightly weaker
+        this.flapStrength = dt < 180 ? Math.max(0.8, this.flapStrength * 0.92) : Math.min(1.2, this.flapStrength * 1.08);
+
+        this.velocity = this.jumpStrength * this.flapStrength;
+        this.isFlapping = true;
+        this.flapTimer = 12;
+
+        // Burst particles on flap
+        for (let i = 0; i < 6; i++) {
+            this.trail.push({
+                x: this.x + this.width * 0.25,
+                y: this.y + this.height / 2 + (Math.random() - 0.5) * this.height,
+                vx: -1.5 - Math.random() * 2,
+                vy: (Math.random() - 0.5) * 3,
+                life: 1,
+                size: 2 + Math.random() * 3,
+            });
         }
-        
-        this.imageLoaded = false;
-        
-        this.image.onload = () => {
-            this.imageLoaded = true;
-            console.log('Bird image loaded successfully');
-        };
-        
-        this.image.onerror = () => {
-            console.log('Failed to load bird image, using placeholder');
-            this.usePlaceholder();
-        };
-        
-        // Bird animation frames
-        this.frames = 3;
-        
-        // Create fallback colors for simple drawing
-        this.bodyColor = '#FFEB3B'; // Yellow 
-        this.wingColor = '#FFC107'; // Dark yellow
-        this.beakColor = '#FF5722'; // Orange
 
-        // Animation properties
-        this.flapSpeed = 5; // Normal flap speed
-        this.flappingTime = 0; // Track how long we've been actively flapping
-        this.isFlapping = false; // Whether the bird is actively flapping
-        this.flapAnimationDuration = 15; // Duration of flap animation frames
-        
-        // Additional properties for responsive wing movement
-        this.flapStrength = 1.0; // Varies with user input timing
-        this.lastFlapTime = 0; // When the user last flapped
+        // Vibrate on mobile
+        if (navigator.vibrate) navigator.vibrate(8);
     }
 
-    usePlaceholder() {
-        if (window.placeholderImages && window.placeholderImages.bird) {
-            // Use the generated placeholder
-            this.image = new Image();
-            this.image.src = window.placeholderImages.bird;
-            this.imageLoaded = true;
-            this.usePlaceholderImages = true;
-            console.log('Bird using placeholder image');
-        }
-    }
-    
-    useRealImage() {
-        // Switch to real image
-        this.image = new Image();
-        this.image.src = './img/bird.png';
-        this.usePlaceholderImages = false;
-        
-        // Handle load events
-        this.image.onload = () => {
-            this.imageLoaded = true;
-            console.log('Bird image loaded successfully');
-        };
-        
-        this.image.onerror = () => {
-            console.log('Failed to load bird image, falling back to placeholder');
-            this.usePlaceholder();
-        };
-    }
-
+    /* ── per-frame update ── */
     update() {
-        // Apply gravity
         this.velocity += this.gravity;
         this.y += this.velocity;
-        
-        // Handle animation - make wings respond to velocity and flapping
-        this.frameCount++;
-        
-        // When actively flapping (right after user input), animate wings quickly
+        if (this.y < 0) { this.y = 0; this.velocity = 0; }
+
+        // Rotation: tilt up when rising, dive when falling
+        const targetRot = Math.max(-0.45, Math.min(Math.PI / 2.5, this.velocity * 0.07));
+        this.rotation += (targetRot - this.rotation) * 0.12;
+
+        // Wing animation
         if (this.isFlapping) {
-            // Count down the active flapping time
-            this.flappingTime--;
-            
-            // Force frame to go through the sequence 0->1->2
-            if (this.flappingTime <= 0) {
-                this.isFlapping = false;
-                // Go to natural gliding animation
-            } else if (this.flappingTime > this.flapAnimationDuration * 0.66) {
-                this.frameIndex = 0; // Wings up
-            } else if (this.flappingTime > this.flapAnimationDuration * 0.33) {
-                this.frameIndex = 1; // Wings middle
-            } else {
-                this.frameIndex = 2; // Wings down
-            }
-        } 
-        // When falling or gliding, animate wings based on velocity
-        else {
-            // Make wings go up when rising and down when falling
-            if (this.frameCount >= this.flapSpeed) {
-                this.frameCount = 0;
-                
-                if (this.velocity < -2) {
-                    // Rising quickly - wings up
-                    this.frameIndex = 0;
-                } else if (this.velocity < 2) {
-                    // Neutral/slow - wings middle
-                    this.frameIndex = 1;
-                } else {
-                    // Falling - wings down
-                    this.frameIndex = 2;
-                }
-            }
+            this.wingPhase += 0.5;
+            this.flapTimer--;
+            if (this.flapTimer <= 0) this.isFlapping = false;
+        } else {
+            this.wingPhase += this.wingSpeed;
         }
-        
-        // Prevent bird from going off the top of the screen
-        if (this.y < 0) {
-            this.y = 0;
-            this.velocity = 0;
+
+        // Passive trail
+        if (Math.random() < 0.4) {
+            this.trail.push({
+                x: this.x + 4,
+                y: this.y + this.height / 2 + (Math.random() - 0.5) * 8,
+                vx: -0.8 - Math.random(),
+                vy: (Math.random() - 0.5) * 0.5,
+                life: 1,
+                size: 1.5 + Math.random() * 1.5,
+            });
+        }
+
+        // Update trail
+        for (let i = this.trail.length - 1; i >= 0; i--) {
+            const p = this.trail[i];
+            p.x += p.vx;
+            p.y += p.vy;
+            p.life -= 0.04;
+            if (p.life <= 0) this.trail.splice(i, 1);
+        }
+        if (this.trail.length > this.maxTrail * 3) {
+            this.trail.splice(0, this.trail.length - this.maxTrail * 3);
         }
     }
 
+    /* ── draw ── */
     draw() {
-        try {
-            if (this.imageLoaded && this.image.complete && this.image.naturalWidth > 0) {
-                // Draw from sprite sheet
-                const frameHeight = this.image.height / this.frames;
-                
-                this.ctx.drawImage(
-                    this.image,
-                    0,
-                    this.frameIndex * frameHeight, 
-                    this.image.width,
-                    frameHeight,
-                    this.x,
-                    this.y,
-                    this.width,
-                    this.height
-                );
-            } else {
-                // Fallback to simple drawing
-                this.drawFallbackBird();
-            }
-        } catch (e) {
-            console.error('Error drawing bird:', e);
-            this.drawFallbackBird();
+        const ctx = this.ctx;
+
+        // Draw trail
+        for (const p of this.trail) {
+            ctx.globalAlpha = p.life * 0.5;
+            ctx.fillStyle = this.glowColor;
+            ctx.shadowColor = this.glowColor;
+            ctx.shadowBlur = 8;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+            ctx.fill();
         }
-    }
-    
-    drawFallbackBird() {
-        const centerX = this.x + this.width / 2;
-        const centerY = this.y + this.height / 2;
-        
-        // Draw body
-        this.ctx.fillStyle = this.bodyColor;
-        this.ctx.beginPath();
-        this.ctx.ellipse(centerX, centerY, this.width/2 - 5, this.height/2 - 5, 0, 0, Math.PI * 2);
-        this.ctx.fill();
-        
-        // Draw wing - position based on frame and flapping state
-        this.ctx.fillStyle = this.wingColor;
-        this.ctx.beginPath();
-        
-        // Wing animation is more exaggerated during active flapping
-        const wingOffset = this.isFlapping ? 1.5 : 1.0;
-        
-        if (this.frameIndex === 0) {
-            // Wing up (active flap or rising)
-            const wingHeight = this.isFlapping ? this.height/5 : this.height/6;
-            this.ctx.ellipse(
-                centerX - 5, 
-                centerY - 8 * wingOffset, 
-                this.width/4, 
-                wingHeight, 
-                Math.PI/4, 
-                0, 
-                Math.PI * 2
-            );
-        } else if (this.frameIndex === 1) {
-            // Wing middle (neutral)
-            this.ctx.ellipse(
-                centerX - 5, 
-                centerY, 
-                this.width/4, 
-                this.height/6, 
-                0, 
-                0, 
-                Math.PI * 2
-            );
-        } else {
-            // Wing down (falling or end of flap)
-            const wingHeight = this.isFlapping ? this.height/5 : this.height/6;
-            this.ctx.ellipse(
-                centerX - 5, 
-                centerY + 8 * wingOffset, 
-                this.width/4, 
-                wingHeight, 
-                -Math.PI/4, 
-                0, 
-                Math.PI * 2
-            );
-        }
-        this.ctx.fill();
-        
-        // Draw eye
-        this.ctx.fillStyle = 'white';
-        this.ctx.beginPath();
-        this.ctx.arc(centerX + 10, centerY - 5, 5, 0, Math.PI * 2);
-        this.ctx.fill();
-        
-        this.ctx.fillStyle = 'black';
-        this.ctx.beginPath();
-        this.ctx.arc(centerX + 12, centerY - 5, 2, 0, Math.PI * 2);
-        this.ctx.fill();
-        
-        // Draw beak
-        this.ctx.fillStyle = this.beakColor;
-        this.ctx.beginPath();
-        this.ctx.moveTo(centerX + 15, centerY - 3);
-        this.ctx.lineTo(centerX + 25, centerY);
-        this.ctx.lineTo(centerX + 15, centerY + 3);
-        this.ctx.closePath();
-        this.ctx.fill();
+        ctx.globalAlpha = 1;
+        ctx.shadowBlur = 0;
+
+        // Save and rotate around bird center
+        ctx.save();
+        const cx = this.x + this.width / 2;
+        const cy = this.y + this.height / 2;
+        ctx.translate(cx, cy);
+        ctx.rotate(this.rotation);
+
+        // Outer glow
+        ctx.shadowColor = this.glowColor;
+        ctx.shadowBlur = 22;
+
+        // Body
+        ctx.fillStyle = this.bodyColor;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, this.width / 2, this.height / 2, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Inner highlight
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = 'rgba(255,255,255,0.18)';
+        ctx.beginPath();
+        ctx.ellipse(-3, -4, this.width / 3, this.height / 4, -0.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Wing
+        const wingY = Math.sin(this.wingPhase) * 8;
+        ctx.fillStyle = this.wingColor;
+        ctx.shadowColor = this.wingColor;
+        ctx.shadowBlur = 10;
+        ctx.beginPath();
+        ctx.ellipse(-5, wingY, this.width / 3.5, this.height / 3, wingY * 0.04, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        // Eye
+        ctx.fillStyle = '#fff';
+        ctx.beginPath();
+        ctx.arc(this.width / 4 + 2, -this.height / 6, 5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#111';
+        ctx.beginPath();
+        ctx.arc(this.width / 4 + 3.5, -this.height / 6, 2.2, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Beak
+        ctx.fillStyle = '#ff8800';
+        ctx.shadowColor = '#ff8800';
+        ctx.shadowBlur = 4;
+        ctx.beginPath();
+        ctx.moveTo(this.width / 2 - 4, -3);
+        ctx.lineTo(this.width / 2 + 6, 0);
+        ctx.lineTo(this.width / 2 - 4, 3);
+        ctx.closePath();
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.restore();
     }
 
-    flap() {
-        // Calculate flap strength based on timing
-        const now = Date.now();
-        const timeSinceLastFlap = now - this.lastFlapTime;
-        this.lastFlapTime = now;
-        
-        // Rapid clicking gives less strength, spaced clicks give more
-        // On mobile, be more forgiving with the timing
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const minGoodInterval = isMobile ? 150 : 200;
-        
-        if (timeSinceLastFlap < minGoodInterval) {
-            // Rapid clicking, reduce effectiveness, but not as much on mobile
-            const reduction = isMobile ? 0.95 : 0.9;
-            this.flapStrength = Math.max(0.8, this.flapStrength * reduction);
-        } else {
-            // Well-timed flapping, increase effectiveness
-            const boost = isMobile ? 1.05 : 1.1;
-            this.flapStrength = Math.min(1.2, this.flapStrength * boost);
-        }
-        
-        // Apply jump velocity with strength modifier (and consider current velocity)
-        // Improved formula for better feel across different gravities
-        const velocityScale = Math.min(1, Math.abs(this.velocity / 8) + 0.7);
-        this.velocity = this.jumpStrength * this.flapStrength * velocityScale;
-        
-        // Start the flapping animation sequence
-        this.isFlapping = true;
-        this.flappingTime = this.flapAnimationDuration;
-        this.frameIndex = 0; // Start with wings up
-        
-        // Vibrate device for tactile feedback on mobile
-        if (isMobile && navigator.vibrate) {
-            navigator.vibrate(10); // Subtle vibration
-        }
-    }
-
+    /* ── hitbox ── */
     getBounds() {
-        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        const margin = isMobile ? 7 : 5; // More forgiving on mobile
-        
+        const m = 6;
         return {
-            left: this.x + margin,
-            top: this.y + margin,
-            right: this.x + this.width - margin,
-            bottom: this.y + this.height - margin
+            left: this.x + m,
+            top: this.y + m,
+            right: this.x + this.width - m,
+            bottom: this.y + this.height - m,
         };
     }
 
@@ -295,70 +227,9 @@ class Bird {
         this.x = x;
         this.y = y;
         this.velocity = 0;
-        this.frameIndex = 1; // Middle position
-        this.isFlapping = false;
-        this.flappingTime = 0;
-        this.flapStrength = 1.0;
+        this.rotation = 0;
+        this.trail = [];
+        this.flapStrength = 1;
         this.lastFlapTime = 0;
-    }
-
-    reloadImage() {
-        if (this.usePlaceholderImages && window.placeholderImages && window.placeholderImages.bird) {
-            this.image.src = window.placeholderImages.bird;
-            this.imageLoaded = true;
-        }
-    }
-    
-    setGravity(gravityFactor, planetName) {
-        // Scale gravity based on the celestial body
-        this.gravity = this.baseGravity * gravityFactor;
-        
-        // Adjust jump strength to be appropriate for the gravity
-        // This ensures the gameplay remains challenging but fair
-        this.jumpStrength = this.baseJumpStrength * Math.sqrt(gravityFactor + 0.5);
-        
-        // Additional adjustment for higher gravity bodies
-        if (gravityFactor > 1.5) {
-            // Give a bit more jump power at high gravity
-            this.jumpStrength *= 1.2;
-        } else if (gravityFactor < 0.2) {
-            // Reduce jump power slightly at very low gravity
-            this.jumpStrength *= 0.9;
-        }
-        
-        // Adjust bird appearance based on planet
-        this.setPlanetaryAppearance(planetName);
-        
-        console.log(`Bird gravity set to ${this.gravity} (${planetName}), jump strength: ${this.jumpStrength}`);
-    }
-    
-    setPlanetaryAppearance(planetName) {
-        // Adjust bird appearance based on the celestial body
-        switch (planetName) {
-            case 'Moon':
-                // On moon, low gravity means slower flapping
-                this.flapSpeed = 8;
-                this.flapAnimationDuration = 20;
-                break;
-                
-            case 'Sun':
-                // On sun, extreme conditions mean rapid flapping
-                this.flapSpeed = 3;
-                this.flapAnimationDuration = 10;
-                // Faster falling on sun due to extreme gravity
-                this.gravity *= 1.1;
-                break;
-                
-            case 'Jupiter':
-                // On Jupiter, strong gravity but more manageable
-                this.flapSpeed = 4;
-                this.flapAnimationDuration = 12;
-                break;
-                
-            default: // Earth
-                this.flapSpeed = 5;
-                this.flapAnimationDuration = 15;
-                break;
-        }
     }
 }

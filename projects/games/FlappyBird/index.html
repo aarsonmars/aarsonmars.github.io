@@ -3,162 +3,110 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <link rel="stylesheet" href="style.css" />
-    <title>Space Flappy Bird</title>
-    <!-- The game now uses planetary gravity settings -->
-    <!-- Added mobile-specific meta tags -->
+    <title>Neon Flap — Space Bird</title>
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#4287f5">
-    
-    <!-- Prevent iOS phone number detection -->
+    <meta name="theme-color" content="#0a0a1a">
     <meta name="format-detection" content="telephone=no">
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="img/bird.png" as="image">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css" />
   </head>
 
   <body>
-    <main>
-      <h1 id="gameTitle">Space Flappy Bird</h1>
-      <div id="levelAndScore">
-        <div id="gravityText">Gravity: <span id="gravity">Earth</span></div>
-        <div id="score">Score: 0</div>
-      </div>
-      <canvas id="myCanvas" width="800" height="500"></canvas>
-      <div id="startScreen" class="planet-selection">
-        <h2>Choose Your Planet:</h2>
-        <div id="planet-selector">
-          <div class="planet-option" data-gravity="0.16" data-name="Moon" data-color="#D1D1D1">
-            <div class="planet-icon moon"></div>
-            <span>Moon</span>
-            <div class="gravity-info">Gravity: 0.16g</div>
-          </div>
-          <div class="planet-option selected" data-gravity="0.5" data-name="Earth" data-color="#4287f5">
-            <div class="planet-icon earth"></div>
-            <span>Earth</span>
-            <div class="gravity-info">Gravity: 1.0g</div>
-          </div>
-          <div class="planet-option" data-gravity="1.0" data-name="Jupiter" data-color="#E8B247">
-            <div class="planet-icon jupiter"></div>
-            <span>Jupiter</span>
-            <div class="gravity-info">Gravity: 2.6g</div>
-          </div>
-          <div class="planet-option" data-gravity="3.0" data-name="Sun" data-color="#FFA500">
-            <div class="planet-icon sun"></div>
-            <span>Sun</span>
-            <div class="gravity-info">Gravity: 27.1g</div>
+    <!-- Rotate-to-landscape prompt (mobile only, CSS-driven) -->
+    <div id="rotate-prompt">
+      <div class="rotate-icon">📱</div>
+      <div class="rotate-msg">ROTATE YOUR DEVICE</div>
+      <div class="rotate-sub">This game plays best in landscape mode</div>
+    </div>
+
+    <div id="game-wrapper">
+      <!-- HUD -->
+      <div id="hud">
+        <div id="hud-left">
+          <div id="planet-badge">
+            <span id="planet-icon-hud">🌍</span>
+            <span id="planet-name-hud">Earth</span>
           </div>
         </div>
-        <button id="start-game-btn" class="pulse-button">Start Game</button>
+        <div id="hud-center">
+          <div id="score-display">0</div>
+        </div>
+        <div id="hud-right">
+          <div id="best-score-display">BEST: <span id="best-score">0</span></div>
+        </div>
       </div>
-      <div id="gameOverScreen" class="hidden">Game Over<br><span id="finalScore"></span><br>Tap to Choose Planet</div>
-      <div id="infoText" style="font-size: 12px; color: #666; text-align: center; margin-top: 10px;">
-        Using placeholder images. Press Debug button to switch to real images if available.
-      </div>
-    </main>
 
-    <!-- Rotate screen message and button -->
-    <div id="rotate-screen" class="hidden">
-      <div class="rotate-message">
-        <p>Please rotate your device for a better experience!</p>
-        <button id="rotate-button">Rotate Screen</button>
+      <!-- Canvas -->
+      <canvas id="gameCanvas"></canvas>
+
+      <!-- Start / Menu Screen -->
+      <div id="menu-screen" class="overlay-screen">
+        <div class="screen-content glass">
+          <h1 class="neon-title">NEON FLAP</h1>
+          <p class="subtitle">Choose your gravity</p>
+          <div id="planet-selector">
+            <button class="planet-btn" data-gravity="0.16" data-name="Moon" data-icon="🌙" data-color="#b0b0d0">
+              <span class="planet-emoji">🌙</span>
+              <span class="planet-label">Moon</span>
+              <span class="planet-g">0.16g</span>
+            </button>
+            <button class="planet-btn selected" data-gravity="0.5" data-name="Earth" data-icon="🌍" data-color="#00e5ff">
+              <span class="planet-emoji">🌍</span>
+              <span class="planet-label">Earth</span>
+              <span class="planet-g">1.0g</span>
+            </button>
+            <button class="planet-btn" data-gravity="1.0" data-name="Jupiter" data-icon="🪐" data-color="#ffab40">
+              <span class="planet-emoji">🪐</span>
+              <span class="planet-label">Jupiter</span>
+              <span class="planet-g">2.6g</span>
+            </button>
+            <button class="planet-btn" data-gravity="3.0" data-name="Sun" data-icon="☀️" data-color="#ff5252">
+              <span class="planet-emoji">☀️</span>
+              <span class="planet-label">Sun</span>
+              <span class="planet-g">27.1g</span>
+            </button>
+          </div>
+          <button id="play-btn" class="glow-btn">
+            <span>LAUNCH</span>
+          </button>
+          <p class="hint-text">Space / Click / Tap to flap</p>
+        </div>
+      </div>
+
+      <!-- Game Over Screen -->
+      <div id="gameover-screen" class="overlay-screen hidden">
+        <div class="screen-content glass">
+          <h2 class="gameover-title">GAME OVER</h2>
+          <div id="final-score-container">
+            <div class="final-score-label">SCORE</div>
+            <div id="final-score" class="final-score-value">0</div>
+          </div>
+          <div id="new-best" class="new-best hidden">★ NEW BEST ★</div>
+          <div id="final-best-container">
+            <span class="final-best-label">BEST:</span>
+            <span id="final-best" class="final-best-value">0</span>
+          </div>
+          <button id="retry-btn" class="glow-btn">
+            <span>RETRY</span>
+          </button>
+          <button id="menu-btn" class="ghost-btn">CHANGE PLANET</button>
+        </div>
+      </div>
+
+      <!-- Get Ready overlay -->
+      <div id="ready-screen" class="overlay-screen hidden">
+        <div class="ready-text">GET READY</div>
+        <div class="ready-hint">Tap to flap!</div>
       </div>
     </div>
 
-    <!-- Load placeholder generator first -->
-    <script src="img/placeholder.js"></script>
-    
-    <!-- Game components -->
+    <!-- Game scripts -->
     <script src="bird.js"></script>
     <script src="pipe.js"></script>
     <script src="game.js"></script>
-    
-    <!-- Debug helper -->
-    <script src="debug-helper.js"></script>
-
-    <!-- Load touch controls for mobile devices -->
-    <script src="mobile-controls.js"></script>
-
-    <script>
-      // Initialize the game to use placeholders by default
-      document.addEventListener('DOMContentLoaded', () => {
-        if (typeof generateAndApplyPlaceholders === 'function') {
-          generateAndApplyPlaceholders();
-        }
-        
-        // Set up planet selection
-        const planetOptions = document.querySelectorAll('.planet-option');
-        planetOptions.forEach(option => {
-          option.addEventListener('click', () => {
-            // Remove selected class from all options
-            planetOptions.forEach(opt => opt.classList.remove('selected'));
-            // Add selected class to clicked option
-            option.classList.add('selected');
-            
-            // Update start button to reflect planet choice
-            updateStartButtonText();
-          });
-        });
-        
-        // Update start button text based on selected planet
-        function updateStartButtonText() {
-          const selectedPlanet = document.querySelector('.planet-option.selected');
-          const startBtn = document.getElementById('start-game-btn');
-          if (selectedPlanet && startBtn) {
-            const planetName = selectedPlanet.dataset.name;
-            startBtn.textContent = `Play on ${planetName}`;
-          }
-        }
-        
-        // Initialize button text
-        updateStartButtonText();
-        
-        // Start game button
-        const startBtn = document.getElementById('start-game-btn');
-        if (startBtn) {
-          startBtn.addEventListener('click', (e) => {
-            // Prevent event from bubbling to the startScreen
-            e.stopPropagation();
-            
-            const selectedPlanet = document.querySelector('.planet-option.selected');
-            if (selectedPlanet && window.game) {
-              const gravity = parseFloat(selectedPlanet.dataset.gravity);
-              const planetName = selectedPlanet.dataset.name;
-              const planetColor = selectedPlanet.dataset.color;
-              
-              // Set game gravity
-              window.game.setGravity(gravity, planetName, planetColor);
-              window.game.start();
-              
-              // Explicitly hide the start screen
-              document.getElementById('startScreen').classList.add('hidden');
-            }
-          });
-        }
-
-        // Prevent scrolling on touch devices
-        document.addEventListener('touchmove', function(e) {
-          if (e.target.nodeName !== 'INPUT') {
-            e.preventDefault();
-          }
-        }, { passive: false });
-        
-        // Fix iOS audio context issues
-        document.addEventListener('touchstart', function() {
-          // Create and play a silent sound to unlock audio on iOS
-          const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-          const gainNode = audioContext.createGain();
-          gainNode.gain.value = 0;
-          gainNode.connect(audioContext.destination);
-          
-          const oscillator = audioContext.createOscillator();
-          oscillator.connect(gainNode);
-          oscillator.start(0);
-          oscillator.stop(0.001);
-        }, { once: true });
-      });
-    </script>
   </body>
 </html>
