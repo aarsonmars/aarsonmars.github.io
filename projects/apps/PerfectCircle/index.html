@@ -3,35 +3,123 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0c0c18">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Perfect Circle</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
+    <canvas id="confettiCanvas"></canvas>
+
+    <div class="app">
         <header>
+            <a href="../../" class="back-link" title="Back to Projects">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+                Projects
+            </a>
             <h1>Perfect Circle</h1>
-            <p>Draw a circle with your finger or mouse to see how perfect it is!</p>
         </header>
-        
-        <div class="canvas-container">
-            <canvas id="drawCanvas"></canvas>
-        </div>
-        
-        <div class="stats-container">
-            <div id="stats" aria-live="polite"></div>
-            <div class="score-display">
-                <div id="score">0%</div>
-                <div>Perfectness</div>
+
+        <div class="main-layout">
+            <!-- Left: Canvas -->
+            <div class="game-panel">
+                <div class="canvas-wrap">
+                    <canvas id="drawCanvas"></canvas>
+                    <div class="canvas-hint" id="canvasHint">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9" stroke-dasharray="4 3"/></svg>
+                        <span>Draw here</span>
+                    </div>
+                    <!-- Score overlay on canvas -->
+                    <div class="score-badge" id="scoreBadge">
+                        <svg class="score-ring" viewBox="0 0 120 120">
+                            <circle class="score-ring-bg" cx="60" cy="60" r="52" />
+                            <circle class="score-ring-fill" id="scoreRing" cx="60" cy="60" r="52" />
+                        </svg>
+                        <div class="score-ring-text">
+                            <span id="score" class="score-value">0</span>
+                            <span class="score-label">%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Info -->
+            <div class="info-panel">
+                <div class="breakdown-grid" id="breakdownGrid">
+                    <div class="breakdown-card">
+                        <div class="breakdown-label">Roundness</div>
+                        <div class="breakdown-value" id="metricRoundness">—</div>
+                    </div>
+                    <div class="breakdown-card">
+                        <div class="breakdown-label">Closure</div>
+                        <div class="breakdown-value" id="metricClosure">—</div>
+                    </div>
+                    <div class="breakdown-card">
+                        <div class="breakdown-label">Consistency</div>
+                        <div class="breakdown-value" id="metricConsistency">—</div>
+                    </div>
+                    <div class="breakdown-card">
+                        <div class="breakdown-label">Time</div>
+                        <div class="breakdown-value" id="metricTime">—</div>
+                    </div>
+                </div>
+
+                <div class="controls">
+                    <button id="clearBtn" class="btn btn-secondary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18"/><path d="M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+                        Clear
+                    </button>
+                    <button id="toggleBtn" class="btn btn-secondary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/></svg>
+                        Fit
+                    </button>
+                    <button id="challengeBtn" class="btn btn-primary">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+                        Challenge
+                    </button>
+                </div>
+
+                <div class="history-section">
+                    <div class="history-header">
+                        <span class="history-title">Stats</span>
+                        <button id="clearHistoryBtn" class="btn-text" title="Clear history">Clear</button>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-card glow">
+                            <div class="stat-value" id="bestScore">—</div>
+                            <div class="stat-label">Best</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="avgScore">—</div>
+                            <div class="stat-label">Avg</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="totalAttempts">0</div>
+                            <div class="stat-label">Tries</div>
+                        </div>
+                    </div>
+                    <div class="history-chart" id="historyChart"></div>
+                </div>
             </div>
         </div>
-        
-        <div class="controls">
-            <button id="clearBtn" class="btn">Clear Canvas</button>
-            <button id="toggleBtn" class="btn">Toggle Fit Circle</button>
+    </div>
+
+    <!-- Challenge mode overlay -->
+    <div class="challenge-overlay" id="challengeOverlay">
+        <div class="challenge-modal">
+            <h3>Challenge Mode</h3>
+            <p>Trace the ghost circle as accurately as you can!</p>
+            <div class="challenge-sizes">
+                <button class="challenge-size-btn" data-size="small">Small</button>
+                <button class="challenge-size-btn active" data-size="medium">Medium</button>
+                <button class="challenge-size-btn" data-size="large">Large</button>
+            </div>
+            <button class="btn btn-primary" id="startChallengeBtn">Start Challenge</button>
+            <button class="btn btn-secondary" id="cancelChallengeBtn">Cancel</button>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
