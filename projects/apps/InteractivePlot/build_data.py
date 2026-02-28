@@ -23,6 +23,13 @@ df = df.dropna(subset=['Year'])
 
 print(f"✅ Loaded {len(df):,} records")
 
+def clean_str(val):
+    """Clean string values - handle NaN, None, and empty strings"""
+    if val is None or (isinstance(val, float) and pd.isna(val)) or str(val).strip().lower() == 'nan':
+        return 'Unknown'
+    s = str(val).strip()
+    return s if s else 'Unknown'
+
 # Show year distribution
 print("\n📅 Year Distribution:")
 year_counts = df['Year'].value_counts().sort_index()
@@ -52,9 +59,9 @@ for idx, row in df.iterrows():
         'ped': 1 if row.get('Pedestrian Collision', '') == 'Y' else 0,
         'bike': 1 if row.get('Bicycle Collision', '') == 'Y' else 0,
         'imp': 1 if row.get('Impaired Driving', '') == 'Y' else 0,
-        'weather': str(row.get('Weather Condition', 'Unknown'))[:20],
-        'road': str(row.get('Road Configuration', 'Unknown'))[:25],
-        'light': str(row.get('Light Condition', 'Unknown'))[:15]
+        'weather': clean_str(row.get('Weather Condition', 'Unknown')),
+        'road': clean_str(row.get('Road Configuration', 'Unknown')),
+        'light': clean_str(row.get('Light Condition', 'Unknown'))
     }
     collisions.append(collision)
 

@@ -33,6 +33,13 @@ async function loadData() {
     const response = await fetch('src/data.json');
     state.data = await response.json();
     
+    // Sanitize string fields - convert 'nan' to 'Unknown'
+    state.data.collisions.forEach(c => {
+        if (!c.weather || c.weather === 'nan') c.weather = 'Unknown';
+        if (!c.road || c.road === 'nan') c.road = 'Unknown';
+        if (!c.light || c.light === 'nan') c.light = 'Unknown';
+    });
+    
     // Exclude 2025 by default (incomplete data)
     state.filters.years = state.data.meta.years.filter(y => y !== INCOMPLETE_YEAR);
     
@@ -226,7 +233,9 @@ function calculateStats(collisions) {
         byYear: {},
         bySeason: { winter: 0, spring: 0, summer: 0, fall: 0 },
         byWeather: {},
-        byDay: new Array(7).fill(0)
+        byDay: new Array(7).fill(0),
+        byRoad: {},
+        byLight: {}
     };
     
     collisions.forEach(c => {
@@ -235,6 +244,10 @@ function calculateStats(collisions) {
         stats.byYear[c.year] = (stats.byYear[c.year] || 0) + 1;
         stats.byWeather[c.weather] = (stats.byWeather[c.weather] || 0) + 1;
         stats.byDay[c.dow]++;
+        const road = c.road || 'Unknown';
+        const light = c.light || 'Unknown';
+        stats.byRoad[road] = (stats.byRoad[road] || 0) + 1;
+        stats.byLight[light] = (stats.byLight[light] || 0) + 1;
         
         if (c.month >= 2 && c.month <= 4) stats.bySeason.spring++;
         else if (c.month >= 5 && c.month <= 7) stats.bySeason.summer++;
@@ -245,13 +258,19 @@ function calculateStats(collisions) {
     return stats;
 }
 
+function calculateCSI(stats) {
+    // Collision Severity Index: PDO×1 + Injury×3 + Fatal×12
+    const pdo = stats.total - stats.injury - stats.fatal;
+    return (pdo * 1) + (stats.injury * 3) + (stats.fatal * 12);
+}
+
 function updateCircleStats(stats) {
     document.getElementById('statTotal').textContent = stats.total.toLocaleString();
     document.getElementById('statFatal').textContent = stats.fatal;
     document.getElementById('statInjury').textContent = stats.injury;
     
-    const fatalRate = stats.total > 0 ? ((stats.fatal / stats.total) * 100).toFixed(2) : '0.00';
-    document.getElementById('statRate').textContent = fatalRate + '%';
+    const csi = calculateCSI(stats);
+    document.getElementById('statCSI').textContent = csi.toLocaleString();
 }
 
 function updateStoryPanel(collisions, stats) {
@@ -262,6 +281,7 @@ function updateStoryPanel(collisions, stats) {
         case 'seasonal': renderSeasonalStory(container, stats); break;
         case 'time': renderTimeStory(container, stats); break;
         case 'safety': renderSafetyStory(container, stats); break;
+        case 'vulnerable': renderVulnerableStory(container, collisions, stats); break;
     }
 }
 
@@ -409,31 +429,63 @@ function renderTimeStory(container, stats) {
 function renderSafetyStory(container, stats) {
     const total = stats.total || 1;
     const fatalRate = ((stats.fatal / total) * 100).toFixed(2);
+    const csi = calculateCSI(stats);
     const weatherSorted = Object.entries(stats.byWeather).sort((a, b) => b[1] - a[1]).slice(0, 4);
+    
+    // Road configuration - shorten labels for display
+    const roadLabels = {
+        'Non-intersection': 'Mid-block',
+        'Intersection - two or more public roads': 'Intersection',
+        'Intersection - private road or access': 'Private Access',
+        'Traffic circle or roundabout': 'Roundabout',
+        'Express lane of a freeway': 'Freeway',
+        'Bridge, overpass or viaduct': 'Bridge',
+        'Passing lane': 'Passing Lane',
+        'Tunnel or underpass': 'Tunnel',
+        'Rail level crossing': 'Rail Crossing',
+        'Light rail transit crossing': 'LRT Crossing',
+        'Ramp': 'Ramp',
+        'Unknown': 'Unknown'
+    };
+    const roadSorted = Object.entries(stats.byRoad)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 5)
+        .map(([k, v]) => [roadLabels[k] || k, v]);
+    
+    // Light conditions
+    const lightSorted = Object.entries(stats.byLight).sort((a, b) => b[1] - a[1]);
+    const lightColors = { 'Daylight': '#FFC107', 'Darkness': '#3F51B5', 'Dusk': '#FF7043', 'Dawn': '#AB47BC', 'Unknown': '#7D8590' };
     
     container.innerHTML = `
         <div class="story-insight ${stats.fatal > 0 ? 'danger' : ''}">
             <div class="insight-icon" style="background: rgba(229, 57, 53, 0.2); color: #E53935">⚠️</div>
             <div class="insight-text">
-                <div class="insight-title">Fatality Rate</div>
-                <div class="insight-value" style="color: #E53935">${fatalRate}%</div>
+                <div class="insight-title">Severity Index (CSI)</div>
+                <div class="insight-value" style="color: #E53935">${csi.toLocaleString()}</div>
             </div>
         </div>
+        <div class="csi-formula">CSI = PDO×1 + Injury×3 + Fatal×12</div>
         <div class="safety-grid">
             <div class="safety-card"><div class="safety-value" style="color: #E53935">${stats.fatal}</div><div class="safety-label">Fatal</div></div>
             <div class="safety-card"><div class="safety-value" style="color: #FB8C00">${stats.injury}</div><div class="safety-label">Injuries</div></div>
             <div class="safety-card"><div class="safety-value" style="color: #8E24AA">${stats.pedestrian}</div><div class="safety-label">Pedestrian</div></div>
-            <div class="safety-card"><div class="safety-value" style="color: #43A047">${stats.bicycle}</div><div class="safety-label">Bicycle</div></div>
+            <div class="safety-card"><div class="safety-value" style="color: #D81B60">${stats.impaired}</div><div class="safety-label">Impaired</div></div>
         </div>
         <div class="chart-box"><div id="severityChart"></div></div>
         <div class="story-detail">
-            <div class="detail-title">Weather Conditions</div>
-            ${weatherSorted.map(([w, count]) => `<div class="detail-row"><span>${w}</span><span class="detail-value">${count}</span></div>`).join('')}
+            <div class="detail-title">Road Configuration</div>
+            ${roadSorted.map(([r, count]) => {
+                const pct = ((count / total) * 100).toFixed(0);
+                return `<div class="detail-row"><span>${r}</span><div class="mini-bar"><div class="mini-fill" style="width: ${(count / roadSorted[0][1]) * 100}%"></div></div><span class="detail-value">${count} <small>(${pct}%)</small></span></div>`;
+            }).join('')}
         </div>
         <div class="story-detail">
-            <div class="detail-title">Impaired Driving</div>
-            <div class="detail-row"><span>🍺 Impaired incidents</span><span class="detail-value" style="color: #D81B60">${stats.impaired}</span></div>
-            <div class="detail-row"><span>Rate of total</span><span class="detail-value">${((stats.impaired/total)*100).toFixed(1)}%</span></div>
+            <div class="detail-title">Light Conditions</div>
+            <div id="lightChart" style="height: 80px;"></div>
+        </div>
+        <div class="story-detail">
+            <div class="detail-title">Weather Conditions</div>
+            ${weatherSorted.map(([w, count]) => `<div class="detail-row"><span>${w}</span><span class="detail-value">${count}</span></div>`).join('')}
         </div>
     `;
     
@@ -443,6 +495,131 @@ function renderSafetyStory(container, stats) {
         hole: 0.65, marker: { colors: ['#43A047', '#FB8C00', '#E53935'] },
         textinfo: 'percent', textposition: 'outside', textfont: { size: 11, color: '#E6EDF3' }, sort: false
     }], { ...chartLayout(), margin: { t: 25, r: 40, b: 25, l: 40 } }, chartConfig());
+    
+    // Light condition bar chart
+    if (lightSorted.length > 0) {
+        Plotly.react('lightChart', [{
+            type: 'bar',
+            x: lightSorted.map(([l]) => l),
+            y: lightSorted.map(([, v]) => v),
+            marker: { color: lightSorted.map(([l]) => lightColors[l] || '#7D8590') }
+        }], { ...chartLayout(), margin: { t: 5, r: 5, b: 25, l: 30 }, yaxis: { showticklabels: false } }, chartConfig());
+    }
+}
+
+// STORY 5: Vulnerable Road Users
+function renderVulnerableStory(container, collisions, stats) {
+    const total = stats.total || 1;
+    const pedCollisions = collisions.filter(c => c.ped);
+    const bikeCollisions = collisions.filter(c => c.bike);
+    const vuln = pedCollisions.length + bikeCollisions.length;
+    
+    // Severity comparison
+    const pedFatal = pedCollisions.filter(c => c.sev === 2).length;
+    const pedInjury = pedCollisions.filter(c => c.sev === 1).length;
+    const bikeFatal = bikeCollisions.filter(c => c.sev === 2).length;
+    const bikeInjury = bikeCollisions.filter(c => c.sev === 1).length;
+    const pedSeverityRate = pedCollisions.length > 0 ? (((pedFatal + pedInjury) / pedCollisions.length) * 100).toFixed(1) : '0.0';
+    const bikeSeverityRate = bikeCollisions.length > 0 ? (((bikeFatal + bikeInjury) / bikeCollisions.length) * 100).toFixed(1) : '0.0';
+    const overallSeverityRate = total > 0 ? (((stats.fatal + stats.injury) / total) * 100).toFixed(1) : '0.0';
+    
+    // Hourly distribution for vulnerable users
+    const pedByHour = new Array(24).fill(0);
+    const bikeByHour = new Array(24).fill(0);
+    pedCollisions.forEach(c => pedByHour[c.hour]++);
+    bikeCollisions.forEach(c => bikeByHour[c.hour]++);
+    
+    // Seasonal patterns
+    const pedBySeason = { winter: 0, spring: 0, summer: 0, fall: 0 };
+    const bikeBySeason = { winter: 0, spring: 0, summer: 0, fall: 0 };
+    pedCollisions.forEach(c => {
+        if (c.month >= 2 && c.month <= 4) pedBySeason.spring++;
+        else if (c.month >= 5 && c.month <= 7) pedBySeason.summer++;
+        else if (c.month >= 8 && c.month <= 10) pedBySeason.fall++;
+        else pedBySeason.winter++;
+    });
+    bikeCollisions.forEach(c => {
+        if (c.month >= 2 && c.month <= 4) bikeBySeason.spring++;
+        else if (c.month >= 5 && c.month <= 7) bikeBySeason.summer++;
+        else if (c.month >= 8 && c.month <= 10) bikeBySeason.fall++;
+        else bikeBySeason.winter++;
+    });
+    
+    // Light condition analysis for vulnerable users
+    const pedByLight = {};
+    const bikeByLight = {};
+    pedCollisions.forEach(c => { const l = c.light || 'Unknown'; pedByLight[l] = (pedByLight[l] || 0) + 1; });
+    bikeCollisions.forEach(c => { const l = c.light || 'Unknown'; bikeByLight[l] = (bikeByLight[l] || 0) + 1; });
+    const darkPed = (pedByLight['Darkness'] || 0) + (pedByLight['Dusk'] || 0) + (pedByLight['Dawn'] || 0);
+    const darkBike = (bikeByLight['Darkness'] || 0) + (bikeByLight['Dusk'] || 0) + (bikeByLight['Dawn'] || 0);
+    const darkPedPct = pedCollisions.length > 0 ? ((darkPed / pedCollisions.length) * 100).toFixed(0) : '0';
+    const darkBikePct = bikeCollisions.length > 0 ? ((darkBike / bikeCollisions.length) * 100).toFixed(0) : '0';
+    
+    container.innerHTML = `
+        <div class="story-insight">
+            <div class="insight-icon" style="background: rgba(142, 36, 170, 0.2); color: #8E24AA">🚶</div>
+            <div class="insight-text">
+                <div class="insight-title">Vulnerable Road Users</div>
+                <div class="insight-value" style="color: #8E24AA">${vuln} <small style="font-size:12px;color:var(--text-muted)">(${((vuln/total)*100).toFixed(1)}% of all)</small></div>
+            </div>
+        </div>
+        <div class="vuln-grid">
+            <div class="vuln-card ped">
+                <div class="vuln-icon">🚶</div>
+                <div class="vuln-count">${stats.pedestrian}</div>
+                <div class="vuln-label">Pedestrians</div>
+                <div class="vuln-detail">${pedFatal} fatal · ${pedInjury} injury</div>
+                <div class="vuln-severity">Severity rate: <strong>${pedSeverityRate}%</strong></div>
+            </div>
+            <div class="vuln-card bike">
+                <div class="vuln-icon">🚲</div>
+                <div class="vuln-count">${stats.bicycle}</div>
+                <div class="vuln-label">Cyclists</div>
+                <div class="vuln-detail">${bikeFatal} fatal · ${bikeInjury} injury</div>
+                <div class="vuln-severity">Severity rate: <strong>${bikeSeverityRate}%</strong></div>
+            </div>
+        </div>
+        <div class="severity-compare">
+            <div class="detail-title">Injury Rate Comparison</div>
+            <div class="compare-bar-row"><span>All collisions</span><div class="compare-bar"><div class="compare-fill" style="width:${overallSeverityRate}%; background: var(--primary)"></div></div><span>${overallSeverityRate}%</span></div>
+            <div class="compare-bar-row"><span>Pedestrians</span><div class="compare-bar"><div class="compare-fill" style="width:${pedSeverityRate}%; background: #8E24AA"></div></div><span>${pedSeverityRate}%</span></div>
+            <div class="compare-bar-row"><span>Cyclists</span><div class="compare-bar"><div class="compare-fill" style="width:${bikeSeverityRate}%; background: #43A047"></div></div><span>${bikeSeverityRate}%</span></div>
+        </div>
+        <div class="chart-box"><div id="vulnHourChart"></div></div>
+        <div class="story-detail">
+            <div class="detail-title">Seasonal Exposure</div>
+            <div class="season-compare">
+                ${['winter', 'spring', 'summer', 'fall'].map(s => {
+                    const icons = { winter: '❄️', spring: '🌸', summer: '☀️', fall: '🍂' };
+                    return `<div class="season-col">
+                        <div class="season-icon">${icons[s]}</div>
+                        <div class="season-vals">
+                            <span style="color:#8E24AA">${pedBySeason[s]}</span>
+                            <span style="color:#43A047">${bikeBySeason[s]}</span>
+                        </div>
+                    </div>`;
+                }).join('')}
+            </div>
+            <div class="season-legend"><span class="legend-dot" style="background:#8E24AA"></span>Ped <span class="legend-dot" style="background:#43A047; margin-left:8px"></span>Bike</div>
+        </div>
+        <div class="story-detail">
+            <div class="detail-title">Low-Light Collisions</div>
+            <div class="detail-row"><span>🚶 Pedestrians in dark/dusk/dawn</span><span class="detail-value" style="color:#8E24AA">${darkPed} <small>(${darkPedPct}%)</small></span></div>
+            <div class="detail-row"><span>🚲 Cyclists in dark/dusk/dawn</span><span class="detail-value" style="color:#43A047">${darkBike} <small>(${darkBikePct}%)</small></span></div>
+        </div>
+    `;
+    
+    // Hourly chart with pedestrian and cyclist overlaid
+    Plotly.react('vulnHourChart', [
+        { type: 'bar', name: 'Pedestrian', x: Array.from({length: 24}, (_, i) => i), y: pedByHour, marker: { color: 'rgba(142, 36, 170, 0.7)' } },
+        { type: 'bar', name: 'Cyclist', x: Array.from({length: 24}, (_, i) => i), y: bikeByHour, marker: { color: 'rgba(67, 160, 71, 0.7)' } }
+    ], {
+        ...chartLayout(),
+        barmode: 'stack',
+        showlegend: true,
+        legend: { x: 0, y: 1.15, orientation: 'h', font: { size: 10, color: '#7D8590' } },
+        xaxis: { tickvals: [0, 6, 12, 18, 23], ticktext: ['0', '6', '12', '18', '23'], color: '#7D8590', gridcolor: 'rgba(255,255,255,0.05)' }
+    }, chartConfig());
 }
 
 function chartLayout() {
@@ -471,7 +648,8 @@ function initControls() {
                 trends: '📈 COLLISION TRENDS',
                 seasonal: '🌡️ SEASONAL PATTERNS',
                 time: '⏰ TIME ANALYSIS',
-                safety: '⚠️ SAFETY REPORT'
+                safety: '⚠️ SAFETY REPORT',
+                vulnerable: '🚶 VULNERABLE USERS'
             };
             document.getElementById('panelHeader').textContent = headers[state.story];
             

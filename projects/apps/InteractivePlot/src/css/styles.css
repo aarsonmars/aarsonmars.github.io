@@ -535,6 +535,153 @@ body {
     z-index: 400;
 }
 
+/* CSI Formula */
+.csi-formula {
+    text-align: center;
+    font-size: 10px;
+    color: var(--text-muted);
+    background: rgba(229, 57, 53, 0.08);
+    border: 1px solid rgba(229, 57, 53, 0.2);
+    border-radius: 6px;
+    padding: 6px 10px;
+    margin-bottom: 14px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.3px;
+}
+
+/* Vulnerable Users */
+.vuln-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.vuln-card {
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 10px;
+    padding: 14px 10px;
+    text-align: center;
+    border: 1px solid var(--border);
+}
+
+.vuln-card.ped { border-color: rgba(142, 36, 170, 0.3); }
+.vuln-card.bike { border-color: rgba(67, 160, 71, 0.3); }
+
+.vuln-icon { font-size: 24px; margin-bottom: 4px; }
+
+.vuln-count {
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.vuln-card.ped .vuln-count { color: #8E24AA; }
+.vuln-card.bike .vuln-count { color: #43A047; }
+
+.vuln-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.vuln-detail {
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-bottom: 2px;
+}
+
+.vuln-severity {
+    font-size: 10px;
+    color: var(--text);
+}
+
+/* Severity comparison bars */
+.severity-compare {
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 16px;
+}
+
+.compare-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 0;
+    font-size: 11px;
+}
+
+.compare-bar-row > span:first-child {
+    min-width: 75px;
+    color: var(--text-muted);
+    font-size: 10px;
+}
+
+.compare-bar-row > span:last-child {
+    min-width: 35px;
+    text-align: right;
+    font-weight: 600;
+    font-size: 11px;
+}
+
+.compare-bar {
+    flex: 1;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.compare-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+}
+
+/* Season comparison grid */
+.season-compare {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.season-col {
+    text-align: center;
+    padding: 6px 2px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+}
+
+.season-icon { font-size: 16px; margin-bottom: 4px; }
+
+.season-vals {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.season-legend {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 10px;
+    color: var(--text-muted);
+    margin-top: 4px;
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
 @media (max-width: 900px) {
     .side-panel { width: 260px; right: 10px; }
     .year-selector { display: none; }
